@@ -1,0 +1,36 @@
+\section*{Aufgabe 1: ConcurrentEvent}
+
+\subsection*{ConcurrentEvent.java}
+
+In der Klasse ConcurrentEvent wurde das abstrakte Modell einer Menge von Paaren aus Tickets und OutputStreams konkret mit einer HashMap realisiert. Das bietet sich auf Grund des sehr einfachen Zugriffs auf OutputStream-Values über Ticket-Keys an, schließt aber nicht aus das ein OutputStream-Objekt mehreren verschiedenen Tickets zugeordnet, im Gegensatz zu der Realisierung mittels eines Sets.\\
+
+\lstinputlisting[caption=ConcurrentEvent.java,firstnumber=16,linerange=16-16]
+{../../src/uebung1/aufgabe1/ConcurrentEvent.java}
+
+Um Nebenläufigkeitsfehlern vorzubeugen sind alle Methoden {\tt synchronized} deklariert. Damit entspricht die Klasse konzeptuell in etwa einem Monitor, in dem nach Definition höchstens ein Zugriff zu einem Zeitpunkt stattfindet.
+
+Die Methoden {\tt cancel} und {\tt register} sind so simpel wie möglich gehalten und entfernen lediglich ein Ticket/OutputStream Paar aus der internen Map bzw. fügen es hinzu.
+
+\lstinputlisting[caption=ConcurrentEvent.java,firstnumber=22,linerange=22-25]
+{../../src/uebung1/aufgabe1/ConcurrentEvent.java}
+
+Auf Fehlerbehandlung falls ein Ticket nicht existiert kann hier verzichtet werden. Die Methode tut in diesem Fall de facto nichts, da es hier für das Resultat irrelevant ist, ob ein Ticket, das geschlossen wird, überhaupt existierte oder nicht.
+
+\lstinputlisting[caption=ConcurrentEvent.java,firstnumber=47,linerange=47-52]
+{../../src/uebung1/aufgabe1/ConcurrentEvent.java}
+
+Letztere Methode erzeugt ein neues Ticket-Objekt zu einem gegebenen OutputStream und gibt dieses Ticket letztendlich zurück.
+
+{\tt propagate()} iteriert über alle Ticket-Keys, prüft ob es sich nicht um das eigene Ticket des Aufrufenden handelt und sendet in diesem Fall  einen String an den zugehörigen Stream. Mittels {\tt flush()} wird sichergestellt, dass der gepufferte PrintStream über den der String formatiert wird, diesen zur Sicherheit sofort, auch ohne abschließendes Newline, verschickt.
+
+\lstinputlisting[caption=ConcurrentEvent.java,firstnumber=32,linerange=32-41]
+{../../src/uebung1/aufgabe1/ConcurrentEvent.java}
+
+\subsection*{ConcurrentEventTest.java}
+
+JUnit-Test für die Methoden aus ConcurrentEvent. Getestet werden kann komfortabel in der Eclipse-IDE. Die Tests für {\tt cancel} und {\tt register} testen nur die rudimentäre Funktionalität. Interessanter ist {\tt testPropagate}:
+
+\lstinputlisting[caption=ConcurrentEventTest.java[firstnumber=32,linerange=40-62]
+{../../src/uebung1/aufgabe1/ConcurrentEventTest.java}
+
+Hier wird ein Dummy-Objekt OutputStream erzeugt, dessen {\tt write}-Methode lediglich die zu schreibenden Daten in einen internen Byte-Buffer schreibt. Dieser OutputStream wird nun als ConcurrentEvent registriert und ein Test-String mittels {\tt propagate} verteilt. Anschließend wird überprüft ob der mittels OutputStream gefüllte {\tt buffer} die richtigen Bytes \"empfangen\" hat.

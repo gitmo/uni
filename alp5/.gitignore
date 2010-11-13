@@ -1,0 +1,26 @@
+# Eclipse
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# Java
+*.class
+
+# Tex
+*.pdf
+*.log
+*.aux
+*.synctex.gz
+
+# Project specific
+release/**

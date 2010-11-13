@@ -1,0 +1,56 @@
+\section*{Aufgabe 3: Ein über TCP benutzbarer Dienst}
+
+\subsection*{Chatroom.java}
+
+Der Chatroom-Server wird mit einem optionalen Argument, dem Subject-String gestartet. Fehlt dieser bleibt Subject leer. Anschließend wird ein freier Port (oberhalb von 50000) gesucht und an ein Socket-Objekt gebunden.
+
+\lstinputlisting[caption=Chatroom.java,firstnumber=27,linerange=27-34]{../../src/uebung1/aufgabe3/Chatroom.java}
+
+Das Server besteht im wesentlichen aus einer großen Endlosschleife, in der nacheinander folgendes passiert:
+
+\begin{itemize}
+\item Warten (blockierend) bis sich ein neuer Client verbindet.
+\item Ein neues Thread-Objekt {\tt workerClient} mit Logik zur Client-Kommunikation erzeugt.
+\item Der Thread wird gestartet.
+\end{itemize}
+
+\subsection*{workerClient}
+
+Zunächst wird der Client als ConcurrentEvent registriert und auf dem Socket auf einen Namensstring vom Client gewartet. Anschließend sendet der Server eine Willkommensnachricht an den Client inklusive Betreff.
+
+\lstinputlisting[caption= workerClient in Chatroom.java,firstnumber=12,linerange=61-68]{../../src/uebung1/aufgabe3/Chatroom.java}
+
+Des weiteren besteht {\tt workerClient} wiederum größtenteils aus einer großen Endlosschleife, die solange läuft bis der Client die Verbindung beendet hat.
+
+\begin{itemize}
+\item Blockieren bis der Client eine Nachricht gesendet hat
+\item Überprüfung ob die Verbindung noch besteht (und die Nachricht gültig ist).
+\item Client-Name und Nachricht wird an alle anderen verbundenen Clients propagiert.
+\end{itemize}
+
+\lstinputlisting[caption= workerClient in Chatroom.java,firstnumber=76,linerange=76-97]{../../src/uebung1/aufgabe3/Chatroom.java}
+
+Nach Austritt der Schleife ist die Verbindung beendet und der Client wird mittels {\tt events.cancel(ticket)} aus dem Pool genommen und Lesepuffer und Socket geschlossen.
+
+\subsection*{ChatClient.java}
+
+Der Chat-Client wird mit drei Argument, dem Subject-String gestartet: Host, Port, und Name.
+
+\begin{verbatim}
+$ java –jar ChatClient.jar <localhost> <50000> <Klaus>
+Socket initialized
+Wecome Klaus! Subject is 'foo bar'
+> 
+\end{verbatim}
+
+Der Client startet zwei Threads zum Senden bzw. Empfangen. Dazu werden vorher drei Puffer an die Systemeingabe, den Socket-Eingabe und die Socket-Ausgabe gebunden.
+
+\lstinputlisting[caption=ChatClient.java,firstnumber=29,linerange=29-33]{../../src/uebung1/aufgabe3/ChatClient.java}
+
+Der Sende-Thread liest von der Systemeingabe und schickt sie an den Server. 
+
+\lstinputlisting[caption=inputWorker ChatClient.java,firstnumber=39,linerange=43-63]{../../src/uebung1/aufgabe3/ChatClient.java}
+
+Der Empfangs-Thread liest analog über die Socket-Eingabe vom Server und gibt die Nachrichten auf der Konsole aus.
+
+\lstinputlisting[caption=incomingWorker ChatClient.java,firstnumber=67,linerange=71-92]{../../src/uebung1/aufgabe3/ChatClient.java}
