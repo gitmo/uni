@@ -1,5 +1,9 @@
-# usage: dengli.sh $1 $2    (needs execute permission!)
+#!/bin/sh
+# usage: dengli.sh file1 file2    (needs execute permission!)
 
+set -x
+
+export CLASSPATH=../../../bin
 package=uebung2.aufgabe1
 
 mkfifo one two    
