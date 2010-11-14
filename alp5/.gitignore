@@ -23,4 +23,4 @@ local.properties
 *.synctex.gz
 
 # Project specific
-release/**
+release/
