@@ -26,7 +26,7 @@ public class Denglish {
 
 		if (args.length < 4) {
 			System.err.println("Usage: java Denglish host1 host2 file1 file2");
-			System.exit(-2); // POSIX
+			System.exit(2); // POSIX
 		}
 
 		String[] hosts = { args[0], args[1] };
@@ -53,37 +53,45 @@ public class Denglish {
 	}
 
 	class FilterWorker implements Runnable {
-		// Standard output and error of remote process
-		BufferedReader stdout, stderr;
 		String hostname, command;
+
+		// Standard output and error of remote process
+		BufferedReader stdout = null, stderr = null;
 
 		public FilterWorker(String hostname, String filename) {
 			this.hostname = hostname;
 			this.command = String.format("%s %s %s %s", SSH, hostname, CMD,
 					filename);
-			System.out.println("About to run: " + this.command);
 		}
 
 		@Override
 		public void run() {
-			Process p = null;
+			System.out.println("About to run: " + this.command);
+			exec();
+			process();
+		}
+
+		private void exec() {
 			try {
-				p = Runtime.getRuntime().exec(this.command);
+				Process p = Runtime.getRuntime().exec(this.command);
+				stdout = new BufferedReader(new InputStreamReader(
+						p.getInputStream()));
+				stderr = new BufferedReader(new InputStreamReader(
+						p.getErrorStream()));
 			} catch (IOException e) {
 				System.err.println("ERROR while executing: " + this.command);
 				e.printStackTrace();
 			}
-			this.stdout = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			this.stderr = new BufferedReader(new InputStreamReader(
-					p.getErrorStream()));
+		}
 
+		private void process() {
 			String line = null;
 			try {
 				if (SSHDEBUG)
-					while ((line = this.stderr.readLine()) != null)
+					while ((line = stderr.readLine()) != null)
 						System.err.printf("%s: %s\n", this.hostname, line);
-				while ((line = this.stdout.readLine()) != null) {
+				
+				while ((line = stdout.readLine()) != null) {
 					if (histogram.containsKey(line))
 						histogram.put(line, histogram.get(line) + 1);
 					else
@@ -92,7 +100,6 @@ public class Denglish {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
 

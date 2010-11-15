@@ -22,7 +22,7 @@ ant build
 
 echo
 echo "Exercise 1a)"
-echo "========+==="
+echo "============"
 mkfifo one two    
 java $package.Filter "$1" one &
 java $package.Filter "$2" two &
@@ -31,7 +31,7 @@ rm one two
 
 echo
 echo "Exercise 1b)"
-echo "========+==="
+echo "============"
 java $package.Denglish localhost localhost "$1" "$2"
 
 # There's also an ant target instead: 
