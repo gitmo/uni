@@ -11,12 +11,12 @@ public class Denglish {
 	static final String SSH = "ssh"; // OpenSSH client
 	static final boolean SSHDEBUG = true;
 
-	// Remote command
 	// Classpath: if there are any "Class not found" problems fix here!
 	static final String pwd = System.getProperty("user.dir");
 	static final String cp = "bin:" + pwd + "/bin:" + pwd
 			+ "/../../../bin:git/uni/alp5/bin";
 
+	// Remote command
 	static final String pkg = Denglish.class.getPackage().getName();
 	static final String CMD = String.format("java -cp %s %s.Filter", cp, pkg);
 
