@@ -7,19 +7,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Denglish {
 
-	static final String SSH = "ssh"; // OpenSSH client
+	// To show the stderr-output of the called process, set to true.
 	static final boolean SSHDEBUG = true;
 
-	// Classpath: if there are any "Class not found" problems fix here!
-	static final String pwd = System.getProperty("user.dir");
-	static final String cp = "bin:" + pwd + "/bin:" + pwd
-			+ "/../../../bin:git/uni/alp5/bin";
+	// Shell script to call Filter on the remote hosts.
+	static final String REMOTE_SH = "remote.sh";
+	static final String SHELL = "/bin/sh";
 
-	// Remote command
-	static final String pkg = Denglish.class.getPackage().getName();
-	static final String CMD = String.format("java -cp %s %s.Filter", cp, pkg);
-
-	// Merge histogram of filtered words
+	// Merged histogram of filtered words
 	final ConcurrentHashMap<String, Integer> histogram = new ConcurrentHashMap<String, Integer>();
 
 	public static void main(String[] args) throws IOException {
@@ -60,7 +55,8 @@ public class Denglish {
 
 		public FilterWorker(String hostname, String filename) {
 			this.hostname = hostname;
-			this.command = String.format("%s %s %s %s", SSH, hostname, CMD,
+			String path = Denglish.class.getResource(REMOTE_SH).getPath();
+			this.command = String.format("%s %s %s %s", SHELL, path, hostname,
 					filename);
 		}
 
@@ -90,7 +86,7 @@ public class Denglish {
 				if (SSHDEBUG)
 					while ((line = stderr.readLine()) != null)
 						System.err.printf("%s: %s\n", this.hostname, line);
-				
+
 				while ((line = stdout.readLine()) != null) {
 					if (histogram.containsKey(line))
 						histogram.put(line, histogram.get(line) + 1);
