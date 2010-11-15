@@ -2,6 +2,9 @@
 # Important: Send error messages to Stderr (&2). Alls messages to Stdout
 #   will be interpreted by the calling programm as filtered words.
 
+# Change to the same directory this script is in
+cd `dirname $0`
+
 # Classpath: if there are any "Class not found" problems fix here!
 export CLASSPATH=$(pwd)/../../../bin:git/uni/alp5/bin
 package=uebung2.aufgabe1
