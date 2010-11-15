@@ -26,7 +26,6 @@ public class Filter {
 
 		StreamTokenizer tokenizer = null;
 		String res = resourceLoc(args[0]);
-		System.out.println("Filter file: ");
 		try {
 			tokenizer = new StreamTokenizer(new FileReader(res));
 			tokenizer.lowerCaseMode(true);

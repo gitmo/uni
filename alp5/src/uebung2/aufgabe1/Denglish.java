@@ -3,7 +3,6 @@ package uebung2.aufgabe1;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Denglish {
@@ -25,7 +24,6 @@ public class Denglish {
 
 	public static void main(String[] args) throws IOException {
 
-		System.out.println(pwd);
 		if (args.length < 4) {
 			System.err.println("Usage: java Denglish host1 host2 file1 file2");
 			System.exit(-2); // POSIX
@@ -33,7 +31,6 @@ public class Denglish {
 
 		String[] hosts = { args[0], args[1] };
 		String[] files = { args[2], args[3] };
-		System.out.println(Arrays.toString(files));
 
 		new Denglish(hosts, files);
 	}
