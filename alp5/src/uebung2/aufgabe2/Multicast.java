@@ -36,9 +36,9 @@ public class Multicast {
 		Thread tr = new Thread(receiver);
 		tr.start();
 
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			// send the group salutations
-			String msg = "Hello";
+			String msg = "Hello" + i;
 			DatagramPacket hi = new DatagramPacket(msg.getBytes(),
 					msg.length(), group, PORT);
 			System.out.println("Sending");
@@ -51,7 +51,6 @@ public class Multicast {
 	}
 
 	Runnable receiver = new Runnable() {
-		String msg = "Hello";
 		byte[] buf = new byte[1024];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 
@@ -65,13 +64,6 @@ public class Multicast {
 					String recvStr = new String(recv.getData(), 0,
 							recv.getLength());
 					System.out.println("Received: " + recvStr);
-
-					// InetAddress senderAddress = recv.getAddress();
-					// int senderPort = recv.getPort();
-
-					DatagramPacket send = new DatagramPacket(msg.getBytes(),
-							msg.length(), group, PORT);
-					socket.send(send);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
