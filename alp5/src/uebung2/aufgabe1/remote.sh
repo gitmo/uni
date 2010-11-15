@@ -17,3 +17,4 @@ fi
 
 set -x
 ssh -f "$1" java -cp $CLASSPATH $package.Filter \"$2\"
+
