@@ -19,7 +19,7 @@ fi
 # During the 'ant init' task (which build depends on) the resource
 # files (english.txt, etc.) are copied to bin/. The build-task then 
 # compiles all sources to bin/ as well.
-ant build
+ant -q build
 
 echo
 echo "Exercise 1b)"

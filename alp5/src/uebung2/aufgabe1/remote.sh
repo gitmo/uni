@@ -5,9 +5,16 @@
 # Change to the same directory this script is in
 cd `dirname $0`
 
-# Classpath: if there are any "Class not found" problems fix here!
-export CLASSPATH=$(pwd)/../../../bin:git/uni/alp5/bin
 package=uebung2.aufgabe1
+
+# Setup class path: assume we're in */{src,bin}/uebung2/aufgabe1
+echo "IMPORTANT: If there are any "Class not found" problems fix CLASSPATH in remote.sh"! >&2
+export CLASSPATH=$(pwd)/../../../bin
+
+# This setup specific path is for running from home and is not needed
+# on the uni servers with a shared home; but doesn't hurt either.
+export CLASSPATH=git/uni/alp5/bin:$CLASSPATH
+
 
 # Check for arguments
 if [ $# -lt  2 ]; then
