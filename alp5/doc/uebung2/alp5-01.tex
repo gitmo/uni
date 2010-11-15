@@ -1,0 +1,116 @@
+%
+%  ALP V Übungszettel
+%
+\documentclass[11pt,german]{scrartcl}
+
+% See geometry.pdf to learn the layout options.
+\usepackage{geometry}
+\geometry{a4paper}
+
+% To begin paragraphs with an empty line
+\usepackage[parfill]{parskip}
+
+% Use utf-8 encoding for foreign characters
+\usepackage[utf8]{inputenc}
+
+% Setup for fullpage use
+\usepackage{fullpage}
+
+% Uncomment some of the following if you use the features
+%
+% Running Headers and footers
+%\usepackage{fancyhdr}
+
+% Multipart figures
+%\usepackage{subfigure}
+
+% More symbols
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{latexsym}
+
+% Surround parts of graphics with box
+\usepackage{boxedminipage}
+
+% Package for including code in the document
+\usepackage{listings}
+\usepackage{color}
+\usepackage{moreverb}
+
+% If you want to generate a toc for each chapter (use with book)
+%\usepackage{minitoc}
+
+% This is now the recommended way for checking for PDFLaTeX:
+\usepackage{ifpdf}
+
+%\newif\ifpdf
+%\ifx\pdfoutput\undefined
+%\pdffalse % we are not running PDFLaTeX
+%\else
+%\pdfoutput=1 % we are running PDFLaTeX
+%\pdftrue
+%\fi
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
+\fi
+
+\usepackage{courier}
+
+\title{ALP V -- Übung}
+\author{\bf Gruppe xxx, Tutor: xxx\\xxx, xxx}
+
+% Activate to display a given date or no date
+%\date{November 2, 2010}
+
+\begin{document}
+
+\ifpdf
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+\else
+\DeclareGraphicsExtensions{.eps, .jpg}
+\fi
+
+\renewcommand{\labelenumi}{\alph{enumi})}
+\renewcommand{\labelenumii}{$\bullet$}
+\lstset{
+	language=Java,                  % choose the language of the code
+	                                % size of fonts used for the code
+	basicstyle=\ttfamily\footnotesize,
+	numbers=left,                   % where to put the line-numbers
+	numberstyle=\footnotesize,      % size of fonts for used line-numbers
+	stepnumber=1,                   % step between line-numbers
+	numbersep=5pt,                  % how far the line-numbers are from the code
+	backgroundcolor=\color{white},  % choose background color. You must add \usepackage{color}
+	showspaces=false,               % show spaces adding particular underscores
+	showstringspaces=false,         % underline spaces within strings
+	showtabs=false,                 % show tabs within strings adding particular underscores
+	frame=single,                   % adds a frame around the code
+	tabsize=4,                      % sets default tabsize to 2 spaces
+	captionpos=b,                   % sets the caption-position to bottom
+	breaklines=true,                % sets automatic line breaking
+	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+	escapeinside={\%*}{*)},         % if you want to add a comment within your code
+  frameround=tttt,
+  extendedchars=true,
+  literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}2
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {°}{{}}0
+}
+
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{aufgabe1a}
+
+\end{document}
