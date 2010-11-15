@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
+import java.net.URL;
 
 public class Filter {
 
@@ -24,11 +25,13 @@ public class Filter {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(args[1])));
 
 		StreamTokenizer tokenizer = null;
+		String res = resourceLoc(args[0]);
+		System.out.println("Filter file: ");
 		try {
-			tokenizer = new StreamTokenizer(new FileReader(args[0]));
+			tokenizer = new StreamTokenizer(new FileReader(res));
 			tokenizer.lowerCaseMode(true);
 		} catch (FileNotFoundException e) {
-			System.err.printf("Input file %s was not found.\n", args[0]);
+			System.err.printf("Input file %s was not found.\n", res);
 			System.exit(-1);
 		}
 
@@ -40,5 +43,10 @@ public class Filter {
 		}
 
 		out.close();
+	}
+	
+	private static String resourceLoc(String file) {
+		URL resource = Denglish.class.getResource(file);
+		return resource == null ? file : resource.getPath();
 	}
 }
