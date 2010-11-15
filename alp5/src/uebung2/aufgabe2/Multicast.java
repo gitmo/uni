@@ -40,7 +40,7 @@ public class Multicast {
 			// send the group salutations
 			String msg = "Hello";
 			DatagramPacket hi = new DatagramPacket(msg.getBytes(),
-					msg.length(), group, 6789);
+					msg.length(), group, PORT);
 			System.out.println("Sending");
 			socket.send(hi);
 		}
