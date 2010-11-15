@@ -34,18 +34,14 @@ public class Multicast {
 		socket.joinGroup(group);
 
 		Thread tr = new Thread(receiver);
+		Thread ts = new Thread(sender);
+
 		tr.start();
+		ts.start();
 
-		for (int i = 0; i < 10; i++) {
-			// send the group salutations
-			String msg = "Hello" + i;
-			DatagramPacket hi = new DatagramPacket(msg.getBytes(),
-					msg.length(), group, PORT);
-			System.out.println("Sending");
-			socket.send(hi);
-		}
-
+		ts.join();
 		tr.join();
+
 		// OK, I'm done talking - leave the group...
 		socket.leaveGroup(group);
 	}
@@ -71,4 +67,23 @@ public class Multicast {
 		}
 	};
 
+	Runnable sender = new Runnable() {
+		DatagramPacket send;
+
+		@Override
+		public void run() {
+			try {
+				for (int i = 0; i < 10; i++) {
+					// send the group salutations
+					String msg = "Hello" + i;
+					send = new DatagramPacket(msg.getBytes(), msg.length(),
+							group, PORT);
+					socket.send(send);
+					System.out.println("Sending");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 }
