@@ -16,17 +16,25 @@ import java.net.UnknownHostException;
  * @author xxx & xxx (Gruppe xxx)
  */
 public class Multicast {
+	private static final String PROMPT = "> ";
 	private static final int PORT = 56789;
 	InetAddress group;
 	MulticastSocket socket;
+	String name;
 
 	public static void main(String[] args) throws UnknownHostException,
 			IOException, InterruptedException {
 
-		new Multicast();
+		if (args.length < 1) {
+			System.err.println("Usage: java Multicast <name>");
+			System.exit(2);
+		}
+		new Multicast(args[0]);
 	}
 
-	public Multicast() throws IOException, InterruptedException {
+	public Multicast(String name) throws IOException, InterruptedException {
+		// Set client name
+		this.name = name;
 		// join a Multicast group
 		// 224.0.0.1 - 239.255.255.255
 		group = InetAddress.getByName("229.1.2.3");
@@ -46,6 +54,32 @@ public class Multicast {
 		socket.leaveGroup(group);
 	}
 
+	Runnable sender = new Runnable() {
+		DatagramPacket send;
+		BufferedReader input = new BufferedReader(new InputStreamReader(
+				System.in));
+
+		@Override
+		public void run() {
+			System.out.print(PROMPT);
+			try {
+				while (true) {
+					String readLine = input.readLine();
+					// EOF (^D) received
+					if (readLine == null)
+						break;
+
+					String msg = name + ": " + readLine;
+					send = new DatagramPacket(msg.getBytes(), msg.length(),
+							group, PORT);
+					socket.send(send);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 	Runnable receiver = new Runnable() {
 		byte[] buf = new byte[1024];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
@@ -54,32 +88,13 @@ public class Multicast {
 		public void run() {
 			try {
 				while (true) {
-					System.out.println("Ready to receive");
 					// get their responses!
 					socket.receive(recv);
 					String recvStr = new String(recv.getData(), 0,
 							recv.getLength());
-					System.out.println("Received: " + recvStr);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	};
-
-	Runnable sender = new Runnable() {
-		DatagramPacket send;
-
-		@Override
-		public void run() {
-			try {
-				for (int i = 0; i < 10; i++) {
-					// send the group salutations
-					String msg = "Hello" + i;
-					send = new DatagramPacket(msg.getBytes(), msg.length(),
-							group, PORT);
-					socket.send(send);
-					System.out.println("Sending");
+					System.out.println();
+					System.out.println(recvStr);
+					System.out.print(PROMPT);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
