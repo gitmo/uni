@@ -1,0 +1,58 @@
+\subsection*{a) Filter und Merge mit \emph{Named Pipes}}
+\subsubsection*{Filter.java}
+	Mit Hilfe der \texttt{StreamTokenizer}-Klasse wird der Text der zu analysierenden Datei in einzelne Wörter zerlegt und Schritt für Schritt abgearbeitet.
+	Bei jedem Schritt wird das Wort über ein Wörterbuch abgeglichen. Enthält dieses das Wort, so wird es in der als Parameter übergebenen \emph{Named Pipe} zwischengespeichert.
+	\lstinputlisting[caption=Filter.java,firstnumber=27,linerange=27-42]
+	{../../src/uebung2/aufgabe1/Filter.java}
+
+\subsubsection*{Merge.java}
+	Die \texttt{Merge}-Klasse bringt den Inhalt zweier \emph{Named Pipes} zusammen und gibt danach die Häufigkeit der einzelnen Wörter textuell aus.
+	Als Datenstruktur kommt eine \texttt{ConcurrentHashMap} zum Einsatz. Diese hat den Vorteil, dass keine Probleme aufgrund der Nebenläufigkeit entstehen können.
+	\lstinputlisting[caption=Merge.java, firstnumber=16,linerange=16-16]
+	{../../src/uebung2/aufgabe1/Merge.java}
+
+	Nun lassen wir die \emph{Named Pipes} nebenläufig über zwei Threads abarbeiten. Hierzu wird jede Zeile in die Datenstruktur eingetragen.
+	\lstinputlisting[caption=Merge.java, firstnumber=30,linerange=30-48]
+	{../../src/uebung2/aufgabe1/Merge.java}
+
+	Nach erfolgreichem zusammenführen der \emph{Named Pipes} wird letztendlich noch die \texttt{HashMap} selbst textuell ausgegeben.
+	\lstinputlisting[caption=Merge.java, firstnumber=67,linerange=67-73]
+	{../../src/uebung2/aufgabe1/Merge.java}
+
+{\sf TODO}
+
+\lstinputlisting[caption= exercise1a.sh,language=bash,firstnumber=1,linerange=1-999]
+ 	{../../src/uebung2/aufgabe1/exercise1a.sh}
+
+
+\subsection*{b) Merge auf entfernten Rechnern}
+
+{\sf TODO}
+
+\lstinputlisting[caption=remote.sh,language=bash,firstnumber=1,linerange=1-999]
+	{../../src/uebung2/aufgabe1/remote.sh}
+
+{\sf TODO}
+
+\lstinputlisting[caption=exercise1b.sh,language=bash,firstnumber=1,linerange=1-999]
+	{../../src/uebung2/aufgabe1/exercise1b.sh}
+
+{\sf TODO}
+
+\lstinputlisting[caption=Denglish.java,firstnumber=1,linerange=1-10]
+	{../../src/uebung2/aufgabe1/Denglish.java}
+
+{\sf TODO}
+
+\begin{verbatim}
+Output:
+\end{verbatim}
+
+	
+\subsection*{c) Dienst-Architektur?}
+{\sf TODO}
+
+\begin{description}
+\item[PRO:]
+\item[CONTRA:]
+\end{description}
