@@ -27,15 +27,17 @@
 
 \subsection*{b) Merge auf entfernten Rechnern}
 
-{\sf TODO}
-
-\lstinputlisting[caption=remote.sh,language=bash,firstnumber=1,linerange=1-999]
-	{../../src/uebung2/aufgabe1/remote.sh}
-
-{\sf TODO}
-
-\lstinputlisting[caption=exercise1b.sh,language=bash,firstnumber=1,linerange=1-999]
+	Um die Lösung für Aufgabe 1b auszuführen muss folgendes Bash-Skript ausgeführt werden.
+	Es braucht als Parameter zwei Hosts für die Abarbeitung, sowie zwei zu filternde Dateien.
+	\lstinputlisting[caption=exercise1b.sh,language=bash,firstnumber=1,linerange=1-999]
 	{../../src/uebung2/aufgabe1/exercise1b.sh}
+
+	Da während der Bearbeitung der Übungszettel wir desöftern mit Pfad-Problemen zu kämpfen hatten,
+	haben wir uns eine Remote-Bash-Datei geschrieben um das Filter-Programm letztendlich auf dem Remote-Server zu starten.
+	Es wird also nicht direkt mittels \texttt{ssh -t host program} das Programm Filter aus dem Java-Quelltext aufgerufen
+	sondern das Bash-Skript \texttt{remote.sh} übernimmt diese Aufgabe. 
+	\lstinputlisting[caption=remote.sh,language=bash,firstnumber=1,linerange=1-999]
+	{../../src/uebung2/aufgabe1/remote.sh}
 
 {\sf TODO}
 
