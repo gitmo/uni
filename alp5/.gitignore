@@ -21,6 +21,10 @@ local.properties
 *.log
 *.aux
 *.synctex.gz
+*.texshop
+
+# Mac OS X goodness
+.DS_Store
 
 # Project specific
 release/
