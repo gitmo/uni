@@ -39,22 +39,37 @@
 	\lstinputlisting[caption=remote.sh,language=bash,firstnumber=1,linerange=1-999]
 	{../../src/uebung2/aufgabe1/remote.sh}
 
-{\sf TODO}
-
-\lstinputlisting[caption=Denglish.java,firstnumber=1,linerange=1-10]
+	Als Datenstruktur zur Speicherung der gefilterten Wörter wurde für die Denglish-Klasse wieder eine ConcurrentHashMap gewählt.
+	\lstinputlisting[caption=Denglish.java,firstnumber=18,linerange=18-18]
 	{../../src/uebung2/aufgabe1/Denglish.java}
 
-{\sf TODO}
+	Das Programm selbst arbeitet in zwei separaten Threads die zu filternden Dateien ab.
+	Gestartet werden diese im Konstruktor der Klasse selbst.
+	\lstinputlisting[caption=Denglish.java,firstnumber=36,linerange=36-38]
+	{../../src/uebung2/aufgabe1/Denglish.java}
 
-\begin{verbatim}
-Output:
-\end{verbatim}
+	Am Ende wird die Datenstruktur ConcurrentHashMap textuell ausgegeben:
+	\lstinputlisting[caption=Denglish.java,firstnumber=102,linerange=102-105]
+	{../../src/uebung2/aufgabe1/Denglish.java}
+
+
+	Die Threads selber verbinden sich in der Methode \texttt{exec}  über \texttt{ssh} mit mit einem Remote Rechner und versuchen mit die Daten abzuarbeiten.
+	Danach werden die Daten mit Hilfe der Methode \texttt{process} in die gemeinsame Datenstruktur gespeichert.
+	\lstinputlisting[caption=Denglish.java,firstnumber=64,linerange=64-68]
+	{../../src/uebung2/aufgabe1/Denglish.java}
+
+
+%\begin{verbatim}
+%Output:
+%\end{verbatim}
 
 	
 \subsection*{c) Dienst-Architektur?}
-{\sf TODO}
-
 \begin{description}
 \item[PRO:]
+	Aufgrunddessen, dass Klienten keine wirkliche Antwort erhalten und der Broadcast eher einer \textit{event notification} gleicht könnte man argumentieren, dass es sich hierbei nicht um eine Dienst-Architektur handelt.
+
 \item[CONTRA:]
+	Gegen ein eventbasiertes System spricht, dass die Denglish-Klasse gleichzeitig ein Publisher als auch ein Subscriber ist.
+	Er kennt also die Funktionalität des Subscribers. Noch dazu handelt es sich bei den Nachrichten nicht wirklich um sogenannte Events, da sie keinen Status enthalten.
 \end{description}
