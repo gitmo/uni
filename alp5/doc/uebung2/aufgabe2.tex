@@ -1,20 +1,21 @@
 \subsection*{a) Ereignisbasiertes System?}
-Bei der Client/Server-Architektur kennt der Klient den Dienstanbieter und dessen Funktionalität.
-Er erwartet nach einem verschickten Auftrag eine Antwort. 
-Der Server dagegen weiß nichts über den Clienten.
+	Bei der Client/Server-Architektur kennt der Klient den Dienstanbieter und dessen Funktionalität.
+	Er erwartet nach einem verschickten Auftrag eine Antwort. 
+	Der Server dagegen weiß nichts über den Clienten.
 
-Das ereignisbasierte System dagegen hat sogenannte Subscribers und Publishers.
-Die Publisher hinterlegen in Kanälen Ereignisse, die wiederum von bestimmten Subscribers verarbeitet werden. 
-Der Publisher selbst erwartet also keine Antwort, er kennt nicht einmal die Funktionalität des Subscribers.
+	Das ereignisbasierte System dagegen hat sogenannte Subscribers und Publishers.
+	Die Publisher hinterlegen in Kanälen Ereignisse, die wiederum von bestimmten Subscribers verarbeitet werden. 
+	Der Publisher selbst erwartet also keine Antwort, er kennt nicht einmal die Funktionalität des Subscribers.
 
-Der Chatroom-Dienst kann somit durch aus als ein ereignisbasiertes System verstanden werden, da den Teilnehmern auf ihre Nachricht nicht direkt eine Antwort geschickt wird. Sie hinterlegen in dem Kanal nur ein Nachrichten-Ereignis und warten auf andere Nachrichten-Ereignisse (die nicht von ihnen selbst ausgelöst wurden).
+	Der Chatroom-Dienst kann somit durch aus als ein ereignisbasiertes System verstanden werden, da den Teilnehmern auf ihre Nachricht nicht direkt eine Antwort geschickt wird. Sie hinterlegen in dem Kanal nur ein Nachrichten-Ereignis und warten auf andere Nachrichten-Ereignisse (die nicht von ihnen selbst ausgelöst wurden).
 
-Die Implementation selbst wiederspricht aber ein wenig dieser Auffassung.
+	Die Implementation selbst wiederspricht aber ein wenig dieser Auffassung.
 
 \subsection*{b) Spezifikation}
-Der Multicast-Klient muss sich mit einer Mulitcast-Gruppe über einen Server verbinden.
-Er selbst verschickt an alle Teilnehmer der Gruppe selbstverfasste Nachrichten und empfängt auch selbstständig die anderer Teilnehmer.
+	Der Multicast-Klient muss sich mit einer Mulitcast-Gruppe über einen Server verbinden.
+	Er selbst verschickt an alle Teilnehmer der Gruppe selbstverfasste Nachrichten und empfängt auch selbstständig die anderer Teilnehmer.
 
 \subsection*{c) Multicast.java}
-{\sf TODO}
-\lstinputlisting[caption=Merge.java, firstnumber=1,linerange=1-128] {../../src/uebung2/aufgabe2/Multicast.java}
+	Die Multicast-Klasse benutzt zur Kommunikation einen Multicast-Socket.
+	Die Abarbeitung der Eingaben, sowie der einkommenden Daten wird mittels zwei Threads gehandabt.
+	\lstinputlisting[caption=Merge.java, firstnumber=1,linerange=1-128] {../../src/uebung2/aufgabe2/Multicast.java}
