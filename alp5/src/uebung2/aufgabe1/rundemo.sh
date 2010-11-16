@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SSHUSER='foux'
+SSHUSER=$USER
 
 ant clean build
 sh exercise1a.sh test1.txt test2.txt
