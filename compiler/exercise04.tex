@@ -113,7 +113,7 @@ Token scan() {
 
 \section*{Aufgabe 3}
 \begin{itemize}
-	\item[a)] $\left((\epsilon\mid a)b^*\right)^*$. Die Sprache aller Wörter über dem Alphabet $\{a,b\}$, \dh die $a$s und $b$s können beliebig angeordnet sein.
+	\item[a)] $\left((\epsilon\mid a)b^*\right)^*$. Die Sprache aller Wörter über dem Alphabet $\{a,b\}$, \dh die $a$s und $b$s können beliebig angeordnet sein. Das leere Wort ist inbegriffen.
 	
 	\item[b)] $(a\mid b)^* a(a\mid b)(a\mid b)$.  Hier wird die Sprache über dem Alphabet $\{a,b\}$ beschrieben, in der alle Wörter auf $aaa$, $aab$, $aba$ oder $abb$ enden. Also alle Wörter, deren drittletzter Buchstabe ein $a$ ist.
 	
@@ -122,11 +122,11 @@ Token scan() {
 
 \section*{Aufgabe 4}
 \begin{itemize}
-	\item[d)] Die Grammatik ist wenig robust, insofern nicht alle möglichen Schreibweisen boolescher Ausdrücke erkannt werden. Beispielsweise ist $f \wedge \neg (t \vee f)$ ableitbar aber nicht der äquivalente (nach Kommutativgesetz) Ausdruck $\neg (t \vee f) \wedge f$.
+%	\item[a)]
+%	\item[b)]
+%	\item[c)]
+	\item[d)] Die Grammatik ist "wenig robust", insofern nicht alle möglichen Schreibweisen boolescher Ausdrücke erkannt werden. Beispielsweise ist $f \wedge \neg (t \vee f)$ ableitbar aber nicht der äquivalente (nach Kommutativgesetz) Ausdruck $\neg (t \vee f) \wedge f$.
 	
-	Des weiteren ist die Startproduktion nicht, der Konvention entsprechend, die erste Produktion.
-	%	\item[a)]
-%	\item[a)]
-%	\item[a)]
+	Die Reihenfolge der Produktionen ist irreführend. So ist die Startproduktion nicht, der Konvention entsprechend, die erste Produktion, sondern die Produktion mit dem Kopf $B$.
 \end{itemize}
 \end{document}  
