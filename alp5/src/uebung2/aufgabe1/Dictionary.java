@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.TreeSet;
 import java.util.Set;
 
-class Dictionary {
+public class Dictionary {
 	String dictionaryEnFile = "english.txt";
 	String dictionaryDeFile = "german.txt";
 	Set<String> dictionaryEn = new TreeSet<String>();
