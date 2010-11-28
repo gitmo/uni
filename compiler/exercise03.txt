@@ -1,0 +1,161 @@
+Aufgabe 1
+=========
+
+a)  S -> + S S | - S S | a
+--------------------------
+void S() {
+    switch ( lookahead ) {
+    case '+':
+        match('+'); S(); S(); break;
+    case '-':
+        match('-'); S(); S(); break;
+    case 'a':
+        match('a'); break;
+    default:
+        report("syntax error");
+    }
+}
+
+void match(terminal t) {
+    if ( lookahead == t ) lookahead = nextTerminal;
+    else report("syntax error");
+}
+
+b)  S -> S ( S ) S | epsilon
+----------------------------
+    S -> epsilon R                  // left-recursive to
+    R -> ( S ) S R | epsilon        // right-recursive
+<=>
+    S -> ( S ) S S | epsilon        // elimination of S->R prodcution
+
+void S() {
+    if ( lookahead == '(' ) {
+        match('('); S(); match(')'); S(); S();
+    }
+}
+
+c)  S  -> 0 S 1 | 01
+--------------------
+    S  -> 0 S' 1                // extension with a new start symbol
+    S' -> 0 S' 1 | epsilon      // to make grammar 'predictive parseable'
+
+void S() {
+    if ( lookahead == '0' ) {
+        match('0'); S_(); match('1');
+    } else
+        report("syntax error");
+}
+
+void S_() {
+    if ( lookahead == '0' ) {
+        match('0'); S_(); match('1');
+    }
+}
+
+Aufgabe 2
+=========
+
+S -> ( S_1 ) S      S.t = S_1.t
+S -> epsilon        S.t = 'Correct'
+S -> E              S.t = E.t
+E -> ) E_1          E.t = E_1.t
+E -> ( E_1          E.t = E_1.t
+E -> epsilon        E.t = 'Wrong'
+
+Aufgabe 3
+=========
+
+a) Grammatik für römische Zahlen
+--------------------------------
+T -> mT | H
+H -> cZ | ccZ | cccZ | cdZ | dZ | dcZ | dccZ | dcccZ | cmZ | Z
+Z -> xE | xxE | xxxE | xlE | lE | lxE | lxxE | lxxxE | xcE | E
+E -> i  | ii  | iii  | iv  | v  | vi  | vii  | viii  | ix  | epsilon
+
+b) Prädiktiver Parser?
+----------------------
+Ein prädiktiver Parser ist für diese Grammatik NICHT realisierbar,
+denn beispielsweise besitzen die Produktionen E->i und E->ii
+nicht-disjunkte Mengen von Terminalsymbolen, die als erstes Zeichen
+in den erzeugten Strings auftauchen, nämlich
+    FIRST(i) = FIRST(ii) = {i} .
+Für prädiktives Parsen müssen diese Mengen disjunkt sein.
+
+Aufgabe 4
+=========
+
+a) Übersetzungsschema ganze -> römische Zahlen
+----------------------------------------------
+T -> 1H {print ('m')}
+   | 2H {print ('mm')}
+   ...
+   | 9H {print ('mmm mmm mmm')}
+   | H
+H -> 1Z {print ('c')}
+   | 2Z {print ('cc')}
+   | 3Z {print ('ccc')}
+   | 4Z {print ('cd')}
+   | 5Z {print ('d')}
+   | 6Z {print ('dc')}
+   | 7Z {print ('dcc')}
+   | 8Z {print ('dccc')}
+   | 9Z {print ('cm')}
+   | 0Z
+Z -> 1E {print ('x')}
+   | 2E {print ('xx')}
+   | 3E {print ('xxx')}
+   | 4E {print ('xl')}
+   | 5E {print ('l')}
+   | 6E {print ('lx')}
+   | 7E {print ('lxx')}
+   | 8E {print ('lxxx')}
+   | 9E {print ('xc')}
+   | 0E
+E -> 1 {print ('i')}
+   | 2 {print ('ii')}
+   | 3 {print ('iii')}
+   | 4 {print ('iv')}
+   | 5 {print ('v')}
+   | 6 {print ('vi')}
+   | 7 {print ('vii')}
+   | 8 {print ('viii')}
+   | 9 {print ('ix')}
+   | 0
+
+b) Übersetzungsschema römisch -> ganze Zahlen
+---------------------------------------------
+T -> mH         {print ('1')}
+   | mmH        {print ('2')}
+   ...
+   | mmmmmmmmmH {print ('9')}
+   | H          {print ('0')}
+H -> cZ         {print ('1')}
+   | ccZ        {print ('2')}
+   | cccZ       {print ('3')}
+   | cdZ        {print ('4')}
+   | dZ         {print ('5')}
+   | dcZ        {print ('6')}
+   | dccZ       {print ('7')}
+   | dcccZ      {print ('8')}
+   | cmZ        {print ('9')}
+   | Z          {print ('0')}
+Z -> xE         {print ('1')}
+   | xxE        {print ('2')}
+   | xxxE       {print ('3')}
+   | xlE        {print ('4')}
+   | lE         {print ('5')}
+   | lxE        {print ('6')}
+   | lxxE       {print ('7')}
+   | lxxxE      {print ('8')}
+   | xcE        {print ('9')}
+   | E          {print ('0')}
+E -> i          {print ('1')}
+   | ii         {print ('2')}
+   | iii        {print ('3')}
+   | iv         {print ('4')}
+   | v          {print ('5')}
+   | vi         {print ('6')}
+   | vii        {print ('7')}
+   | viii       {print ('8')}
+   | ix         {print ('9')}
+   | epsi       {print ('0')}

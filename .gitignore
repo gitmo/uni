@@ -1,0 +1,30 @@
+# Eclipse
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# Java
+*.class
+
+# Tex
+*.pdf
+*.log
+*.aux
+*.synctex.gz
+*.texshop
+
+# Mac OS X goodness
+.DS_Store
+
+# Project specific
+release/

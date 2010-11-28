@@ -1,0 +1,132 @@
+\documentclass[11pt,a4paper,ngerman]{article}
+\usepackage[bottom=2.5cm,top=2.5cm]{geometry} 
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+\usepackage{ae} 
+\usepackage{amssymb} 
+\usepackage{amsmath} 
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage{fancyref}
+\usepackage{xcolor}
+\usepackage{paralist}
+\usepackage{listings}
+\usepackage[pdftex, bookmarks=false, pdfstartview={FitH}, linkbordercolor=white]{hyperref}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Übersetzerbau WS10/11: E. Fehr}
+\fancyhead[L]{\today}
+\fancyhead[C]{}
+\fancyfoot{}
+\fancyfoot[L]{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\footrulewidth}{0.5pt}
+\renewcommand{\headrulewidth}{0.5pt}
+\setlength{\parindent}{0pt} 
+\setlength{\headheight}{15pt}
+%
+\newcommand{\N}[0]{\mathbb{N}} 
+\newcommand{\Z}[0]{\mathbb{Z}} 
+\newcommand{\Q}[0]{\mathbb{Q}} 
+\newcommand{\R}[0]{\mathbb{R}} 
+\newcommand{\C}[0]{\mathbb{C}} 
+\newcommand{\B}[0]{\mathbb{B}} 
+\newcommand{\im}[0]{\mathit{i}}
+\newcommand{\uber}[2]{{{#1} \choose {#2}}} 
+\newcommand{\vect}[1]{\begin{pmatrix}#1\end{pmatrix}} 
+%
+\newcommand\zb{z.\,B.\ }
+\renewcommand\dh{d.\,h.\ }
+\newcommand\parbig{\par\bigskip}
+\newcommand\parmed{\par\medskip}
+\newcommand{\mailto}[1]{\href{mailto:#1}{#1}}
+%
+\title{Übungsblatt 04} 
+%\author{von\\ XX,XX} 
+\date{}
+%
+\begin{document} 
+%
+\lstset{language=Java, basicstyle=\ttfamily\fontsize{10pt}{10pt}\selectfont\upshape, commentstyle=\rmfamily\slshape, keywordstyle=\rmfamily\bfseries, breaklines=true, frame=single, xleftmargin=3mm, xrightmargin=3mm, tabsize=2}
+%
+\maketitle
+\thispagestyle{fancy}
+
+
+\section*{Aufgabe 1}
+Ausgehend von der Vorlesung, erweitern wir den Pseudocode, so dass zusätzlich zu \emph{White Space} auch Zeilen- und Blockkommentare übersprungen werden.
+
+\parmed
+\begin{lstlisting}
+for ( ; ; peek = next input character) {
+  if (peek is blank or tab) doNothing;
+  else if (peek is newline) line = line + 1; 
+  else if (peek is '/') {
+    peek = next input character;
+    
+    /* a) Ignorieren einzeiliger Kommentare */
+    if (peek is '/') { 
+      do {
+      	peek = next input character;
+      } while(peek is not newline);      
+      continue;
+    } 
+    
+    /* b) Ignorieren mehrzeiliger Kommentare */
+    if (peek is '*') {
+      do {
+      	peek = next input character;
+      } while(peek is not '*' && peek+1 is not '/');
+      peek = next input character;
+      continue;
+    }    
+  } else
+    break;
+}
+\end{lstlisting}
+
+\section*{Aufgabe 2}
+Erweiterung \texttt{scan()} Methode um die Operatoren zu erkennen \texttt{<, >, <=, >=, ==, !=}.
+\parmed
+\begin{lstlisting}
+Token scan() {
+  // Ignore whitespaces and comments
+  // Read digits
+  // Read identifier and key words
+  ...
+  switch(peek) {
+    case '<': case '>':
+    	if (peek+1 is '=')
+    	  return new Token(peek concat peek+1);
+      return new Token(peek);
+    case '=': case '!':
+      if (peek+1 is '=')
+        return new Token(peek concat peek+1);
+      break;
+    case default: // assume single character operator  
+      return new Token(peek);
+  }
+}
+\end{lstlisting}
+
+
+\section*{Aufgabe 3}
+\begin{itemize}
+	\item[a)] $\left((\epsilon\mid a)b^*\right)^*$. Die Sprache aller Wörter über dem Alphabet $\{a,b\}$, \dh die $a$s und $b$s können beliebig angeordnet sein. Das leere Wort ist inbegriffen.
+	
+	\item[b)] $(a\mid b)^* a(a\mid b)(a\mid b)$.  Hier wird die Sprache über dem Alphabet $\{a,b\}$ beschrieben, in der alle Wörter auf $aaa$, $aab$, $aba$ oder $abb$ enden. Also alle Wörter, deren drittletzter Buchstabe ein $a$ ist.
+	
+	\item[c)] $a^* ba^* ba^* ba^*$. Sprache über dem Alphabet $\{a,b\}$ deren Wörter genau drei $b$s enthalten.
+\end{itemize}
+
+\section*{Aufgabe 4}
+\begin{itemize}
+%	\item[a)]
+%	\item[b)]
+%	\item[c)]
+	\item[d)] Die Grammatik ist "wenig robust", insofern nicht alle möglichen Schreibweisen boolescher Ausdrücke erkannt werden. Beispielsweise ist $f \wedge \neg (t \vee f)$ ableitbar aber nicht der äquivalente (nach Kommutativgesetz) Ausdruck $\neg (t \vee f) \wedge f$.
+	
+	Die Reihenfolge der Produktionen ist irreführend. So ist die Startproduktion nicht, der Konvention entsprechend, die erste Produktion, sondern die Produktion mit dem Kopf $B$.
+\end{itemize}
+\end{document}  
