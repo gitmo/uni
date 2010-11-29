@@ -1,6 +1,5 @@
 package uebung3.aufgabe1b;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
@@ -19,12 +18,8 @@ String[] words = null;
 			words = currentLine.split("\\s");
 			
 			for(String currentWord : words) {
-				try {
-					if(!dictionary.contains(currentWord))
-						continue;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				if(!dictionary.contains(currentWord))
+					continue;
 				
 				if(!localOcurrence.contains(currentWord)) {
 					localOcurrence.add(currentWord);

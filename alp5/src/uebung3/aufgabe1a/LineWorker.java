@@ -1,6 +1,5 @@
 package uebung3.aufgabe1a;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -9,10 +8,9 @@ import uebung2.aufgabe1.Dictionary;
 
 public class LineWorker extends Thread {
 	private ArrayList<String> lines;
-	private int start = 0, end = 0;
-	private SortedSet<String> localOcurrence = new TreeSet<String>();
-	private SortedSet<String> globalOcurrence;
-	private Dictionary dictionary;
+	private int start, end;
+	private SortedSet<String> localOcurrence, globalOcurrence;
+	private static Dictionary dictionary = new Dictionary();
 
 	/**
 	 * @param globalOcurrence
@@ -25,13 +23,8 @@ public class LineWorker extends Thread {
 		this.lines = lines;
 		this.start = start;
 		this.end = end;
+		this.localOcurrence = new TreeSet<String>();
 		this.globalOcurrence = globalOcurrence;
-		try {
-			this.dictionary = new Dictionary();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/*

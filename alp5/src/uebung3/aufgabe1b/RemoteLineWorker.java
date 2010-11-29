@@ -1,7 +1,5 @@
 package uebung3.aufgabe1b;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -19,11 +17,7 @@ public class RemoteLineWorker implements Runnable{
 	public RemoteLineWorker(IRemoteSet<String> globalOcurrence, ArrayList<String> lines) {
 		this.lines = lines;
 		this.globalOcurrence = globalOcurrence;
-		try {
-			this.dictionary = new Dictionary();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.dictionary = new Dictionary();
 	}
 	
 	public void run() {

@@ -12,16 +12,17 @@ import uebung3.aufgabe1b.RemoteLineWorker;
 
 public class RemoteForeign extends Foreign {
 	IRemoteSet<String> globalOcurrences;
-	
+
+	/**
+	 * 
+	 */
+	private static Dictionary dictionary = new Dictionary();
+
+
 	public RemoteForeign() {
 		super();
 		
-		try {
-			dictionary = new Dictionary();
-		} catch (IOException e) {
-            System.err.println("Dictionary exception:");
-			e.printStackTrace();
-		}
+		dictionary = new Dictionary();
 		
 		if (System.getSecurityManager() == null)
             System.setSecurityManager(new SecurityManager());

@@ -12,12 +12,12 @@ public class Dictionary {
 	Set<String> dictionaryEn = new TreeSet<String>();
 	Set<String> dictionaryDe = new TreeSet<String>();
 
-	public Dictionary() throws IOException {
+	public Dictionary() {
 		readInMemory(dictionaryEnFile, dictionaryEn);
 		readInMemory(dictionaryDeFile, dictionaryDe);
 	}
 
-	private void readInMemory(String file, Set<String> dict) throws IOException {
+	private void readInMemory(String file, Set<String> dict) {
 		BufferedReader dictionaryReader = null;
 		try {
 			String path = this.getClass().getResource(file).getPath();
@@ -27,8 +27,13 @@ public class Dictionary {
 		}
 
 		String line = null;
-		while ((line = dictionaryReader.readLine()) != null)
-			dict.add(line.toLowerCase());
+		try {
+			while ((line = dictionaryReader.readLine()) != null)
+				dict.add(line.toLowerCase());
+		} catch (IOException e) {
+			System.err.printf("ERROR: Reading dictionary file '%s'!\n", file);
+			e.printStackTrace();
+		}
 	}
 
 	/**

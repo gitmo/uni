@@ -26,7 +26,7 @@ public class Foreign {
 	/**
 	 * 
 	 */
-	protected Dictionary dictionary;
+	private static Dictionary dictionary = new Dictionary();
 
 	/**
 	 * 
@@ -44,13 +44,6 @@ public class Foreign {
 	public Foreign() {
 		globalOcurrences = Collections
 				.synchronizedSortedSet(new TreeSet<String>());
-
-		try {
-			dictionary = new Dictionary();
-		} catch (IOException e) {
-			System.err.println("Could not load dictionary!");
-			return;
-		}
 	}
 
 	/**
@@ -93,11 +86,11 @@ public class Foreign {
 
 		int i = 0;
 		for (; i < numThreads - 1; ++i)
-			workers[i] = new LineWorker(globalOcurrences, lines, i
-					* lineRange, i * lineRange + lineRange);
+			workers[i] = new LineWorker(globalOcurrences, lines, i * lineRange,
+					i * lineRange + lineRange);
 
-		workers[i] = new LineWorker(globalOcurrences, lines, i
-				* lineRange, i * lineRange + lineRange + lineMod);
+		workers[i] = new LineWorker(globalOcurrences, lines, i * lineRange, i
+				* lineRange + lineRange + lineMod);
 
 		for (Thread thread : workers)
 			if (thread != null)
@@ -118,7 +111,7 @@ public class Foreign {
 
 	/**
 	 * @param ocurrences
-	 * @return 
+	 * @return
 	 */
 	protected synchronized void printOcurrences(Set<String> ocurrences) {
 		System.out.println("Ocurrences:");
