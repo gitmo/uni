@@ -16,34 +16,36 @@ public class Foreign {
 	protected Dictionary dictionary;
 	protected ArrayList<String> lines;
 	final protected SortedSet<String> globalOcurrences;
-	
+
 	public Foreign() {
-		globalOcurrences = Collections.synchronizedSortedSet(new TreeSet<String>());
-		
+		globalOcurrences = Collections
+				.synchronizedSortedSet(new TreeSet<String>());
+
 		try {
-			 dictionary = new Dictionary();
-		} catch(IOException e) {
-			System.err.println("Could load dictionary!");
+			dictionary = new Dictionary();
+		} catch (IOException e) {
+			System.err.println("Could not load dictionary!");
 			return;
-		}	
+		}
 	}
-	
-	protected ArrayList<String> loadFile(String fileName) throws FileNotFoundException {
+
+	protected ArrayList<String> loadFile(String fileName)
+			throws FileNotFoundException {
 		String filePath = this.getClass().getResource(fileName).getPath();
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		ArrayList<String> lines = new ArrayList<String>();
-		
+
 		String nextLine;
 		try {
-			while((nextLine = reader.readLine()) != null)
+			while ((nextLine = reader.readLine()) != null)
 				lines.add(nextLine);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return lines;
 	}
-	
+
 	public void analyse(String fileName, int numberOfThreads) {
 		try {
 			lines = this.loadFile(fileName);
@@ -51,44 +53,46 @@ public class Foreign {
 			System.err.println("File not found");
 			return;
 		}
-		
-		
+
 		int lineRange = lines.size() / numberOfThreads;
-		int lineMod = lines.size()%numberOfThreads;
-		
+		int lineMod = lines.size() % numberOfThreads;
+
 		Thread[] workers = new Thread[numberOfThreads];
-		
+
 		int i = 0;
-		for(; i < numberOfThreads-1; ++i)
-			workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i * lineRange, i*lineRange + lineRange));
-		
-		workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i * lineRange, i*lineRange + lineRange + lineMod));
-		
-		for(Thread thread : workers)
-			if(thread !=  null)
+		for (; i < numberOfThreads - 1; ++i)
+			workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i
+					* lineRange, i * lineRange + lineRange));
+
+		workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i
+				* lineRange, i * lineRange + lineRange + lineMod));
+
+		for (Thread thread : workers)
+			if (thread != null)
 				thread.start();
-		
-		for(Thread thread : workers) {
-			if(thread !=  null) {
+
+		for (Thread thread : workers) {
+			if (thread != null) {
 				try {
 					thread.join();
-				} catch (InterruptedException e) { e.printStackTrace();	}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
+
 		printOcurrences(globalOcurrences);
 	}
 
 	protected void printOcurrences(Set<String> ocurrences) {
 		System.out.println("Ocurrences:");
-		for(String word : ocurrences)
+		for (String word : ocurrences)
 			System.out.println("\t" + word);
-		
+
 	}
-	
 
 	public static void main(String[] args) {
-		
+
 		Foreign foreign = new Foreign();
 		foreign.analyse("test.txt", 2);
 	}

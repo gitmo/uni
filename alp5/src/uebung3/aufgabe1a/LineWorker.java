@@ -13,8 +13,9 @@ public class LineWorker implements Runnable {
 	SortedSet<String> localOcurrence = new TreeSet<String>();
 	SortedSet<String> globalOcurrence = null;
 	Dictionary dictionary;
-	
-	public LineWorker(SortedSet<String> globalOcurrence, ArrayList<String> lines, int start, int end) {
+
+	public LineWorker(SortedSet<String> globalOcurrence,
+			ArrayList<String> lines, int start, int end) {
 		this.lines = lines;
 		this.start = start;
 		this.end = end;
@@ -26,32 +27,32 @@ public class LineWorker implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void run() {
 		String[] words = null;
-		
-		for(int currentLine = start; currentLine < end; ++currentLine) {
+
+		for (int currentLine = start; currentLine < end; ++currentLine) {
 			words = lines.get(currentLine).split("\\s");
-			
-			for(String currentWord : words) {
+
+			for (String currentWord : words) {
 				try {
-					if(!dictionary.contains(currentWord))
+					if (!dictionary.contains(currentWord))
 						continue;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
-				if(!localOcurrence.contains(currentWord)) {
+
+				if (!localOcurrence.contains(currentWord)) {
 					globalOcurrence.addAll(localOcurrence);
-					
-					if(!globalOcurrence.contains(currentWord))
+
+					if (!globalOcurrence.contains(currentWord))
 						globalOcurrence.add(currentWord);
-					
+
 					localOcurrence.addAll(globalOcurrence);
-				}	
+				}
 			}
 		}
-		
+
 		globalOcurrence.addAll(localOcurrence);
 	}
 }
