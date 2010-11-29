@@ -35,7 +35,7 @@ public class Dictionary {
 	 * Word is in the English dictionary but has not the same spelling as a
 	 * German word.
 	 */
-	public boolean contains(String s) throws IOException {
+	public boolean contains(String s) {
 		String lower = s.toLowerCase();
 		return dictionaryEn.contains(lower) && !dictionaryDe.contains(lower);
 	}

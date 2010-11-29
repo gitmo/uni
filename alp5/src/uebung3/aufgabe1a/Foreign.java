@@ -118,8 +118,9 @@ public class Foreign {
 
 	/**
 	 * @param ocurrences
+	 * @return 
 	 */
-	protected void printOcurrences(Set<String> ocurrences) {
+	protected synchronized void printOcurrences(Set<String> ocurrences) {
 		System.out.println("Ocurrences:");
 		for (String word : ocurrences)
 			System.out.println("\t" + word);

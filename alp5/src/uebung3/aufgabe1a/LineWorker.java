@@ -8,11 +8,11 @@ import java.util.TreeSet;
 import uebung2.aufgabe1.Dictionary;
 
 public class LineWorker extends Thread {
-	ArrayList<String> lines = null;
-	int start = 0, end = 0;
-	SortedSet<String> localOcurrence = new TreeSet<String>();
-	SortedSet<String> globalOcurrence = null;
-	Dictionary dictionary;
+	private ArrayList<String> lines;
+	private int start = 0, end = 0;
+	private SortedSet<String> localOcurrence = new TreeSet<String>();
+	private SortedSet<String> globalOcurrence;
+	private Dictionary dictionary;
 
 	/**
 	 * @param globalOcurrence
@@ -34,35 +34,30 @@ public class LineWorker extends Thread {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		String[] words = null;
+		String[] words;
 
 		for (int currentLine = start; currentLine < end; ++currentLine) {
 			// Split at word boundaries (Boundary matcher \b).
 			words = lines.get(currentLine).split("\\b");
 
 			for (String currentWord : words) {
-				try {
-					if (!dictionary.contains(currentWord))
-						continue;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				if (!localOcurrence.contains(currentWord)) {
-					globalOcurrence.addAll(localOcurrence);
-
-					if (!globalOcurrence.contains(currentWord))
-						globalOcurrence.add(currentWord);
-
-					localOcurrence.addAll(globalOcurrence);
+				if (localOcurrence.contains(currentWord))
+					continue;
+				else if (dictionary.contains(currentWord)) {
+					// Add word to local set and sync with global set.
+					localOcurrence.add(currentWord);
+					synchronized (globalOcurrence) {
+						globalOcurrence.addAll(localOcurrence);
+						localOcurrence.addAll(globalOcurrence);
+					}
 				}
 			}
 		}
-
-		globalOcurrence.addAll(localOcurrence);
 	}
 }
