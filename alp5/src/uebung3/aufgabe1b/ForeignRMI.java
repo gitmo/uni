@@ -1,8 +1,6 @@
 package uebung3.aufgabe1b;
 
 import java.io.FileNotFoundException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -37,7 +35,11 @@ public class ForeignRMI extends Foreign {
 			IRemoteSet<String> engine = new RemoteSet<String>();
 			globalOcurrences = (IRemoteSet<String>) UnicastRemoteObject
 					.exportObject(engine, 0);
-			registry = LocateRegistry.createRegistry(port);
+			try {
+				registry = LocateRegistry.getRegistry(port);
+			} catch(RemoteException e) {
+				registry = LocateRegistry.createRegistry(port);
+			}
 			registry.bind(name, globalOcurrences);
 			System.out.println("globalOcurrences bound");
 		} catch (Exception e) {
@@ -49,8 +51,8 @@ public class ForeignRMI extends Foreign {
 
 		int i = 0;
 		for (String hs : hostList) {
-			(threads[i++] = new Worker(hs + "-"
-					+ FilterImpl.myName, hs)).start();
+			(threads[i++] = new Worker(FilterImpl.myName, hs))
+					.start();
 		}
 
 		for (Thread thread : threads) {
@@ -66,15 +68,6 @@ public class ForeignRMI extends Foreign {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static String getRealHostName(String hostname) {
-		String realHostName = null;
-		try {
-			realHostName = InetAddress.getByName(hostname).getHostName();
-		} catch (UnknownHostException e) {
-		}
-		return realHostName;
 	}
 
 	class Worker extends Thread {

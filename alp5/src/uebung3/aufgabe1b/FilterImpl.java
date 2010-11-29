@@ -1,7 +1,5 @@
 package uebung3.aufgabe1b;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -45,27 +43,17 @@ public class FilterImpl implements IFilter {
 		return localOcurrence;
 	}
 
-	private static String getHostName() {
-		String hostname = null;
-		try {
-			hostname = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-		}
-		return hostname;
-	}
-
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.err.println("Usage: java " + myName + " host [port]");
+			System.err.println("Usage: java " + myName + " [port]");
 			System.exit(2);
-		} else if (args.length > 1) {
-			port = Integer.parseInt(args[1]);
-			System.out.println(port);
 		}
+		
+		port = Integer.parseInt(args[0]);
 
 		try {
-			String name = getHostName() + "-" + myName;
+			String name = myName;
 			System.out.println("FilterImpl.main(): " + name);
 			IFilter ci = new FilterImpl();
 			IFilter stub = (IFilter) UnicastRemoteObject.exportObject(ci, 0);
