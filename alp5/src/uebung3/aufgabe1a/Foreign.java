@@ -12,11 +12,35 @@ import java.util.TreeSet;
 
 import uebung2.aufgabe1.Dictionary;
 
+/**
+ * @author cholin, gitmo
+ * 
+ */
 public class Foreign {
+
+	/**
+	 * The default number of threads will be the number of CPU cores.
+	 */
+	private static int numThreads = Runtime.getRuntime().availableProcessors();
+
+	/**
+	 * 
+	 */
 	protected Dictionary dictionary;
+
+	/**
+	 * 
+	 */
 	protected ArrayList<String> lines;
+
+	/**
+	 * 
+	 */
 	final protected SortedSet<String> globalOcurrences;
 
+	/**
+	 * 
+	 */
 	public Foreign() {
 		globalOcurrences = Collections
 				.synchronizedSortedSet(new TreeSet<String>());
@@ -29,6 +53,11 @@ public class Foreign {
 		}
 	}
 
+	/**
+	 * @param fileName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	protected ArrayList<String> loadFile(String fileName)
 			throws FileNotFoundException {
 		String filePath = this.getClass().getResource(fileName).getPath();
@@ -46,7 +75,10 @@ public class Foreign {
 		return lines;
 	}
 
-	public void analyse(String fileName, int numberOfThreads) {
+	/**
+	 * @param fileName
+	 */
+	public void analyse(String fileName) {
 		try {
 			lines = this.loadFile(fileName);
 		} catch (FileNotFoundException e) {
@@ -54,13 +86,13 @@ public class Foreign {
 			return;
 		}
 
-		int lineRange = lines.size() / numberOfThreads;
-		int lineMod = lines.size() % numberOfThreads;
+		int lineRange = lines.size() / numThreads;
+		int lineMod = lines.size() % numThreads;
 
-		Thread[] workers = new Thread[numberOfThreads];
+		Thread[] workers = new Thread[numThreads];
 
 		int i = 0;
-		for (; i < numberOfThreads - 1; ++i)
+		for (; i < numThreads - 1; ++i)
 			workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i
 					* lineRange, i * lineRange + lineRange));
 
@@ -84,6 +116,9 @@ public class Foreign {
 		printOcurrences(globalOcurrences);
 	}
 
+	/**
+	 * @param ocurrences
+	 */
 	protected void printOcurrences(Set<String> ocurrences) {
 		System.out.println("Ocurrences:");
 		for (String word : ocurrences)
@@ -91,10 +126,22 @@ public class Foreign {
 
 	}
 
-	public static void main(String[] args) {
+	/**
+	 * @param args
+	 * @throws InterruptedException
+	 * @throws FileNotFoundException
+	 */
+	public static void main(String[] args) throws InterruptedException,
+			FileNotFoundException {
+
+		if (args.length < 1) {
+			System.err.println("Usage: java Foreign file [threads]");
+			System.exit(2);
+		} else if (args.length > 1) {
+			numThreads = Integer.parseInt(args[1]);
+		}
 
 		Foreign foreign = new Foreign();
-		foreign.analyse("test.txt", 2);
+		foreign.analyse(args[0]);
 	}
-
 }
