@@ -3,10 +3,17 @@ package uebung2.aufgabe1;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.TreeSet;
 import java.util.Set;
 
-public class Dictionary {
+public class Dictionary implements Serializable{
+	
+	/**
+	 * Super random!
+	 */
+	private static final long serialVersionUID = -1113311028500055983L;
+	
 	String dictionaryEnFile = "english.txt";
 	String dictionaryDeFile = "german.txt";
 	Set<String> dictionaryEn = new TreeSet<String>();

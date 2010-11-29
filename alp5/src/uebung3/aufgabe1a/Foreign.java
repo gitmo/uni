@@ -33,6 +33,7 @@ public class Foreign {
 	final protected SortedSet<String> globalOcurrences = Collections
 			.synchronizedSortedSet(new TreeSet<String>());
 
+	
 	/**
 	 * Create a Foreign word filter working on the specified file.
 	 * 

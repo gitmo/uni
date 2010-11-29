@@ -1,0 +1,98 @@
+WS 2010/11
+
+Netzprogrammierung
+
+
+
+Übungsblatt 3
+
+Ausgabe  16.11.                     Abgabe  30.11., 12 Uhr, in der
+Vorlesung
+
+
+
+Aufgabe 1 - Parallele Textanalyse mit Fernaufrufen  (24  Punkte)
+
+a)  (6 Punkte)  Die parallele Textanalyse aus Aufgabe 2.1 lieferte ein
+Histogramm der (englischen) Fremdwörter in einem Text.  Wenn man nur an
+diesen Fremdwörtern, nicht aber an deren Häufigkeit interessiert ist,
+ist eine etwas schnellere Analyse möglich: für jedes Wort im Text wird
+zunächst geprüft, ob es in der Menge der bereits gefundenen Fremdwörter
+enthalten ist; nur wenn das nicht der Fall ist, wird der aus Aufgabe 2.1
+bekannte Suchvorgang angestoßen. Wird die Analyse-Arbeit auf mehrere
+Threads verteilt, dann wird die Fremdwörterliste von den Threads
+gemeinsam benutzt und wird dadurch womöglich zum Engpass, insbesondere
+auch wegen der notwendigen Sperrsynchronisation.  Daher empfiehlt sich
+die folgende, leicht abgewandelte Vorgehensweise: Jeder Thread führt
+zusätzlich eine lokale Fremdwörterliste; nur wenn diese um ein neues
+Wort erweitert wird, wird das neue Wort auch in die globale
+Fremdwörterliste eingetragen; da zwischenzeitlich auch andere Threads
+dort Wörter eingetragen haben können, wird bei dieser Gelegenheit der
+gesamte aktuelle Inhalt in die lokale Liste übernommen. Entwickeln Sie
+ein Programm Foreign.jar,  das wie in Aufgabe 2.1 zwei Wortlisten
+woerter.txt und words.txt verwendet!  Als Parameter fungieren hier der
+Name der Textdatei und die gewünschte Anzahl der Threads bzw.
+Textfragmente.  Testen Sie wie bei Aufgabe 2.1!
+
+b)  (12 Punkte)  Man kann hoffen, dass sich das Programm aus a) unter
+Einsatz von Fernaufrufen in einfacher Weise auf mehrere Rechner
+verteilen lässt, und zwar derart, dass jeder Thread auf einem anderen
+Rechner ausgeführt wird.  Es stellt sich heraus, dass RMI es einem nicht
+so leicht macht wie erwartet.  Zunächst müssen wir auf Ortsabstraktion
+verzichten: das Programm wird so geändert, dass die Namen der zu
+verwendenden Rechner als Parameter angegeben werden; auf diesen Rechnern
+wir dann je ein Fragment des Textes analysiert.  Da die Runnable-Objekte
+für die Threads nicht fernerzeugt werden können, müssen entsprechende
+Filter-Objekte auf jenen Rechnern händisch eingerichtet und bei dortigen
+rmiregistry-Prozessen registriert werden. Das Hauptprogramm erzeugt die
+passende Anzahl von Threads, und jeder dieser Threads wendet sich per
+Fernaufruf an eines der Filter-Objekte.  Zu den Argumenten des Aufrufs
+gehört die vom Hauptprogramm verwaltete globale Fremdwörterliste. Testen
+Sie zunächst rein lokal, d.h. unter Verwendung eines einzigen, im
+lokalen rmiregistry verzeichneten Filter-Objekts, und anschließend unter
+Verwendung von midestens drei anderen Rechnern! Hinweise: Es empfiehlt
+sich eine Übersetzung mit Version 1.5, um nicht später Probleme wegen
+Versions-Diskrepanzen auf verschiedenen Rechnern zu bekommen. Ferner
+empfiehlt es sich, den häuslichen Rechner nur an einem lokalen, nicht an
+einem verteilten Test teilnehmen zu lassen, um nicht eventuell Probleme
+mit Firewalls zu bekommen. ! Denken Sie daran, nach Ausführung des
+Programms die rmiregistry-Prozesse und die Filter-Prozesse wieder
+abzuräumen !
+
+[c] [wahlfrei]  Das manuelle Einrichten und Abräumen von Registern und
+Filtern ist lästig.  Entwickeln Sie ein Shell-Skript, das die ganze
+Sache so gut wie möglich automatisiert!
+
+Aufgabe 2 -  ... und das Ganze nur mit Sockets?  (6 Punkte)
+Offensichtlich ist der Einsatz von RMI für die Lösung des obigen
+Textanalyse-Problems nicht gerade ein Kinderspiel.  Könnte man dann
+nicht auch gleich darauf verzichten und direkt mit Sockets arbeiten?  
+Beschreiben Sie für einen Programmierer, der sich mit Sockets auskennt,
+wie in diesem Fall vorzugehen wäre!
+
+
+
+Diskussionsaufgaben
+
+Fernaufrufe allgemein
+
+Warum Fernaufrufe? Erläutern Sie einige Facetten der
+Verteilungsabstraktion! Architektur typischer Fernaufrufsysteme? Welche
+Teile eines Fernaufrufsystems sind von der Schnittstelle des
+aufzurufenden Moduls/Klasse/Objekts abhängig, welche nicht? Beschreiben
+Sie zwei mögliche Varianten des Fernbindens für Module! Was ist ein
+Fernverweis? Welche Parametermechanismen einer Programmiersprache sind
+für Fernaufrufe geeignet, welche nicht? Ist eine
+mindestens-einmal-Semantik überhaupt sinnvoll? Java RMI
+
+Wie/wann werden Vertreter und Treiber erzeugt? Ist Fernerzeugung mit new
+möglich – warum oder warum nicht?  Gibt es andere Möglichkeiten der
+Fernerzeugung? Warum kommt RMI nicht ohne eine rmiregistry aus? Wie
+findet man eine rmiregistry? Wie steht es bei RMI mit der Zugriffs- und
+Ortsabstraktion? Welche drei Varianten sind bei der Übergabe von
+Fernaufruf-Parametern mit Verweistyp zu unterschieden? Welche
+Möglichkeiten hat mein Programm, sich einen Fernverweis zu beschaffen?
+Warum ist Serialisierung im Zusammenhang mit Fernaufrufen unverzichtbar?
+Welches Sicherheitsproblem kann durch Fernaufrufe mit Serialisierung
+entstehen? Was ist ein Multiserver? Wieviele Threads können in einem
+Objekt aktiv sein? Wofür ist Aktivierung gut und wie funktioniert sie?

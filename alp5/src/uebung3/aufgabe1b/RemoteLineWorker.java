@@ -28,7 +28,7 @@ public class RemoteLineWorker implements Runnable {
 		try {
 			String name = "filter";
 			Registry registry = LocateRegistry.getRegistry("localhost");
-			Filter filter = (Filter) registry.lookup(name);
+			FilterImpl filter = (FilterImpl) registry.lookup(name);
 			globalOcurrence.remoteAddAll(filter.filter(globalOcurrence, lines,
 					dictionary));
 		} catch (Exception e) {

@@ -2,17 +2,19 @@ package uebung3.aufgabe1b;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Set;
 import java.util.TreeSet;
 
-public class RemoteSet<T> extends TreeSet<T> implements IRemoteSet<T> {
+public class RemoteSet<T> implements IRemoteSet<T> {
 	private static final long serialVersionUID = 2601212913645664134L;
+	private TreeSet<T> set = new TreeSet<T>();
 
-	public boolean remoteAdd(T object) throws RemoteException {
-		return this.add(object);
+	public boolean remoteAddAll(Collection<T> collection) {
+		return set.addAll(collection);
 	}
 
-	public boolean remoteAddAll(Collection<T> collection)
-			throws RemoteException {
-		return this.addAll(collection);
+	@Override
+	public Set<T> remoteGetAll() throws RemoteException {
+		return set;
 	}
 }
