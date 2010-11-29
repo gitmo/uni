@@ -37,7 +37,7 @@ public class ForeignRMI extends Foreign {
 					.exportObject(engine, 0);
 			try {
 				registry = LocateRegistry.getRegistry(port);
-			} catch(RemoteException e) {
+			} catch (RemoteException e) {
 				registry = LocateRegistry.createRegistry(port);
 			}
 			registry.rebind(name, globalOcurrences);
@@ -48,11 +48,13 @@ public class ForeignRMI extends Foreign {
 		}
 
 		Thread[] threads = new Thread[hostList.size()];
+		int range = lines.size() / hostList.size();
 
 		int i = 0;
 		for (String hs : hostList) {
-			(threads[i++] = new Worker(FilterImpl.myName, hs))
-					.start();
+			ArrayList<String> subList = new ArrayList<String>(lines.subList(i
+					* range, (i + 1) * range));
+			(threads[i++] = new Worker(FilterImpl.myName, hs, subList)).start();
 		}
 
 		for (Thread thread : threads) {
@@ -73,10 +75,12 @@ public class ForeignRMI extends Foreign {
 	class Worker extends Thread {
 
 		private String name, hostName;
+		private ArrayList<String> lines;
 
-		public Worker(String name, String hostname) {
+		public Worker(String name, String hostname, ArrayList<String> lines) {
 			this.name = name;
 			this.hostName = hostname;
+			this.lines = lines;
 		}
 
 		@Override
