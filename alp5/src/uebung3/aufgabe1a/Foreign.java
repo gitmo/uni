@@ -23,23 +23,32 @@ public class Foreign {
 	private static int numThreads = Runtime.getRuntime().availableProcessors();
 
 	/**
-	 * 
+	 * Memory representation of the text file to be filtered.
 	 */
 	protected ArrayList<String> lines;
 
 	/**
-	 * 
+	 * Global set of all foreign words found by the worker threads.
 	 */
 	final protected SortedSet<String> globalOcurrences = Collections
 			.synchronizedSortedSet(new TreeSet<String>());
 
+	/**
+	 * Create a Foreign word filter working on the specified file.
+	 * 
+	 * @param fileName
+	 * @throws FileNotFoundException
+	 */
 	public Foreign(String fileName) throws FileNotFoundException {
-		lines = this.loadFile(fileName);
+		lines = loadFile(fileName);
 	}
 
 	/**
+	 * Loads a text file line by line into an ArrayList.
+	 * 
 	 * @param fileName
-	 * @return
+	 * @return An ArrayList which elements are the lines of text.
+	 * 
 	 * @throws FileNotFoundException
 	 */
 	protected ArrayList<String> loadFile(String fileName)
@@ -75,7 +84,9 @@ public class Foreign {
 	}
 
 	/**
-	 * @param fileName
+	 * Divide the text file up into equal chunks and filter them concurrently
+	 * while maintaining a global list of words found so far. That list is
+	 * synchronized by each worker thread.
 	 */
 	public void analyse() {
 
@@ -106,20 +117,16 @@ public class Foreign {
 	}
 
 	/**
-	 * @param ocurrences
-	 * @return
+	 * Shows the global list of all the foreign words found so far.
 	 */
 	protected synchronized void printOcurrences(Set<String> ocurrences) {
 		System.out.println("Ocurrences:");
 		for (String word : ocurrences)
 			System.out.println("\t" + word);
-
 	}
 
 	/**
-	 * @param args
-	 * @throws InterruptedException
-	 * @throws FileNotFoundException
+	 * Test program.
 	 */
 	public static void main(String[] args) {
 
