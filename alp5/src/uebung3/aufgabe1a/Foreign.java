@@ -89,14 +89,14 @@ public class Foreign {
 		int lineRange = lines.size() / numThreads;
 		int lineMod = lines.size() % numThreads;
 
-		LineThread[] workers = new LineThread[numThreads];
+		LineWorker[] workers = new LineWorker[numThreads];
 
 		int i = 0;
 		for (; i < numThreads - 1; ++i)
-			workers[i] = new LineThread(globalOcurrences, lines, i
+			workers[i] = new LineWorker(globalOcurrences, lines, i
 					* lineRange, i * lineRange + lineRange);
 
-		workers[i] = new LineThread(globalOcurrences, lines, i
+		workers[i] = new LineWorker(globalOcurrences, lines, i
 				* lineRange, i * lineRange + lineRange + lineMod);
 
 		for (Thread thread : workers)
