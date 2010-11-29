@@ -69,7 +69,7 @@ public class FilterImpl implements IFilter {
 			System.out.println("FilterImpl.main(): " + name);
 			IFilter ci = new FilterImpl();
 			IFilter stub = (IFilter) UnicastRemoteObject.exportObject(ci, 0);
-			Registry reg = LocateRegistry.getRegistry(args[0], port);
+			Registry reg = LocateRegistry.createRegistry(port);
 			reg.rebind(name, stub);
 			System.out.println("FilterImpl.main() Engine bound!");
 		} catch (Exception e) {

@@ -50,7 +50,7 @@ public class ForeignRMI extends Foreign {
 		int i = 0;
 		for (String hs : hostList) {
 			(threads[i++] = new Worker(hs + "-"
-					+ FilterImpl.myName)).start();
+					+ FilterImpl.myName, hs)).start();
 		}
 
 		for (Thread thread : threads) {
@@ -85,10 +85,11 @@ public class ForeignRMI extends Foreign {
 
 	class Worker extends Thread {
 
-		private String name;
+		private String name, hostName;
 
-		public Worker(String name) {
+		public Worker(String name, String hostname) {
 			this.name = name;
+			this.hostName = hostname;
 		}
 
 		@Override
@@ -97,7 +98,7 @@ public class ForeignRMI extends Foreign {
 				String name = this.name;
 				System.out.println(name);
 				System.out.println(port);
-				Registry reg = LocateRegistry.getRegistry(port);
+				Registry reg = LocateRegistry.getRegistry(hostName, port);
 				IFilter filter = (IFilter) reg.lookup(name);
 
 				filter.filter(globalOcurrences, lines, dictionary);
