@@ -7,14 +7,20 @@ import java.util.TreeSet;
 
 import uebung2.aufgabe1.Dictionary;
 
-public class LineWorker implements Runnable {
+public class LineThread extends Thread {
 	ArrayList<String> lines = null;
 	int start = 0, end = 0;
 	SortedSet<String> localOcurrence = new TreeSet<String>();
 	SortedSet<String> globalOcurrence = null;
 	Dictionary dictionary;
 
-	public LineWorker(SortedSet<String> globalOcurrence,
+	/**
+	 * @param globalOcurrence
+	 * @param lines
+	 * @param start
+	 * @param end
+	 */
+	public LineThread(SortedSet<String> globalOcurrence,
 			ArrayList<String> lines, int start, int end) {
 		this.lines = lines;
 		this.start = start;
@@ -28,6 +34,9 @@ public class LineWorker implements Runnable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		String[] words = null;
 
