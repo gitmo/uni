@@ -102,8 +102,6 @@ public class ForeignRMI extends Foreign {
 				IFilter filter = (IFilter) reg.lookup(name);
 
 				filter.filter(globalOcurrences, lines, dictionary);
-
-				reg.unbind(name);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
