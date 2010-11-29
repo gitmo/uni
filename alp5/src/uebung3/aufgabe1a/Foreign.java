@@ -53,8 +53,9 @@ public class Foreign {
 	 */
 	protected ArrayList<String> loadFile(String fileName)
 			throws FileNotFoundException {
-		String filePath = resourceLoc(fileName);
-		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		// Resolve resource given by file name to an absolute path if possible.
+		String path = resourceLoc(fileName);
+		BufferedReader reader = new BufferedReader(new FileReader(path));
 		ArrayList<String> lines = new ArrayList<String>();
 
 		String nextLine;
