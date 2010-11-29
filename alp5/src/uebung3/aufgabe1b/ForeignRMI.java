@@ -16,6 +16,8 @@ import uebung3.aufgabe1a.Foreign;
 public class ForeignRMI extends Foreign {
 	private static String myName = ForeignRMI.class.getName();
 
+	private static int port;
+
 	private List<String> hostList;
 
 	public ForeignRMI(String fileName, List<String> hostList)
@@ -35,7 +37,7 @@ public class ForeignRMI extends Foreign {
 			IRemoteSet<String> engine = new RemoteSet<String>();
 			globalOcurrences = (IRemoteSet<String>) UnicastRemoteObject
 					.exportObject(engine, 0);
-			registry = LocateRegistry.getRegistry();
+			registry = LocateRegistry.getRegistry(port);
 			registry.rebind(name, globalOcurrences);
 			System.out.println("globalOcurrences bound");
 		} catch (Exception e) {
@@ -47,7 +49,7 @@ public class ForeignRMI extends Foreign {
 
 		int i = 0;
 		for (String hs : hostList) {
-			(threads[i++] = new Worker(getRealHostName(hs) + "-"
+			(threads[i++] = new Worker(hs + "-"
 					+ FilterImpl.myName)).start();
 		}
 
@@ -58,7 +60,7 @@ public class ForeignRMI extends Foreign {
 				e.printStackTrace();
 			}
 		}
-		
+
 		try {
 			printOcurrences(globalOcurrences.remoteGetAll());
 		} catch (RemoteException e) {
@@ -94,7 +96,8 @@ public class ForeignRMI extends Foreign {
 			try {
 				String name = this.name;
 				System.out.println(name);
-				Registry reg = LocateRegistry.getRegistry();
+				System.out.println(port);
+				Registry reg = LocateRegistry.getRegistry(port);
 				IFilter filter = (IFilter) reg.lookup(name);
 
 				filter.filter(globalOcurrences, lines, dictionary);
@@ -108,13 +111,14 @@ public class ForeignRMI extends Foreign {
 
 	public static void main(String[] args) {
 
-		if (args.length < 1) {
-			System.err.println("Usage: java " + myName + " host [host...]");
+		if (args.length < 2) {
+			System.err.println("Usage: java " + myName + "port host [host...]");
 			System.exit(2);
 		}
+		port = Integer.parseInt(args[0]);
 
 		List<String> hostList = new ArrayList<String>();
-		for (int i = 0; i < args.length; i++) {
+		for (int i = 1; i < args.length; i++) {
 			hostList.add(args[i]);
 		}
 

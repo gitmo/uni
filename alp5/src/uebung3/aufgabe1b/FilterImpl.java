@@ -16,6 +16,7 @@ import uebung2.aufgabe1.Dictionary;
 public class FilterImpl implements IFilter {
 	SortedSet<String> localOcurrence = new TreeSet<String>();
 	public static final String SALT = "TEAM.AWESOME.";
+	public static int port = 1099;
 	public static String myName = SALT + FilterImpl.class.getName();
 
 	public Set<String> filter(IRemoteSet<String> globalOcurrence,
@@ -56,8 +57,11 @@ public class FilterImpl implements IFilter {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.err.println("Usage: java " + myName + " host");
+			System.err.println("Usage: java " + myName + " host [port]");
 			System.exit(2);
+		} else if (args.length > 1) {
+			port = Integer.parseInt(args[1]);
+			System.out.println(port);
 		}
 
 		try {
@@ -65,7 +69,7 @@ public class FilterImpl implements IFilter {
 			System.out.println("FilterImpl.main(): " + name);
 			IFilter ci = new FilterImpl();
 			IFilter stub = (IFilter) UnicastRemoteObject.exportObject(ci, 0);
-			Registry reg = LocateRegistry.getRegistry(args[0]);
+			Registry reg = LocateRegistry.getRegistry(args[0], port);
 			reg.rebind(name, stub);
 			System.out.println("FilterImpl.main() Engine bound!");
 		} catch (Exception e) {
