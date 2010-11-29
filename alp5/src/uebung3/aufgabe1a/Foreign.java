@@ -33,13 +33,8 @@ public class Foreign {
 	final protected SortedSet<String> globalOcurrences = Collections
 			.synchronizedSortedSet(new TreeSet<String>());
 
-	public Foreign(String fileName) {
-		try {
-			lines = this.loadFile(fileName);
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found");
-			return;
-		}
+	public Foreign(String fileName) throws FileNotFoundException {
+		lines = this.loadFile(fileName);
 	}
 
 	/**
@@ -84,30 +79,26 @@ public class Foreign {
 	 */
 	public void analyse() {
 
-		int lineRange = lines.size() / numThreads;
-		int lineMod = lines.size() % numThreads;
-
 		LineWorker[] workers = new LineWorker[numThreads];
 
-		int i = 0;
-		for (; i < numThreads - 1; ++i)
-			workers[i] = new LineWorker(globalOcurrences, lines, i * lineRange,
-					i * lineRange + lineRange);
+		// Divide in equally large chunks of text by the number of threads.
+		// Add 1 so there's no rest.
+		int range = lines.size() / numThreads + 1;
 
-		workers[i] = new LineWorker(globalOcurrences, lines, i * lineRange, i
-				* lineRange + lineRange + lineMod);
+		// Divide and conquer
+		for (int i = 0; i < numThreads; ++i) {
+			// LineWorker adjusts end index if we're at the end of file.
+			workers[i] = new LineWorker(globalOcurrences, lines, i * range,
+					(i + 1) * range);
+			workers[i].start();
+		}
 
-		for (Thread thread : workers)
-			if (thread != null)
-				thread.start();
-
+		// Wait for all threads to finish
 		for (Thread thread : workers) {
-			if (thread != null) {
-				try {
-					thread.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -130,8 +121,7 @@ public class Foreign {
 	 * @throws InterruptedException
 	 * @throws FileNotFoundException
 	 */
-	public static void main(String[] args) throws InterruptedException,
-			FileNotFoundException {
+	public static void main(String[] args) {
 
 		if (args.length < 1) {
 			System.err.println("Usage: java Foreign file [threads]");
@@ -140,7 +130,14 @@ public class Foreign {
 			numThreads = Integer.parseInt(args[1]);
 		}
 
-		Foreign foreign = new Foreign(args[0]);
-		foreign.analyse();
+		Foreign foreign;
+		try {
+			foreign = new Foreign(args[0]);
+			foreign.analyse();
+		} catch (FileNotFoundException e) {
+			System.err
+					.printf("Foreign: %s: No such file or directory", args[0]);
+			System.exit(1);
+		}
 	}
 }

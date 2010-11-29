@@ -26,7 +26,8 @@ public class LineWorker extends Thread {
 			ArrayList<String> lines, int start, int end) {
 		this.lines = lines;
 		this.start = start;
-		this.end = end;
+		// Truncate end index to the actual end if end was to big.
+		this.end = Math.min(end, lines.size());
 		this.localOcurrence = new TreeSet<String>();
 		this.globalOcurrence = globalOcurrence;
 	}
