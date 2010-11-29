@@ -66,12 +66,6 @@ public class ForeignRMI extends Foreign {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-
-		try {
-			registry.unbind(name);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static String getRealHostName(String hostname) {
