@@ -41,7 +41,8 @@ public class LineWorker extends Thread {
 		String[] words = null;
 
 		for (int currentLine = start; currentLine < end; ++currentLine) {
-			words = lines.get(currentLine).split("\\s");
+			// Split at word boundaries (Boundary matcher \b).
+			words = lines.get(currentLine).split("\\b");
 
 			for (String currentWord : words) {
 				try {
