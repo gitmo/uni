@@ -10,8 +10,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import uebung2.aufgabe1.Dictionary;
-
 /**
  * @author cholin, gitmo
  * 
@@ -22,11 +20,6 @@ public class Foreign {
 	 * The default number of threads will be the number of CPU cores.
 	 */
 	private static int numThreads = Runtime.getRuntime().availableProcessors();
-
-	/**
-	 * 
-	 */
-	private static Dictionary dictionary = new Dictionary();
 
 	/**
 	 * 
