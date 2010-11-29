@@ -52,28 +52,24 @@ public class Foreign {
 		int lineRange = lines.size() / numberOfThreads;
 		int lineMod = lines.size()%numberOfThreads;
 		
-		Thread[] workers;
-		if(lineMod == 0)
-			workers = new Thread[lineRange];
-		else
-			workers = new Thread[lineRange+1];
-			
+		Thread[] workers = new Thread[numberOfThreads];
+		
 		int i = 0;
-		for(; i < lineRange; ++i)
+		for(; i < numberOfThreads-1; ++i)
 			workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i * lineRange, i*lineRange + lineRange));
 		
-		if(lineMod != 0)
-			workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i*lineRange, lines.size()));
+		workers[i] = new Thread(new LineWorker(globalOcurrences, lines, i * lineRange, i*lineRange + lineRange + lineMod));
 		
-		
-		for(Thread thread : workers) {
-			thread.start();
-		}
+		for(Thread thread : workers)
+			if(thread !=  null)
+				thread.start();
 		
 		for(Thread thread : workers) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) { e.printStackTrace();	}
+			if(thread !=  null) {
+				try {
+					thread.join();
+				} catch (InterruptedException e) { e.printStackTrace();	}
+			}
 		}
 		
 		printOcurrences(globalOcurrences);
@@ -88,8 +84,8 @@ public class Foreign {
 	
 
 	public static void main(String[] args) {
-		Foreign foreign = new Foreign();
 		
+		Foreign foreign = new Foreign();
 		foreign.analyse("test.txt", 2);
 	}
 
