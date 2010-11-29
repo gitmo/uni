@@ -6,6 +6,10 @@ import java.util.TreeSet;
 
 import uebung2.aufgabe1.Dictionary;
 
+/**
+ * @author cholin, gitmo
+ * 
+ */
 public class LineWorker extends Thread {
 	private ArrayList<String> lines;
 	private int start, end;

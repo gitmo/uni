@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
@@ -29,14 +30,16 @@ public class Foreign {
 	/**
 	 * 
 	 */
-	final protected SortedSet<String> globalOcurrences;
+	final protected SortedSet<String> globalOcurrences = Collections
+			.synchronizedSortedSet(new TreeSet<String>());
 
-	/**
-	 * 
-	 */
-	public Foreign() {
-		globalOcurrences = Collections
-				.synchronizedSortedSet(new TreeSet<String>());
+	public Foreign(String fileName) {
+		try {
+			lines = this.loadFile(fileName);
+		} catch (FileNotFoundException e) {
+			System.err.println("File not found");
+			return;
+		}
 	}
 
 	/**
@@ -46,7 +49,7 @@ public class Foreign {
 	 */
 	protected ArrayList<String> loadFile(String fileName)
 			throws FileNotFoundException {
-		String filePath = this.getClass().getResource(fileName).getPath();
+		String filePath = resourceLoc(fileName);
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		ArrayList<String> lines = new ArrayList<String>();
 
@@ -62,15 +65,24 @@ public class Foreign {
 	}
 
 	/**
+	 * Calls java.lang.Class.getResource() to get the absolute path to the given
+	 * resource file name. If its not found it simply returns the file name
+	 * again (which might already be an absolute path).
+	 * 
+	 * @param file
+	 *            Name of the resource file.
+	 * @return A String of the absolute path of file or just file again if not
+	 *         found.
+	 */
+	private String resourceLoc(String file) {
+		URL url = this.getClass().getResource(file);
+		return url == null ? file : url.getPath();
+	}
+
+	/**
 	 * @param fileName
 	 */
-	public void analyse(String fileName) {
-		try {
-			lines = this.loadFile(fileName);
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found");
-			return;
-		}
+	public void analyse() {
 
 		int lineRange = lines.size() / numThreads;
 		int lineMod = lines.size() % numThreads;
@@ -128,7 +140,7 @@ public class Foreign {
 			numThreads = Integer.parseInt(args[1]);
 		}
 
-		Foreign foreign = new Foreign();
-		foreign.analyse(args[0]);
+		Foreign foreign = new Foreign(args[0]);
+		foreign.analyse();
 	}
 }
