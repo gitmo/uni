@@ -40,7 +40,7 @@ public class ForeignRMI extends Foreign {
 			} catch(RemoteException e) {
 				registry = LocateRegistry.createRegistry(port);
 			}
-			registry.bind(name, globalOcurrences);
+			registry.rebind(name, globalOcurrences);
 			System.out.println("globalOcurrences bound");
 		} catch (Exception e) {
 			System.err.println("globalOcurrences exception:");
