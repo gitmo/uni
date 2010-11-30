@@ -1,4 +1,59 @@
 \subsection*{a) Foreign}
 
-\lstinputlisting[caption=Foreign.java,firstnumber=1,linerange=1-999]
+Das Programm Foreign erhält beim Aufruf zwei Kommandozeilenargumente: die zu filternde Textdatei und optional die Anzahl der Threads (default sind die Anzahl der Prozessoren im System.
+
+\begin{verbatim}
+.../bin$ java uebung3.aufgabe1a.Foreign Blatt3.txt 2
+Ocurrences:
+	Filter
+	Firewalls
+	Foreign
+	Fragment
+	Module
+	Sockets
+	Thread
+	Threads
+	Versions
+	jar
+	words
+\end{verbatim}
+
+\subsubsection*{Foreign.java}
+
+Diese Klasse hat zwei wesentliche Methoden:
+\begin{enumerate}
+
+\item \texttt{ArrayList<String> loadFile(String fileName}
+Lädt die Textdatei in das Klassenattribut \texttt{ArrayList<String> lines;}
+Diese Methode wird einmal beim Erzeugen eines Foreign-Objekts über den Konstruktur gestartet.
+
+\item \texttt{void analyse()}
+Hier passiert die eigentliche Arbeit. Ein Array von LineWorker-Threads wird mit der gewünschten Anzahl von $n$ Threads erzeugt. Die Textdatei wird nun Zeilenweise in $n$ gleichgroße Fragmente zerlegt und dem LineWorker-Konstruktur der erste und letzte Zeilenindex beim Erzeugen übergeben. Jeder Thread wird sofort gestartet. Nachdem alle Threads terminiert sind gibt \texttt{printOcurrences(globalOcurrences);} die global geführte Menge (Set) aller Fremdwörter auf der Konsole aus.
+
+Das globale Set ist als \texttt{synchronizedSortedSet} in deklariert um Nebenläufigkeitszugriffe abzusichern:
+
+\texttt{SortedSet<String> globalOcurrences = Collections
+			.synchronizedSortedSet(new TreeSet<String>());}
+\\
+
+\lstinputlisting[caption=Foreign.java,firstnumber=93,linerange=93-119]
 {../../src/uebung3/aufgabe1a/Foreign.java}
+
+\end{enumerate}
+
+\subsubsection*{LineWorker.java}
+
+Die LineWorker-Threads besitzen eine lokale Menge (Set) von Fremdwörter die zu einem bestimmten Zeitpunkt gefunden wurde. Außerdem wird eine Referenz auf das globale Set mitgeführt mit dem neue Funde jeweils mit allen anderen Threads synchronisiert werden können.
+
+\texttt{SortedSet<String> localOcurrence, globalOcurrence;}
+
+Alle Threads arbeiten auf einen disjunkten Teilmenge von Zeilen, die über einen Start- und Endindex übergeben worden sind. 
+
+Wird der Thread ausgeführt erledigt \texttt{void run()} das eigentliche Filtern.
+Das Klassenattribut \texttt{private static Dictionary dictionary = new Dictionary()} stellt das dazu benötigte Wörterbuch bereit und stammt der Übung 2.
+
+Die Zeilen werden in Wörter zerlegt. Ist das Wort ein bekanntes Fremdwort kann es übersprungen werden, sonst wird in Dictionary nachgeschlagen. Handelt es sich um ein neues Fremdwort wird es dem lokalen Set hinzugefügt und anschließend wird mit der globalen Set synchronisiert.
+
+\lstinputlisting[caption=LineWorker.java,firstnumber=66,linerange=66-86]
+{../../src/uebung3/aufgabe1a/LineWorker.java}
+
