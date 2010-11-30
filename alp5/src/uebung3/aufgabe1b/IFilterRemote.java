@@ -7,7 +7,7 @@ import java.util.Set;
 
 import uebung2.aufgabe1.Dictionary;
 
-public interface IFilter extends Remote{
+public interface IFilterRemote extends Remote{
 	public Set<String> filter(IRemoteSet<String> globalOcurrence,
 			List<String> lines, Dictionary dictionary) throws RemoteException;
 }

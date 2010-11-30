@@ -28,6 +28,7 @@ public class ForeignRMI extends Foreign {
 
 	private Dictionary dictionary = new Dictionary();
 
+	@SuppressWarnings("unchecked")
 	public void analyse() {
 		Registry registry = null;
 		String name = myName + "-globalSet";
@@ -48,13 +49,14 @@ public class ForeignRMI extends Foreign {
 		}
 
 		Thread[] threads = new Thread[hostList.size()];
-		int range = lines.size() / hostList.size();
+		int range = lines.size() / hostList.size() + 1;
 
 		int i = 0;
 		for (String hs : hostList) {
 			ArrayList<String> subList = new ArrayList<String>(lines.subList(i
-					* range, (i + 1) * range));
-			(threads[i++] = new Worker(FilterImpl.myName, hs, subList)).start();
+					* range, Math.min(lines.size(), (i + 1) * range)));
+			(threads[i++] = new Worker(FilterRemote.myName, hs, subList))
+					.start();
 		}
 
 		for (Thread thread : threads) {
@@ -74,12 +76,12 @@ public class ForeignRMI extends Foreign {
 
 	class Worker extends Thread {
 
-		private String name, hostName;
+		private String name, hostname;
 		private ArrayList<String> lines;
 
 		public Worker(String name, String hostname, ArrayList<String> lines) {
 			this.name = name;
-			this.hostName = hostname;
+			this.hostname = hostname;
 			this.lines = lines;
 		}
 
@@ -89,8 +91,8 @@ public class ForeignRMI extends Foreign {
 				String name = this.name;
 				System.out.println(name);
 				System.out.println(port);
-				Registry reg = LocateRegistry.getRegistry(hostName, port);
-				IFilter filter = (IFilter) reg.lookup(name);
+				Registry reg = LocateRegistry.getRegistry(hostname, port);
+				IFilterRemote filter = (IFilterRemote) reg.lookup(name);
 
 				filter.filter(globalOcurrences, lines, dictionary);
 			} catch (Exception e) {
@@ -101,20 +103,21 @@ public class ForeignRMI extends Foreign {
 
 	public static void main(String[] args) {
 
-		if (args.length < 2) {
-			System.err.println("Usage: java " + myName + "port host [host...]");
+		if (args.length < 3) {
+			System.err.println("Usage: java " + myName
+					+ "file port host [host...]");
 			System.exit(2);
 		}
-		port = Integer.parseInt(args[0]);
+		port = Integer.parseInt(args[1]);
 
 		List<String> hostList = new ArrayList<String>();
-		for (int i = 1; i < args.length; i++) {
+		for (int i = 2; i < args.length; i++) {
 			hostList.add(args[i]);
 		}
 
 		ForeignRMI remoteForeign;
 		try {
-			remoteForeign = new ForeignRMI("Blatt3.html.txt", hostList);
+			remoteForeign = new ForeignRMI(args[0], hostList);
 			remoteForeign.analyse();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

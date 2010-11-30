@@ -11,11 +11,11 @@ import java.util.TreeSet;
 
 import uebung2.aufgabe1.Dictionary;
 
-public class FilterImpl implements IFilter {
+public class FilterRemote implements IFilterRemote {
 	SortedSet<String> localOcurrence = new TreeSet<String>();
 	public static final String SALT = "TEAM.AWESOME.";
+	public static String myName = SALT + FilterRemote.class.getName();
 	public static int port = 1099;
-	public static String myName = SALT + FilterImpl.class.getName();
 
 	public Set<String> filter(IRemoteSet<String> globalOcurrence,
 			List<String> lines, Dictionary dictionary) {
@@ -46,17 +46,19 @@ public class FilterImpl implements IFilter {
 	public static void main(String[] args) {
 
 		if (args.length < 1) {
-			System.err.println("Usage: java " + myName + " [port]");
+			System.err.println("Usage: java " + FilterRemote.class.getName()
+					+ " [port]");
 			System.exit(2);
 		}
-		
+
 		port = Integer.parseInt(args[0]);
 
 		try {
 			String name = myName;
 			System.out.println("FilterImpl.main(): " + name);
-			IFilter ci = new FilterImpl();
-			IFilter stub = (IFilter) UnicastRemoteObject.exportObject(ci, 0);
+			IFilterRemote ci = new FilterRemote();
+			IFilterRemote stub = (IFilterRemote) UnicastRemoteObject
+					.exportObject(ci, 0);
 			Registry reg = LocateRegistry.createRegistry(port);
 			reg.rebind(name, stub);
 			System.out.println("FilterImpl.main() Engine bound!");
