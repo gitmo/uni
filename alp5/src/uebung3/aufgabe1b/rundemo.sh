@@ -4,6 +4,7 @@
 #
 # Invocation:
 #
+#   $ ant clean build   # on remote file system
 #   $ USER="xxxx" ./rundemo.sh Blatt3.txt andorra nawab peking shanghai
 #
 
