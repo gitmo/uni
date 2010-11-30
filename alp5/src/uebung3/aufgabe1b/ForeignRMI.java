@@ -105,7 +105,7 @@ public class ForeignRMI extends Foreign {
 
 		if (args.length < 3) {
 			System.err.println("Usage: java " + myName
-					+ "file port host [host...]");
+					+ " file port host [host...]");
 			System.exit(2);
 		}
 		port = Integer.parseInt(args[1]);

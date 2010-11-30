@@ -4,7 +4,7 @@
 #
 # Invocation:
 #
-#   $ USER="xxxx" ./rundemo.sh andorra nawab peking shanghai
+#   $ USER="xxxx" ./rundemo.sh Blatt3.txt andorra nawab peking shanghai
 #
 
 PORT=1337
@@ -24,8 +24,8 @@ export CLASSPATH=git/uni/alp5/bin:$CLASSPATH
 package=uebung3.aufgabe1b
 
 # Check for arguments
-if [ $# -lt 2 ]; then
-  echo "Usage:  $(basename "$0") ForeignHost FilterHost [FilterHost ...]" >&2
+if [ $# -lt 3 ]; then
+  echo "Usage:  $(basename "$0") TxtFile ForeignHost FilterHost [FilterHost ...]" >&2
   exit 2
 fi
 
@@ -37,4 +37,4 @@ for host in $*; do
   ssh -t "$USER@$host$SUFFIX" java -cp "$CLASSPATH" $package.FilterRemote $PORT
 done
 
-ssh -t "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $PORT $*
+ssh -t "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
