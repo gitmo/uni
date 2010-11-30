@@ -1,5 +1,51 @@
 \subsection*{c) Build 'n' Run}
+
+\subsubsection*{ant}
+
+\begin{verbatim}
+user@andorra:~/.../src/uebung3/aufgabe1b$ ant clean build
+Buildfile: build.xml
+...
+BUILD SUCCESSFUL
+Total time: 1 second
+\end{verbatim}
+
 \subsubsection*{rundemo.sh}
+
+\begin{verbatim}
+user@andorra:~/.../src/uebung3/aufgabe1b$ ./rundemo.sh Blatt3.txt andorra nawab peking shanghai
+
+Setting up the remote filter
+============================
+FilterImpl.main() Engine bound on peking:61337.
+FilterImpl.main() Engine bound on shanghai:61337.
+FilterImpl.main() Engine bound on nawab:61337.
+
+Starting ForeignRMI (Ctrl-C to quit!)
+=====================================
+globalOcurrences bound
+ForeignRMI.Worker.run() nawab:61337
+ForeignRMI.Worker.run() shanghai:61337
+ForeignRMI.Worker.run() peking:61337
+Ocurrences:
+	Filter
+	Firewalls
+	Foreign
+	Fragment
+	Module
+	Sockets
+	Thread
+	Threads
+	Versions
+	jar
+	words
+^C
+===================================
+Cleaning java processes on hosts...
+done
+
+\end{verbatim}
+
 
 \lstinputlisting[caption=rundemo.sh,firstnumber=1,linerange=1-999]
 {../../src/uebung3/aufgabe1b/rundemo.sh}
