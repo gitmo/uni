@@ -34,16 +34,22 @@ shift
 alpha=$1
 shift
 
-set -x
+echo
+echo "Setting up the remote filter"
+echo "============================"
 for host in $*; do
   ssh -qf "$USER@$host$SUFFIX" "killall -u $USER java 2>/dev/null; \
     java -cp "$CLASSPATH" $package.FilterRemote $PORT"
 done
+sleep 5
 
-sleep 2
+echo
+echo "Starting ForeignRMI (Ctrl-C to quit!)"
+echo "====================================="
 ssh -qt "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
 
-echo Cleaning java processes on hosts
+echo
+echo "Cleaning java processes on hosts"
 for host in $*; do
   ssh -qt "$USER@$host$SUFFIX" 'killall -u $USER java'
 done

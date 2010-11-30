@@ -1,5 +1,6 @@
 package uebung3.aufgabe1b;
 
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -60,8 +61,8 @@ public class FilterRemote implements IFilterRemote {
 					.exportObject(ci, 0);
 			Registry reg = LocateRegistry.createRegistry(port);
 			reg.rebind(name, stub);
-			System.out
-					.println("FilterImpl.main() Engine bound on port " + port);
+			System.out.printf("FilterImpl.main() Engine bound on %s:%d.\n",
+					InetAddress.getLocalHost().getHostName(), port);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
