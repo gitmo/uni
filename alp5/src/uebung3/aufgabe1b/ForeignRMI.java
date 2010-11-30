@@ -37,9 +37,9 @@ public class ForeignRMI extends Foreign {
 			globalOcurrences = (IRemoteSet<String>) UnicastRemoteObject
 					.exportObject(engine, 0);
 			try {
-				registry = LocateRegistry.getRegistry(port);
-			} catch (RemoteException e) {
 				registry = LocateRegistry.createRegistry(port);
+			} catch (RemoteException e) {
+				registry = LocateRegistry.getRegistry(port);
 			}
 			registry.rebind(name, globalOcurrences);
 			System.out.println("globalOcurrences bound");

@@ -7,7 +7,7 @@
 #   $ USER="xxxx" ./rundemo.sh Blatt3.txt andorra nawab peking shanghai
 #
 
-PORT=1337
+PORT=61337
 SUFFIX=".imp.fu-berlin.de"
 
 # Change to the same directory this script is in
@@ -29,12 +29,17 @@ if [ $# -lt 3 ]; then
   exit 2
 fi
 
+FILE=$1
+shift
 alpha=$1
 shift
 
 set -x
 for host in $*; do
-  ssh -t "$USER@$host$SUFFIX" java -cp "$CLASSPATH" $package.FilterRemote $PORT
+  ssh -t "$USER@$host$SUFFIX" java -cp "$CLASSPATH" $package.FilterRemote $PORT &
+  PIDS="$PIDS $!"
+  sleep 1
 done
 
 ssh -t "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
+kill $PIDS
