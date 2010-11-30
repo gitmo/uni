@@ -1,8 +1,8 @@
 \subsection*{b) Foreign RMI}
 
-Die \textit{remote method invocation}-Technik ist nur in Kombination einer sogenannten \textit{rmiregistry} einsetzbar.
+Die \textit{remote method invocation}-Technik ist nur in Kombination mit einer sogenannten \textit{rmiregistry} einsetzbar.
 Diese verwaltet die instanzierten Objekte und ermöglicht so Fernaufrufe.
-Da leider das Speichern von Instanzen in einer anderen \textit{rmiregistry} außer \textit{localhost}
+Da leider das Speichern von Instanzen in einer anderen \textit{rmiregistry} außer der Lokalen 
 nicht möglich ist, müssen wir mehrere Registries verwenden.
 In unserem Falle sind dies die Registries auf dem jeweiligen Computer auf dem unsere Filter-Instanzen laufen,
 sowie diejenige, auf der wir unser ForeignRMI-Klasse starten.
