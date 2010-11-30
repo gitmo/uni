@@ -89,8 +89,8 @@ public class ForeignRMI extends Foreign {
 		public void run() {
 			try {
 				String name = this.name;
-				System.out.println(name);
-				System.out.println(port);
+				System.out.printf("ForeignRMI.Worker.run() %s:%d\n", hostname,
+						port);
 				Registry reg = LocateRegistry.getRegistry(hostname, port);
 				IFilterRemote filter = (IFilterRemote) reg.lookup(name);
 

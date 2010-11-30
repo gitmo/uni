@@ -55,13 +55,13 @@ public class FilterRemote implements IFilterRemote {
 
 		try {
 			String name = myName;
-			System.out.println("FilterImpl.main(): " + name);
 			IFilterRemote ci = new FilterRemote();
 			IFilterRemote stub = (IFilterRemote) UnicastRemoteObject
 					.exportObject(ci, 0);
 			Registry reg = LocateRegistry.createRegistry(port);
 			reg.rebind(name, stub);
-			System.out.println("FilterImpl.main() Engine bound!");
+			System.out
+					.println("FilterImpl.main() Engine bound on port " + port);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

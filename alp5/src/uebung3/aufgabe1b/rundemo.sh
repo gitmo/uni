@@ -36,10 +36,15 @@ shift
 
 set -x
 for host in $*; do
-  ssh -t "$USER@$host$SUFFIX" java -cp "$CLASSPATH" $package.FilterRemote $PORT &
-  PIDS="$PIDS $!"
-  sleep 1
+  ssh -qf "$USER@$host$SUFFIX" "killall -u $USER java 2>/dev/null; \
+    java -cp "$CLASSPATH" $package.FilterRemote $PORT"
 done
 
-ssh -t "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
-kill $PIDS
+sleep 2
+ssh -qt "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
+
+echo Cleaning java processes on hosts
+for host in $*; do
+  ssh -qt "$USER@$host$SUFFIX" 'killall -u $USER java'
+done
+
