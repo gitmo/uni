@@ -49,8 +49,10 @@ echo "====================================="
 ssh -qt "$USER@$alpha$SUFFIX" java -cp "$CLASSPATH" $package.ForeignRMI $FILE $PORT $*
 
 echo
-echo "Cleaning java processes on hosts"
+echo "==================================="
+echo "Cleaning java processes on hosts..."
 for host in $*; do
-  ssh -qt "$USER@$host$SUFFIX" 'killall -u $USER java'
+  ssh -qf "$USER@$host$SUFFIX" 'killall -u $USER java'
 done
+echo done
 
