@@ -6,4 +6,7 @@
 % Beschreiben Sie für einen Programmierer, der sich mit Sockets auskennt,
 % wie in diesem Fall vorzugehen wäre!
 
-TODO
+Bei dem Einsatz von Sockets ist die \textit{remote method invocation}-Technik nicht einsetzbar.
+Aufgrunddessen muss ein eigenes Protokoll zur Übertragung von Daten zwischen den einzelnen Filter-Instanzen und der Foreign-Klasse implementiert werden.
+Die Foreign-Klasse braucht einen Socket für die Synchronisierung der globalen Liste.
+Sie kommuniziert mit den Filter-Instanzen über einen von diesen jeweils zur Verfügung gestellten Socket mit Hilfe eines definierten Protokolls.
