@@ -1,4 +1,23 @@
 \subsection*{b) Foreign RMI}
 
-\lstinputlisting[caption=ForeignRMI.java,firstnumber=1,linerange=1-999]
+Die \textit{remote method invocation}-Technik ist nur in Kombination einer sogenannten \textit{rmiregistry} einsetzbar.
+Diese verwaltet die instanzierten Objekte und ermöglicht so Fernaufrufe.
+Da leider das Speichern von Instanzen in einer anderen \textit{rmiregistry} außer \textit{localhost}
+nicht möglich ist, müssen wir mehrere Registries verwenden.
+In unserem Falle sind dies die Registries auf dem jeweiligen Computer auf dem unsere Filter-Instanzen laufen,
+sowie diejenige, auf der wir unser ForeignRMI-Klasse starten.
+
+ForeignRMI hinterlegt in der lokalen Registry eine fernaufrufbare \textit{Set}-Datenstruktur.
+\lstinputlisting[caption=ForeignRMI.java,firstnumber=36,linerange=36-45]
+{../../src/uebung3/aufgabe1b/ForeignRMI.java}
+
+Danach wird versucht sich über eigene Threads mit den Filter-Instanzen den Text zu analysieren.
+Hierzu sind die jeweiligen Hostnamen auf dem eine Filter-Instanz läuft nötig.
+\lstinputlisting[caption=ForeignRMI.java,firstnumber=51,linerange=51-60]
+{../../src/uebung3/aufgabe1b/ForeignRMI.java}
+
+Der Thread selber verbindet sich nun mit der \textit{rmiregistry} des jeweiligen Hosts und 
+übergibt die zu filternden Daten, die globale Liste, sowie das Wörterbuch.
+Mit Hilfe dieser Argumente können die Daten gefiltert und die Liste synchronisiert werden.
+\lstinputlisting[caption=ForeignRMI.java,firstnumber=91,linerange=91-97]
 {../../src/uebung3/aufgabe1b/ForeignRMI.java}
