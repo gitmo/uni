@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-16</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body><h1>aufgabe16.c</h1><br
+/><br
+/>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/>#include "config.h"<br
+/>#include "aufgabe15.h"<br
+/><br
+/>enum POWER_ENUM powerState;<br
+/><br
+/>void Aufgabe16()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // Alle LEDs aus<br
+/>&nbsp;&nbsp;&nbsp; SET(P4OUT, (BIT0 | BIT1 | BIT2));<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; powerState = LPM_4;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Taster 0 interruptfähig schalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp; // Flanke auf 0 -&gt; Interrupt beim drücken (statt loslassen)<br
+/>&nbsp;&nbsp;&nbsp; // fürdie invertierten Taster entspricht dies einer HF<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IES, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp; SET(P1IE, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Interrupts global einschalten<br
+/>&nbsp;&nbsp;&nbsp; _bis_SR_register(GIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( powerState == ACTIVE ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Ampel<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_SET(LED_GELB);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if ( powerState == LPM_4 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_OFF;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPM4;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/><br
+/><h1>interrupt.c</h1><br
+/>#pragma vector = PORT1_VECTOR&nbsp;<br
+/>__interrupt void PORT1 (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; if( powerState == LPM_4 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Flanke auf 1 -&gt; Interrupt beim loslassen<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // für die invertierten Taster entspricht dies einer LF<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SET(P1IES, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; powerState = ACTIVE;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPM4_EXIT;<br
+/>&nbsp;&nbsp;&nbsp; } else if ( powerState == ACTIVE ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Flanke auf 0 -&gt; Interrupt beim drücken (statt loslassen)<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // für die invertierten Taster entspricht dies einer HF<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CLEAR(P1IES, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; powerState = LPM_4;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Interrupt Flag ausschalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, 0xFF);<br
+/>}<br
+/><br
+/></body>
+</html>

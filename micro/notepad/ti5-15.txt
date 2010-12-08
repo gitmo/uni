@@ -1,0 +1,140 @@
+aufgabe15.c
+#include "msp430x16x.h"        // Systemdefinitionen von TI für den MSP430F1612
+#include "../init.h"        // Initialisierung des Mikrocontrollers
+#include "../CC1100.h"      // CC1100 Funktransceiver
+#include "../system.h"      // Systemfunktionen MSB430H
+#include "../interrupts.h"  // ISR - Interrupt Service Routinen
+#include "stdio.h"          // includes TI MSP430F1612 
+#include "../SHT11.h"
+#include "config.h"
+#include "aufgabe15.h"
+
+enum POWER_ENUM powerState;
+int watchdogSecCounter;
+
+void Aufgabe15()
+{
+    // Alle LEDs aus
+    SET(P4OUT, (BIT0 | BIT1 | BIT2));
+    
+    /*
+     * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8
+     * Zählerstand 32768 für RESET
+     */
+
+    WDTCTL = WDTPW + WDTHOLD;   // Stop WDT
+    WDTCTL = WDT_ADLY_1000;        // Start WDT with ACLK /32768 (= 1000 ms)(TIS0 + TIS1 = 0)
+    SET(IE1, WDTIE);
+     
+    powerState = LPM_4;
+    watchdogSecCounter = 0;
+    
+    // Taster 0 interruptfähig schalten
+    CLEAR(P1IFG, TASTE0);
+    // Flanke auf 0 -> Interrupt beim drücken (statt loslassen)
+    CLEAR(P1IES, TASTE0);
+    SET(P1IE, TASTE0);
+         
+    // Interrupts global einschalten
+    _bis_SR_register(GIE);
+    
+    while(true) {
+        if( powerState == ACTIVE )
+            LED_SET(LED_GELB);
+        else if ( powerState == LPM_4 ) {
+            LED_OFF;
+            LPM4;
+        } 
+        while( TASTEN_BITS & TASTE0 ) {
+            if( watchdogSecCounter > 2 ) {
+                powerState = LPM_4;
+                watchdogSecCounter = 0;
+                break;
+            }
+            wait_ms(10);
+        }            
+    }
+}
+aufgabe15.h
+#ifndef AUFGABE15_H_
+#define AUFGABE15_H_
+
+enum POWER_ENUM { ACTIVE, LPM_1, LPM_2, LPM_3, LPM_4, OFF };
+extern enum POWER_ENUM powerState;
+
+extern int watchdogSecCounter;
+
+#endif /*AUFGABE15_H_*/
+
+config.h
+#ifndef CONFIG_H_
+#define CONFIG_H_
+    
+#define LED_DIR P4DIR
+#define LED_BITS P4OUT
+
+#define LED_ROT BIT0
+#define LED_GELB BIT1
+#define LED_GRUEN BIT2
+
+#define LED_OFF         (SET(LED_BITS, (LED_ROT | LED_GELB | LED_GRUEN)))
+#define LED_ON             (CLEAR(LED_BITS, (LED_ROT | LED_GELB | LED_GRUEN)))
+#define LED_TOGGLE(x)    (LED_BITS ^=  (x))
+#define LED_SET(x)      (CLEAR(LED_BITS, (x)))
+
+#define LED_DIR_OUT (LED_ROT | LED_GELB | LED_GRUEN)
+
+#define TASTEN_BITS P1IN
+#define TASTE0 BIT0
+#define TASTE1 BIT1
+    
+#endif /*CONFIG_H_*/
+
+interrupt.h
+#ifndef INTERRUPTS_H_
+#define INTERRUPTS_H_
+
+extern int watchdogSecCounter;
+
+#endif /*INTERRUPTS_H_*/
+
+
+interrupt.c
+...
+
+#pragma vector = WDT_VECTOR 
+__interrupt void WDT_ISR (void)
+{
+    ++watchdogSecCounter;
+    LED_TOGGLE( LED_ROT );
+
+    if( ( powerState == ACTIVE ) &
+        ( watchdogSecCounter > 10 ) )
+    {
+            watchdogSecCounter = 0;
+            powerState = LPM_4;
+            LED_OFF;
+    }   
+    //Interrupt Flag ausschalten
+    CLEAR(IFG1, WDTIFG);
+}
+    
+#pragma vector = PORT1_VECTOR 
+__interrupt void PORT1 (void)
+{
+    if( powerState == LPM_4 ) {
+        powerState = ACTIVE;
+        // Reset watchdog counter, preserve lower 8 bits
+        WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0xFF);
+        LPM4_EXIT;
+    } else if ( powerState == ACTIVE ) {
+        watchdogSecCounter = 0;
+    }
+    
+    //Interrupt Flag ausschalten
+    CLEAR(P1IFG, 0xFF);
+}
+
+...
+
+

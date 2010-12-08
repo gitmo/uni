@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-1</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "interrupts.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "SHT11.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SHT11 Temperatur- und Feuchtesensor<br
+/><br
+/>/*<br
+/>&nbsp;DIR bei 0 ist der PIN auf Input gestellt,<br
+/>&nbsp;bei 1 ist der Pin auf Output gestellt.<br
+/>&nbsp;<br
+/>&nbsp;Board-Belegung:<br
+/>&nbsp;&nbsp;&nbsp; P4.0 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rot<br
+/>&nbsp;&nbsp;&nbsp; P4.1 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gelb<br
+/>&nbsp;&nbsp;&nbsp; P4.2 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grün&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; P4.3 Beeper<br
+/>*/<br
+/>#define ROT 0<br
+/>#define GELB 1<br
+/>#define GRUEN 2<br
+/>#define BEEPER 3<br
+/>#define A_SEC 1000*1000<br
+/><br
+/><br
+/>int Aufgabe1 (void) {<br
+/>&nbsp;&nbsp;&nbsp; unsigned char a = 0;<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp; P4DIR = 0x00;&nbsp;&nbsp;&nbsp; // Alle Bits werden auf Input gestellt<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; a = 10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // globale Variable a wird den Wert 10 zugewiesen<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; P4OUT = a;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 10_10 = 00001010_2 =&gt; P4.1 = HIGH, P4.4 = HIGH, Rest ist LOW<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; P4OUT = 0x01;&nbsp;&nbsp;&nbsp; // P4.0 = HIGH und Rest auf LOW<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; P4DIR = 0x07;&nbsp;&nbsp;&nbsp; // 0x07 = 00000111_2 =&gt; Bits 0 bis 2 auf OUTPUT, Rest auf Input. Effekt: gruene und gelbe LED leuchten<br
+/>&nbsp;&nbsp;&nbsp; a = P4IN &amp; 0x07;// 0x01 &amp; 0x07 = 0x01<br
+/>&nbsp;&nbsp;&nbsp; P4OUT &amp;= 0x00;&nbsp;&nbsp;&nbsp; // Alle Bits werden auf LOW gesetzt (LEDs leuchten)<br
+/>&nbsp;&nbsp;&nbsp; P4OUT |= 0x01;&nbsp;&nbsp;&nbsp; // P4.0 wird auf HIGH gesetzt (rote LED aus)<br
+/>&nbsp;&nbsp;&nbsp; P4OUT |= LEDRT;&nbsp;&nbsp;&nbsp; // Es ändert sich nichts, da 0x01 | 0x01 = 0x01<br
+/>&nbsp;&nbsp;&nbsp; P4OUT &amp;= ~LEDRT;// ~0x01 = 0xFE -&gt; 0x01 &amp; 0xFE = 0x00 (Effekt: alle LEDs auf LOW und leuchten somit)<br
+/>&nbsp;&nbsp;&nbsp; P4OUT ^= LEDRT;&nbsp;&nbsp;&nbsp; // 0x00 ^ 0x01 = 0x01 (gelbe und gruene LED leuchten)<br
+/>&nbsp;&nbsp; */<br
+/><br
+/>&nbsp;&nbsp;&nbsp; P4DIR = (1 &lt;&lt; ROT) | (1 &lt;&lt; GELB) | (1 &lt;&lt; GRUEN);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(1) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Schreiben Sie ein kleines Programm, welches den Durchlauf einer<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Ampelsignalsequenz mit den Phasen (rt,rt-gb,gr,gb,rt) simuliert.<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Nutzen Sie dazu die bereitgestellte Funktion für eine Zeitschleife.&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //rot<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; ROT);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait(5*A_SEC);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //rot gelb<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~((1 &lt;&lt; GELB) | (1 &lt;&lt; ROT));<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait(A_SEC);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //gelb<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT |= (1 &lt;&lt; ROT);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait(A_SEC);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //gruen<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; GRUEN);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait(5*A_SEC);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp; return 0;<br
+/>}<br
+/><br
+/></body>
+</html>

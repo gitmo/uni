@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-13</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body><h1>aufgabe13.h</h1><br
+/>#ifndef AUFGABE13_H_<br
+/>#define AUFGABE13_H_<br
+/><br
+/>#define LED_ROT 0<br
+/>#define LED_GELB 1<br
+/>#define LED_GRUEN 2<br
+/><br
+/>#define a_sec 100<br
+/><br
+/>#endif /*AUFGABE13_H_*/<br
+/><br
+/><br
+/><h1>aufgabe13.c</h1><br
+/><br
+/>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/>#include "aufgabe13.h"<br
+/><br
+/>#define TASTE0&nbsp;&nbsp;&nbsp; BIT0<br
+/><br
+/><br
+/>enum { GELB, ROT, ROT_GELB, GRUEN } nextTrafficSignal = GELB;<br
+/><br
+/>void playTrafficSignals()&nbsp; {<br
+/>&nbsp;&nbsp;&nbsp; switch(nextTrafficSignal) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case GELB:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; LED_GELB);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitMilli(a_sec);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextTrafficSignal = ROT;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case ROT:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; LED_ROT);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitMilli(5*a_sec);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextTrafficSignal = ROT_GELB;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case ROT_GELB:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~((1 &lt;&lt; LED_GELB) | (1&lt;&lt; LED_ROT));<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitMilli(a_sec);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextTrafficSignal = GRUEN;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case GRUEN:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; LED_GRUEN);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; waitMilli(10*a_sec);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nextTrafficSignal = GELB;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/>void Aufgabe13()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // Taster 0 als Interruptquelle<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp; SET(P1IE, TASTE0);<br
+/><br
+/><br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Alle LEDs aus<br
+/>&nbsp;&nbsp;&nbsp; SET(P4OUT, (BIT0 | BIT1 | BIT2));<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Zählerstand 32768 für RESET<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; */<br
+/><br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTHOLD;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Stop WDT<br
+/>&nbsp;&nbsp;&nbsp; SET(BCSCTL1, DIVA1);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ACLK Divider 10b: /4&nbsp;&nbsp;&nbsp; (DIVA1)<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(BCSCTL1, DIVA0);<br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDT_ADLY_1000;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)<br
+/>&nbsp;&nbsp;&nbsp; SET(IE1, WDTIE);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P4OUT, BIT1);&nbsp;&nbsp;&nbsp;<br
+/><br
+/>&nbsp;&nbsp;&nbsp; // Interrupts global einschalten<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _bis_SR_register(GIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(trafficSignalsAnimation) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; playTrafficSignals();<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; continue;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait_ms(500/4);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT ^= BIT0;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/><h1>interrupt.h</h1><br
+/>#ifndef INTERRUPTS_H_<br
+/>#define INTERRUPTS_H_<br
+/><br
+/>&nbsp;&nbsp;&nbsp; #define led1 (P4OUT &amp; BIT1)<br
+/>&nbsp;&nbsp;&nbsp; #define taster0 (P1IFG &amp; BIT0)<br
+/><br
+/>&nbsp;&nbsp;&nbsp; extern char trafficSignalsAnimation;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>#endif /*INTERRUPTS_H_*/<br
+/><br
+/><h1>interrupt.c</h1><br
+/>...<br
+/>char trafficSignalsAnimation = 0;<br
+/><br
+/>#pragma vector = WDT_VECTOR&nbsp;&nbsp;&nbsp;<br
+/>__interrupt void WDT_ISR (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; if (led1) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CLEAR(P4OUT, BIT1);<br
+/>&nbsp;&nbsp;&nbsp; } else {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Watchdog-Timer ausschalten<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTHOLD;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Ampelschaltung<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; trafficSignalsAnimation = 1;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(IFG1, WDTIFG);<br
+/>}<br
+/><br
+/>#pragma vector = PORT1_VECTOR&nbsp;<br
+/>__interrupt void PORT1 (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // Reset watchdog counter while preserving other status bits<br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + (WDTCTL &amp; 0x00FF) + WDTCNTCL;<br
+/>&nbsp;&nbsp;&nbsp; P4OUT ^= BIT1;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Interrupt Flag ausschalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, 0xFF);<br
+/>}<br
+/>...<br
+/><br
+/></body>
+</html>

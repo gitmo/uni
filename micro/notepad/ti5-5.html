@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-5</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body><h3>Initializierung</h3><br
+/>void Aufgabe5() {<br
+/>&nbsp;&nbsp;&nbsp; P5SEL |= BIT4;&nbsp;&nbsp;&nbsp; // P5 MCLK&nbsp;<br
+/>}<br
+/><br
+/><h3>Messen</h3><br
+/><ul><li>LFXT1CLK (SELM = 11b)<ul><li>LF-Mode (XTS=0)&nbsp;<ul><li>minimal <b>12,29 kHz</b>, DIVM=11b</li
+><li>maximal <b>32,769 kHz</b>, DIVM=00b</li></ul
+></li
+><li>HF Mode (XTS=1)&nbsp;<ul><li>minimal : <b>636,5 kHz</b>, DIVM=11b</li
+><li>maximal: <b>1,695 MHz</b>, DIVM=00b<br/><br
+/></li></ul
+></li></ul
+></li
+><li>XT2CLK (SELM = 10b) XT2OFF=0<ul><li>minimal: <b>635 kHz</b>, DIVM=11b</li
+><li>maximal : <b>1,695 MHz</b>, DIVM=00b<br/><br
+/></li></ul
+></li
+><li>DCOCLK (SELM = 00b)<ul><li>minimal:<b> 99,72khz</b>, DCO=000b, RSEL=000b, DIVM=11b, MOD = 00000b</li
+><li>normal: <b>7,36Mhz</b>, DCO=011b, RSEL=100b, DIVM=00b, MOD = 11101b</li
+><li>maximal: <b>11,59Mhz</b>, DC0=111b, RSEL=111b, DIVM=00b, MOD hat keinen Effekt<br/><br
+/></li></ul
+></li></ul
+><b>Erläutern Sie, wie der externe Widerstand für den DCOCLK-Taktgenerator nutzbar gemacht wir?</b><br
+/>Durch setzten des DCOR-Bits im BCSCTL2-Bit_Feld kann der externe Widerstand nutzbar gemacht werden.<br
+/><br
+/><b>Welchen Einfluss hat der Widerstand auf den DCOCLK-Taktgenerator.</b><br
+/>Der Widerstand verringert den Einfluss der Temperatur auf die Zuverlässigkeit des Taktgenerators. RC-Glied wieder niederohmiger und somit werden die Flanken deutlicher,da der Kondensator sich wieder schnell aufladen kann.<br
+/><br
+/></body>
+</html>

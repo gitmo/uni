@@ -1,0 +1,10 @@
+Messungen mit "leerem" Programm
+
+4,096 MHz; 3.019 mA
+7,368 MHz; 4.667 mA
+
+Messungen mit Tasteninterrupt-Routine
+
+7,366 MHz: 5.095 mA
+4,094 MHz; 3.272
+

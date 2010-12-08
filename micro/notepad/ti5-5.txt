@@ -1,0 +1,29 @@
+Initializierung
+void Aufgabe5() {
+    P5SEL |= BIT4;    // P5 MCLK 
+}
+
+Messen
+ * LFXT1CLK (SELM = 11b)
+   * LF-Mode (XTS=0) 
+     * minimal 12,29 kHz, DIVM=11b
+     * maximal 32,769 kHz, DIVM=00b
+   * HF Mode (XTS=1) 
+     * minimal : 636,5 kHz, DIVM=11b
+     * maximal: 1,695 MHz, DIVM=00b
+
+ * XT2CLK (SELM = 10b) XT2OFF=0
+   * minimal: 635 kHz, DIVM=11b
+   * maximal : 1,695 MHz, DIVM=00b
+
+ * DCOCLK (SELM = 00b)
+   * minimal: 99,72khz, DCO=000b, RSEL=000b, DIVM=11b, MOD = 00000b
+   * normal: 7,36Mhz, DCO=011b, RSEL=100b, DIVM=00b, MOD = 11101b
+   * maximal: 11,59Mhz, DC0=111b, RSEL=111b, DIVM=00b, MOD hat keinen Effekt
+
+Erläutern Sie, wie der externe Widerstand für den DCOCLK-Taktgenerator nutzbar gemacht wir?
+Durch setzten des DCOR-Bits im BCSCTL2-Bit_Feld kann der externe Widerstand nutzbar gemacht werden.
+
+Welchen Einfluss hat der Widerstand auf den DCOCLK-Taktgenerator.
+Der Widerstand verringert den Einfluss der Temperatur auf die Zuverlässigkeit des Taktgenerators. RC-Glied wieder niederohmiger und somit werden die Flanken deutlicher,da der Kondensator sich wieder schnell aufladen kann.
+

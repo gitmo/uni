@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-15</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body><h1>aufgabe15.c</h1><br
+/>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/>#include "config.h"<br
+/>#include "aufgabe15.h"<br
+/><br
+/>enum POWER_ENUM powerState;<br
+/>int watchdogSecCounter;<br
+/><br
+/>void Aufgabe15()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // Alle LEDs aus<br
+/>&nbsp;&nbsp;&nbsp; SET(P4OUT, (BIT0 | BIT1 | BIT2));<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Zählerstand 32768 für RESET<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; */<br
+/><br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTHOLD;&nbsp;&nbsp; // Stop WDT<br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDT_ADLY_1000;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Start WDT with ACLK /32768 (= 1000 ms)(TIS0 + TIS1 = 0)<br
+/>&nbsp;&nbsp;&nbsp; SET(IE1, WDTIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; powerState = LPM_4;<br
+/>&nbsp;&nbsp;&nbsp; watchdogSecCounter = 0;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Taster 0 interruptfähig schalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp; // Flanke auf 0 -&gt; Interrupt beim drücken (statt loslassen)<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IES, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp; SET(P1IE, TASTE0);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Interrupts global einschalten<br
+/>&nbsp;&nbsp;&nbsp; _bis_SR_register(GIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( powerState == ACTIVE )<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_SET(LED_GELB);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if ( powerState == LPM_4 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_OFF;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPM4;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while( TASTEN_BITS &amp; TASTE0 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if( watchdogSecCounter &gt; 2 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; powerState = LPM_4;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; watchdogSecCounter = 0;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait_ms(10);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><h1>aufgabe15.h</h1><br
+/>#ifndef AUFGABE15_H_<br
+/>#define AUFGABE15_H_<br
+/><br
+/>enum POWER_ENUM { ACTIVE, LPM_1, LPM_2, LPM_3, LPM_4, OFF };<br
+/>extern enum POWER_ENUM powerState;<br
+/><br
+/>extern int watchdogSecCounter;<br
+/><br
+/>#endif /*AUFGABE15_H_*/<br
+/><br
+/><h1>config.h</h1><br
+/>#ifndef CONFIG_H_<br
+/>#define CONFIG_H_<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>#define LED_DIR P4DIR<br
+/>#define LED_BITS P4OUT<br
+/><br
+/>#define LED_ROT BIT0<br
+/>#define LED_GELB BIT1<br
+/>#define LED_GRUEN BIT2<br
+/><br
+/>#define LED_OFF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (SET(LED_BITS, (LED_ROT | LED_GELB | LED_GRUEN)))<br
+/>#define LED_ON&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CLEAR(LED_BITS, (LED_ROT | LED_GELB | LED_GRUEN)))<br
+/>#define LED_TOGGLE(x)&nbsp;&nbsp;&nbsp; (LED_BITS ^=&nbsp; (x))<br
+/>#define LED_SET(x)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CLEAR(LED_BITS, (x)))<br
+/><br
+/>#define LED_DIR_OUT (LED_ROT | LED_GELB | LED_GRUEN)<br
+/><br
+/>#define TASTEN_BITS P1IN<br
+/>#define TASTE0 BIT0<br
+/>#define TASTE1 BIT1<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>#endif /*CONFIG_H_*/<br
+/><br
+/><h1>interrupt.h</h1><br
+/>#ifndef INTERRUPTS_H_<br
+/>#define INTERRUPTS_H_<br
+/><br
+/>extern int watchdogSecCounter;<br
+/><br
+/>#endif /*INTERRUPTS_H_*/<br
+/><br
+/><br
+/><h1>interrupt.c</h1><br
+/>...<br
+/><br
+/>#pragma vector = WDT_VECTOR&nbsp;<br
+/>__interrupt void WDT_ISR (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; ++watchdogSecCounter;<br
+/>&nbsp;&nbsp;&nbsp; LED_TOGGLE( LED_ROT );<br
+/><br
+/>&nbsp;&nbsp;&nbsp; if( ( powerState == ACTIVE ) &amp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( watchdogSecCounter &gt; 10 ) )<br
+/>&nbsp;&nbsp;&nbsp; {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; watchdogSecCounter = 0;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; powerState = LPM_4;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_OFF;<br
+/>&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Interrupt Flag ausschalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(IFG1, WDTIFG);<br
+/>}<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>#pragma vector = PORT1_VECTOR&nbsp;<br
+/>__interrupt void PORT1 (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; if( powerState == LPM_4 ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; powerState = ACTIVE;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Reset watchdog counter, preserve lower 8 bits<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTCNTCL + (WDTCTL &amp; 0xFF);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPM4_EXIT;<br
+/>&nbsp;&nbsp;&nbsp; } else if ( powerState == ACTIVE ) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; watchdogSecCounter = 0;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Interrupt Flag ausschalten<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P1IFG, 0xFF);<br
+/>}<br
+/><br
+/>...<br
+/><br
+/><br
+/></body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-10</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/><br
+/>void Aufgabe10()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // Indicate we're started<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(P4OUT, BIT2);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Green LED on<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Zählerstand 32768 für RESET<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; */<br
+/><br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTHOLD;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Stop WDT<br
+/>&nbsp;&nbsp;&nbsp; BCSCTL1 |= DIVA_3;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ACLK Divider 3: /8&nbsp;&nbsp;&nbsp; (DIVA0 + DIVA1)<br
+/>&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTCNTCL + WDTSSEL;&nbsp;&nbsp;&nbsp;&nbsp; // Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Falls der Watchdog feuert ensteht die skurille Situation das Programm<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * mit einer langsameren Taktfrequenz neu gestartet wird, da das DCOCTL<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Register zurückgesetzt wird. Dieses Register wird normalerweise bei<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Programmstart in DCO() in main.c initialisiert. Die Programmausführung<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * setzt beim RESET bei vorigen Program Counter fort (hier fast immer in<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * wait_ms().<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; */<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait_ms(500);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SET(P4OUT, BIT0);&nbsp;&nbsp;&nbsp; // Red LED off<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (P1IN &amp; 0x03){&nbsp;&nbsp;&nbsp; // While buttons A or B are pressed<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait_ms(10);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Reset watchdog counter, preserve lower 8 bits<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTCNTCL + (WDTCTL &amp; 0x0F);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Reset watchdog counter, preserve lower 8 bits<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WDTCTL = WDTPW + WDTCNTCL + (WDTCTL &amp; 0x0F);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait_ms(500);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CLEAR(P4OUT, BIT0);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Red LED on<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/></body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-19</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/>#include "project.h"<br
+/>#include "aufgabe19.h"<br
+/><br
+/>day_time_t dayTime = { 0, 0, 0 };<br
+/>day_time_t t1 = { 0, 0, 1 };<br
+/>day_time_t t2 = { 0, 0, 2 };<br
+/><br
+/>bool laterThan( day_time_t x1, day_time_t x2 ){<br
+/>&nbsp;&nbsp;&nbsp; int epoch1 = x1.hh * 60 + x1.mm * 60 + x1.ss;<br
+/>&nbsp;&nbsp;&nbsp; int epoch2 = x2.hh * 60 + x2.mm * 60 + x2.ss;<br
+/>&nbsp;&nbsp;&nbsp; return epoch1 &gt; epoch2;<br
+/>}<br
+/><br
+/>void Aufgabe19()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; initSecTimer(1);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Interrupts global einschalten<br
+/>&nbsp;&nbsp;&nbsp; _bis_SR_register(GIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(1) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(laterThan(t1, dayTime))<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_SET(LED_ROT);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(laterThan(t2, dayTime))<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LED_OFF;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/></body>
+</html>

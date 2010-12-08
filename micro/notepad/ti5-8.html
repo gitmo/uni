@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-8</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>Messungen<br
+/><br
+/><ul><li>bei steigendender Flanke: 0,7 µs</li
+><li>bei fallender Flanke: 0,9 µs<br/><br
+/></li></ul
+>void Aufgabe8() {<br
+/>&nbsp;&nbsp; //mit bekanntem Grundzustand initialisieren<br
+/>&nbsp;&nbsp;&nbsp; P5OUT = 0x00;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Wechseln des Zustands und Messen des Flankenwechsel<br
+/>&nbsp;&nbsp;&nbsp; while(1) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P5OUT ^= 0x10; //XOR.B&nbsp;&nbsp; #0x0010,&amp;Port_5_6_P5OUT<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P5OUT ^= 0x10; //XOR.B&nbsp;&nbsp; #0x0010,&amp;Port_5_6_P5OUT<br
+/>&nbsp;&nbsp;&nbsp; } //JMP&nbsp;&nbsp;&nbsp;&nbsp; (C$L1)<br
+/>}<br
+/><br
+/></body>
+</html>

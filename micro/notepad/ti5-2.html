@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-2</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SHT11 Temperatur- und Feuchtesensor<br
+/><br
+/>#define TasterA (0x01)<br
+/>#define ROT 0<br
+/>#define GELB 1<br
+/>#define GRUEN 2<br
+/><br
+/>int Aufgabe2(void) {<br
+/>&nbsp;&nbsp;&nbsp; /*<br
+/>&nbsp;&nbsp;&nbsp; unsigned char a = 0;<br
+/>&nbsp;&nbsp;&nbsp; P1DIR = 0xF8;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 0xF8 = 11111000&nbsp; (P1DIR.x mit x e 0..2 werden auf Input gesetzt<br
+/>&nbsp;&nbsp;&nbsp; a = 10;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // a = 00001010b<br
+/>&nbsp;&nbsp;&nbsp; //was passiert wenn jetzt der Taster an der Portleitung P1.0 gedrückt wird?&nbsp; P1IN.0 = HIGH<br
+/>&nbsp;&nbsp;&nbsp; P1OUT = a;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // P1OUT.0 und P1OUT.2 werden auf LOW (kein Effekt, da Richtung auf Input gesetzt ist)<br
+/>&nbsp;&nbsp;&nbsp; a = P1IN &amp; 0x00;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Taste an P1.0 gedrückt =&gt; a = 0x00<br
+/>&nbsp;&nbsp;&nbsp; a = P1IN &amp; 0x03;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Taste an P1.0 gedrückt =&gt; a = 0x01<br
+/>&nbsp;&nbsp;&nbsp; a = P1IN &amp; 0x02;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Taste an P1.0 gedrückt =&gt; a = 0x00<br
+/>&nbsp;&nbsp;&nbsp; a = P1IN &amp; 0x01;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Taste an P1.1 gedrückt =&gt; a = 0x01<br
+/>&nbsp;&nbsp;&nbsp; a = P1IN &amp; 0x03;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Tasten an P1.0 und P1.1 gedrückt a = 0x03<br
+/>&nbsp;&nbsp;&nbsp; P4OUT = P1IN &amp; TasterA; // Taster an P1.0 nicht gedrückt a = 0x00<br
+/>&nbsp;&nbsp;&nbsp; P4OUT = P1IN &amp; TasterA; // Taster an P1.0 gedrückt a = 0x01<br
+/>&nbsp;&nbsp;&nbsp; */<br
+/><br
+/>&nbsp;&nbsp;&nbsp; /**<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; P4.0 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rot<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp; P4.1 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gelb<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; *&nbsp; P4.2 LED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grün&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp; * Schreiben Sie ein Programm mit folgender Funktionalität:<br
+/>&nbsp;&nbsp;&nbsp; * Keine Taste gedrückt gelbe LED (P4.1) an<br
+/>&nbsp;&nbsp;&nbsp; * Rechte Taste gedrückt grüne LED (P4.2) an<br
+/>&nbsp;&nbsp;&nbsp; * Linke Taste gedrückt rote LED (P4.0) an<br
+/>&nbsp;&nbsp;&nbsp; * Beide Tasten gedrückt gelbe LED (P4.1) an<br
+/>&nbsp;&nbsp;&nbsp; */<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Alle LED-Bits auf Output stellen<br
+/>&nbsp;&nbsp;&nbsp; P4DIR = (1 &lt;&lt; ROT) | (1 &lt;&lt; GELB) | (1 &lt;&lt; GRUEN);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch(P1IN) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //linke Taste gedrückt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case 0x01:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; GRUEN);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //rechte Taste gedrückt<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case 0x02:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; ROT);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //beide Tasten gedrückt<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case 0x03:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; GELB);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //keine Taste gedrückt 0x00<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; default:<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4OUT = ~(1 &lt;&lt; GELB);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wait(100);<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; return 0;<br
+/>}<br
+/><br
+/></body>
+</html>

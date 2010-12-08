@@ -1,0 +1,29 @@
+Initialzustand:
+
+Alle LEDs aus mit DCOCL-Takgenerator (7,3728 Mhz) und CC1100 im PowerDown Mode und Debug-Mode
+
+MasterClock:: 7,37 mHz
+Stromverbrauch: 5,25 mA
+
+im LowPower-Modus 4
+
+MasterClock:: 7,37 mHz
+Stromverbrauch: 0,37 mA
+
+Mit Interrupt:
+
+MasterClock:: 0 mHz
+Stromverbrauch: 0,42 mA
+
+nach Tastendruck:
+
+MasterClock:: 7,37 mHz
+Stromverbrauch: 4,06 mA
+
+nach 10 Sekunden:
+
+MasterClock:: 0 mHz
+Stromverbrauch: 0,45 mA
+
+Erläutern  Sie die Abläufe nach dem Starten des Programms im Detail und die Zustände des  Mikrocontrollers.   ...
+
