@@ -28,3 +28,5 @@ local.properties
 
 # Project specific
 release/
+
+*.command
