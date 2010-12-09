@@ -4,73 +4,73 @@
 //=============================================================================
 // zentrale Daten für den CC1100 Funkchip
 //=============================================================================
-// RxCC1100 	Empfangsbuffer
-// TxCC1100 	Sendebuffer
-// ID 			Knoten Adresse
-// channel		Funkkanal
-// conf[39]		Konfigurationstabelle
+// RxCC1100     Empfangsbuffer
+// TxCC1100     Sendebuffer
+// ID           Knoten Adresse
+// channel      Funkkanal
+// conf[39]     Konfigurationstabelle
 //=============================================================================
 extern unsigned char ID ;           //Node ID 
-extern unsigned char channel;		//Funkkanal
-extern char conf[39];				//Konfigurationstabelle
-extern unsigned char paTableIndex;	//PA Tabelle
+extern unsigned char channel;       //Funkkanal
+extern char conf[39];               //Konfigurationstabelle
+extern unsigned char paTableIndex;  //PA Tabelle
 //=============================================================================
 
 
 //=============================================================================
-#define MAX_UID				(0xFF) 			// Maximum UID of a node is 255
-#define MIN_UID				(0x01) 			// Minimum UID of a node is 1
+#define MAX_UID             (0xFF)          // Maximum UID of a node is 255
+#define MIN_UID             (0x01)          // Minimum UID of a node is 1
 //=============================================================================
-#define CC1100_CS_LOW		(P3OUT &= ~0x01)// CS set LOW
-#define CC1100_CS_HIGH		(P3OUT |= 0x01) // CS set HIGH
+#define CC1100_CS_LOW       (P3OUT &= ~0x01)// CS set LOW
+#define CC1100_CS_HIGH      (P3OUT |= 0x01) // CS set HIGH
 //=============================================================================
-#define CC1100_GDO0         (P2IN & 0x02)	// read serial I/O (GDO0)
-#define CC1100_GDO1         (P3IN & 0x04)	// read serial I/O (GDO1)
-#define CC1100_GDO2         (P2IN & 0x01)	// read serial I/O (GDO2)
+#define CC1100_GDO0         (P2IN & 0x02)   // read serial I/O (GDO0)
+#define CC1100_GDO1         (P3IN & 0x04)   // read serial I/O (GDO1)
+#define CC1100_GDO2         (P2IN & 0x01)   // read serial I/O (GDO2)
 //=============================================================================
-#define NOBYTE				(0x00)		// No command, for reading.
-#define PACKET_LENGTH		(0x3E)		// Packet length = 62 Bytes.
-#define MAX_DATA_LENGTH		(0x3C)		// Maximum data length of layer 0 = 60 Bytes.
+#define NOBYTE              (0x00)      // No command, for reading.
+#define PACKET_LENGTH       (0x3E)      // Packet length = 62 Bytes.
+#define MAX_DATA_LENGTH     (0x3C)      // Maximum data length of layer 0 = 60 Bytes.
 //=============================================================================
-#define FIXED_PKTLEN		(0x00)		// Fixed length packets, length configured in PKTLEN register.
-#define	VARIABLE_PKTLEN		(0x01)		// Variable length packets, packet length configured by the first
-										// byte after synch word.
-//=============================================================================										
-#define PATABLE 			(17)		// Current PATABLE Index			
-#define LOW_POWER 			(1)			// Sendeleistung auf -15 dBm setzen
-#define MED_POWER 			(9)			// Sendeleistung auf  +2 dBm setzen
-#define HIGH_POWER 			(16)		// Sendeleistung auf  +9 dBm setzen
+#define FIXED_PKTLEN        (0x00)      // Fixed length packets, length configured in PKTLEN register.
+#define VARIABLE_PKTLEN     (0x01)      // Variable length packets, packet length configured by the first
+                                        // byte after synch word.
+//=============================================================================                                     
+#define PATABLE             (17)        // Current PATABLE Index            
+#define LOW_POWER           (1)         // Sendeleistung auf -15 dBm setzen
+#define MED_POWER           (9)         // Sendeleistung auf  +2 dBm setzen
+#define HIGH_POWER          (16)        // Sendeleistung auf  +9 dBm setzen
 //=============================================================================
 
 
 //=============================================================================
 // Bitmasks for reading out status register values
 //=============================================================================
-#define CRC_OK              (0x80)		// Bitmask (=10000000) for reading CRC_OK.
-										// If CRC_OK == 1: CRC for received data OK (or CRC disabled).
-										// If CRC_OK == 0: CRC error in received data.
-#define LQI_EST				(0x7F)		// Bitmask (=01111111) for reading LQI_EST.
-										// The Link Quality Indicator estimates how easily a received signal can be demodulated.
-#define I_RSSI              (0x00)		// Index 0 contains RSSI information (from optionally appended packet status bytes).
-#define I_LQI               (0x01)		// Index 1 contains LQI & CRC_OK information (from optionally appended packet status bytes).
-#define MARC_STATE			(0x1F)		// Bitmask (=00011111) for reading MARC_STATE in MARCSTATE status register.
-#define CS					(0x40)		// Bitmask (=01000000) for reading CS (Carrier Sense) in PKTSTATUS status register.
-#define PQT_REACHED			(0x20)		// Bitmask (=00100000) for reading PQT_REACHED (Preamble Quality reached) in PKTSTATUS status register.
-#define CCA					(0x10)		// Bitmask (=00010000) for reading CCA (clear channel assessment) in PKTSTATUS status register.
-#define SFD					(0x08)		// Bitmask (=00001000) for reading SFD (Sync word found) in PKTSTATUS status register.
-#define GDO2				(0x04)		// Bitmask (=00000100) for reading GDO2 (current value on GDO2 pin) in PKTSTATUS status register.
-#define GDO1				(0x02)		// Bitmask (=00000010) for reading GDO1 (current value on GDO1 pin) in PKTSTATUS status register.
-#define GDO0				(0x01)		// Bitmask (=00000001) for reading GDO0 (current value on GDO0 pin) in PKTSTATUS status register.
-#define TXFIFO_UNDERFLOW	(0x80)		// Bitmask (=10000000) for reading TXFIFO_UNDERFLOW in TXBYTES status register.
-#define BYTES_IN_TXFIFO		(0x7F)		// Bitmask (=01111111) for reading NUM_TXBYTES in TXBYTES status register.
-#define RXFIFO_OVERFLOW		(0x80)		// Bitmask (=10000000) for reading RXFIFO_OVERFLOW in RXBYTES status register.
-#define BYTES_IN_RXFIFO     (0x7F)		// Bitmask (=01111111) for reading NUM_RXBYTES in RXBYTES status register.
+#define CRC_OK              (0x80)      // Bitmask (=10000000) for reading CRC_OK.
+                                        // If CRC_OK == 1: CRC for received data OK (or CRC disabled).
+                                        // If CRC_OK == 0: CRC error in received data.
+#define LQI_EST             (0x7F)      // Bitmask (=01111111) for reading LQI_EST.
+                                        // The Link Quality Indicator estimates how easily a received signal can be demodulated.
+#define I_RSSI              (0x00)      // Index 0 contains RSSI information (from optionally appended packet status bytes).
+#define I_LQI               (0x01)      // Index 1 contains LQI & CRC_OK information (from optionally appended packet status bytes).
+#define MARC_STATE          (0x1F)      // Bitmask (=00011111) for reading MARC_STATE in MARCSTATE status register.
+#define CS                  (0x40)      // Bitmask (=01000000) for reading CS (Carrier Sense) in PKTSTATUS status register.
+#define PQT_REACHED         (0x20)      // Bitmask (=00100000) for reading PQT_REACHED (Preamble Quality reached) in PKTSTATUS status register.
+#define CCA                 (0x10)      // Bitmask (=00010000) for reading CCA (clear channel assessment) in PKTSTATUS status register.
+#define SFD                 (0x08)      // Bitmask (=00001000) for reading SFD (Sync word found) in PKTSTATUS status register.
+#define GDO2                (0x04)      // Bitmask (=00000100) for reading GDO2 (current value on GDO2 pin) in PKTSTATUS status register.
+#define GDO1                (0x02)      // Bitmask (=00000010) for reading GDO1 (current value on GDO1 pin) in PKTSTATUS status register.
+#define GDO0                (0x01)      // Bitmask (=00000001) for reading GDO0 (current value on GDO0 pin) in PKTSTATUS status register.
+#define TXFIFO_UNDERFLOW    (0x80)      // Bitmask (=10000000) for reading TXFIFO_UNDERFLOW in TXBYTES status register.
+#define BYTES_IN_TXFIFO     (0x7F)      // Bitmask (=01111111) for reading NUM_TXBYTES in TXBYTES status register.
+#define RXFIFO_OVERFLOW     (0x80)      // Bitmask (=10000000) for reading RXFIFO_OVERFLOW in RXBYTES status register.
+#define BYTES_IN_RXFIFO     (0x7F)      // Bitmask (=01111111) for reading NUM_RXBYTES in RXBYTES status register.
 
 
 //=============================================================================
 // Bitmasks for reading out configuration register values
 //=============================================================================
-#define PKT_LENGTH_CONFIG	(0x03)		// Bitmask (=00000011) for reading LENGTH_CONFIG in PKTCTRL0 configuration register.
+#define PKT_LENGTH_CONFIG   (0x03)      // Bitmask (=00000011) for reading LENGTH_CONFIG in PKTCTRL0 configuration register.
 //=============================================================================
 
 
@@ -95,7 +95,7 @@ extern unsigned char paTableIndex;	//PA Tabelle
 #define CC1100_FREQ0    (0x0F) // Frequency control word, low byte
 #define CC1100_MDMCFG4  (0x10) // Modem configuration
 #define CC1100_MDMCFG3  (0x11) // Modem configuration
-#define CC1100_MDMCFG2	(0x12) // Modem configuration
+#define CC1100_MDMCFG2  (0x12) // Modem configuration
 #define CC1100_MDMCFG1  (0x13) // Modem configuration
 #define CC1100_MDMCFG0  (0x14) // Modem configuration
 #define CC1100_DEVIATN  (0x15) // Modem deviation setting
@@ -130,9 +130,9 @@ extern unsigned char paTableIndex;	//PA Tabelle
 //=============================================================================
 // Strobe commands (14x)
 //=============================================================================
-#define CC1100_SRES         (0x30)	// Reset chip.
+#define CC1100_SRES         (0x30)  // Reset chip.
 #define CC1100_SFSTXON      (0x31)  // Enable and calibrate frequency synthesizer (if MCSM0.FS_AUTOCAL=1).
-									// If in RX/TX: Go to a wait state where only the synthesizer is
+                                    // If in RX/TX: Go to a wait state where only the synthesizer is
                                     // running (for quick RX / TX turnaround).
 #define CC1100_SXOFF        (0x32)  // Turn off crystal oscillator.
 #define CC1100_SCAL         (0x33)  // Calibrate frequency synthesizer and turn it off
@@ -158,17 +158,17 @@ extern unsigned char paTableIndex;	//PA Tabelle
 //=============================================================================
 // Status registers (12x)
 //=============================================================================
-#define CC1100_PARTNUM      (0x30)	// Part number of CC1100.
-#define CC1100_VERSION      (0x31)	// Current version number.
-#define CC1100_FREQEST      (0x32)	// Frequency Offset Estimate.
-#define CC1100_LQI          (0x33)	// Demodulator estimate for Link Quality.
-#define CC1100_RSSI         (0x34)	// Received signal strength indication.
-#define CC1100_MARCSTATE    (0x35)	// Control state machine state.
-#define CC1100_WORTIME1     (0x36)	// High byte of WOR timer.
-#define CC1100_WORTIME0     (0x37)	// Low byte of WOR timer.
-#define CC1100_PKTSTATUS    (0x38)	// Current GDOx status and packet status.
-#define CC1100_VCO_VC_DAC   (0x39)	// Current setting from PLL calibration module.
-#define CC1100_TXBYTES      (0x3A)	// Underflow and number of bytes in the TX FIFO.
+#define CC1100_PARTNUM      (0x30)  // Part number of CC1100.
+#define CC1100_VERSION      (0x31)  // Current version number.
+#define CC1100_FREQEST      (0x32)  // Frequency Offset Estimate.
+#define CC1100_LQI          (0x33)  // Demodulator estimate for Link Quality.
+#define CC1100_RSSI         (0x34)  // Received signal strength indication.
+#define CC1100_MARCSTATE    (0x35)  // Control state machine state.
+#define CC1100_WORTIME1     (0x36)  // High byte of WOR timer.
+#define CC1100_WORTIME0     (0x37)  // Low byte of WOR timer.
+#define CC1100_PKTSTATUS    (0x38)  // Current GDOx status and packet status.
+#define CC1100_VCO_VC_DAC   (0x39)  // Current setting from PLL calibration module.
+#define CC1100_TXBYTES      (0x3A)  // Underflow and number of bytes in the TX FIFO.
 #define CC1100_RXBYTES      (0x3B)  // Overflow and number of bytes in the RX FIFO.
 //=============================================================================
 
@@ -176,20 +176,20 @@ extern unsigned char paTableIndex;	//PA Tabelle
 //=============================================================================
 // Multi byte registers
 //=============================================================================
-#define CC1100_PATABLE      (0x3E)	// Register for eight user selected
-									// output power settings.
-									// 3-bit FREND0.PA_POWER value selects the PATABLE entry to use.
-#define CC1100_TXFIFO       (0x3F)	// TX FIFO: Write operations write to the TX FIFO (SB: +0x00; BURST: +0x40) 
-#define CC1100_RXFIFO       (0x3F)	// RX FIFO: Read operations read from the RX FIFO (SB: +0x80; BURST: +0xC0)
+#define CC1100_PATABLE      (0x3E)  // Register for eight user selected
+                                    // output power settings.
+                                    // 3-bit FREND0.PA_POWER value selects the PATABLE entry to use.
+#define CC1100_TXFIFO       (0x3F)  // TX FIFO: Write operations write to the TX FIFO (SB: +0x00; BURST: +0x40) 
+#define CC1100_RXFIFO       (0x3F)  // RX FIFO: Read operations read from the RX FIFO (SB: +0x80; BURST: +0xC0)
 //=============================================================================
 
 
 //=============================================================================
 // Definitions to support burst/single access
 //=============================================================================
-#define CC1100_WRITE_BURST	(0x40)	// Offset for burst write.
-#define CC1100_READ_SINGLE	(0x80)	// Offset for read single byte.
-#define CC1100_READ_BURST	(0xC0)	// Offset for read burst.
+#define CC1100_WRITE_BURST  (0x40)  // Offset for burst write.
+#define CC1100_READ_SINGLE  (0x80)  // Offset for read single byte.
+#define CC1100_READ_BURST   (0xC0)  // Offset for read burst.
 //=============================================================================
 
 
@@ -197,17 +197,17 @@ extern unsigned char paTableIndex;	//PA Tabelle
 // CC1100 Funk Empfangspuffer RxCC1100
 //=============================================================================
 typedef struct RCC1100
-	{
-	unsigned char length;	// Längenbyte muß <= 62 sein
-	unsigned char dest;		// Zieladresse des empfangenen Packetes
-	unsigned char source;	// Quelladresse des empfangenen Packetes
-	char data[61];			// RxCC1100.data[0] Zieladresse
-							// RxCC1100.data[1] Quelladresse
-							// RxCC1100.data[2..59] Daten
-	unsigned char RSSI;	 	// The RSSI value of last received packet
-	unsigned char CRC;		// The CRC status of last received packet (1 = OK, 0 = not OK)
-	} 
- 	CC1100_Rx;
+    {
+    unsigned char length;   // Längenbyte muß <= 62 sein
+    unsigned char dest;     // Zieladresse des empfangenen Packetes
+    unsigned char source;   // Quelladresse des empfangenen Packetes
+    char data[61];          // RxCC1100.data[0] Zieladresse
+                            // RxCC1100.data[1] Quelladresse
+                            // RxCC1100.data[2..59] Daten
+    unsigned char RSSI;     // The RSSI value of last received packet
+    unsigned char CRC;      // The CRC status of last received packet (1 = OK, 0 = not OK)
+    } 
+    CC1100_Rx;
 extern volatile  CC1100_Rx RxCC1100;
 //=============================================================================
 
@@ -216,14 +216,14 @@ extern volatile  CC1100_Rx RxCC1100;
 // CC1100 Funk Sendepuffer TxCC1100 für variable Datenlängen
 //=============================================================================
 typedef struct TCC1100
-	{
-	unsigned char length;	// Länge Daten 	(max 59)
-	unsigned char dest;		// Zieladresse	(0..255)
-	unsigned char source;	// Quelladresse (0..255)
-	char data[59];			// Daten     	(max 60)
-	}
-	CC1100_Tx; 	
-extern volatile  CC1100_Tx TxCC1100;	// 	
+    {
+    unsigned char length;   // Länge Daten     (max 59)
+    unsigned char dest;     // Zieladresse  (0..255)
+    unsigned char source;   // Quelladresse (0..255)
+    char data[59];          // Daten        (max 60)
+    }
+    CC1100_Tx;  
+extern volatile  CC1100_Tx TxCC1100;    //  
 //=============================================================================
 
 
@@ -241,11 +241,11 @@ void reset(void);
 // Reset des CC1100 Transceiver
 //=============================================================================
 void setUid(unsigned char id);
-//	Setzt Adresse des CC1100 Transceiver 0...255 möglich
+//  Setzt Adresse des CC1100 Transceiver 0...255 möglich
 //=============================================================================
 char setOutputPower(unsigned char paIdx);
-//	Setzt die Sendeleistung des CC1100 Transceiver
-//	paIdx siehe paTable 
+//  Setzt die Sendeleistung des CC1100 Transceiver
+//  paIdx siehe paTable 
 //=============================================================================
 void switchFreq(unsigned char  c); 
 // Setzt den Sendekanal des CC1100 Transceiver 0...9 möglich

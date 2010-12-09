@@ -1,4 +1,4 @@
-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"      // Systemdefinitionen von TI für den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -23,7 +23,7 @@ void Aufgabe15()
     WDTCTL = WDTPW + WDTHOLD;   // Stop WDT
     SET(BCSCTL1, DIVA1);                     // ACLK Divider 10b: /4    (DIVA1)
     CLEAR(BCSCTL1, DIVA0);
-    WDTCTL = WDT_ADLY_1000;		// Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)
+    WDTCTL = WDT_ADLY_1000;     // Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)
     SET(IE1, WDTIE);
      
     powerState = LPM_4;
@@ -37,18 +37,18 @@ void Aufgabe15()
     _bis_SR_register(GIE);
     
     while(true) {
-		if( powerState == ACTIVE )
-			LED_SET(LED_GELB);
-		else if ( powerState == LPM_4 ) {
-			LED_OFF;
-			LPM4;
-		} 
-		while( TASTEN_BITS & TASTE0 ) {
-			if( watchdogSecCounter > 2 ) {
-				powerState = LPM_4;
-				break;
-			}
-			wait_ms(10);
-    	}			
+        if( powerState == ACTIVE )
+            LED_SET(LED_GELB);
+        else if ( powerState == LPM_4 ) {
+            LED_OFF;
+            LPM4;
+        } 
+        while( TASTEN_BITS & TASTE0 ) {
+            if( watchdogSecCounter > 2 ) {
+                powerState = LPM_4;
+                break;
+            }
+            wait_ms(10);
+        }           
     }
 }

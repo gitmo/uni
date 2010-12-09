@@ -7,5 +7,5 @@
 #include "../SHT11.h"   
 
 void Aufgabe5() {
-	P5SEL |= BIT4;	// P5 MCLK 	
+    P5SEL |= BIT4;  // P5 MCLK  
 }

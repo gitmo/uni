@@ -1,4 +1,4 @@
-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"      // Systemdefinitionen von TI für den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -10,12 +10,12 @@
 
 void Aufgabe11()
 {
-	CLEAR(P4OUT, BIT1);
-	wait_ms(1000);
-	SET(P4OUT, BIT1);
-	wait_ms(500);
-	
-	MCU_RESET;
-	
-	CLEAR(P4OUT, BIT0);
+    CLEAR(P4OUT, BIT1);
+    wait_ms(1000);
+    SET(P4OUT, BIT1);
+    wait_ms(500);
+    
+    MCU_RESET;
+    
+    CLEAR(P4OUT, BIT0);
 }

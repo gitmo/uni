@@ -8,14 +8,14 @@
 #include "project.h"
 
 void Aufgabe7() {
-	// Taster 0 interruptfähig schalten
+    // Taster 0 interruptfähig schalten
     CLEAR(P1IFG, TASTE0);
     SET(P1IE, TASTE0);
          
     // Interrupts global einschalten
     _bis_SR_register(GIE);
     
-	P5SEL |= BIT4;	// P5 MCLK 	
-	
-	while(true);
+    P5SEL |= BIT4;  // P5 MCLK  
+    
+    while(true);
 }

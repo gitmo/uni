@@ -1,4 +1,4 @@
-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"      // Systemdefinitionen von TI für den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -32,13 +32,13 @@ void Aufgabe13()
     while(true) {
         wait_ms(500);
         SET(P4OUT, BIT0);    // Red LED off
-		while (P1IN & 0x03){	// While buttons A or B are pressed
-			wait_ms(10);
-	        // Reset watchdog counter, preserve lower 8 bits
-			WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0x0F);
-		}
+        while (P1IN & 0x03){    // While buttons A or B are pressed
+            wait_ms(10);
+            // Reset watchdog counter, preserve lower 8 bits
+            WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0x0F);
+        }
         // Reset watchdog counter, preserve lower 8 bits
-		WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0x0F);
+        WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0x0F);
         wait_ms(500);
         CLEAR(P4OUT, BIT0);        // Red LED on
     }
