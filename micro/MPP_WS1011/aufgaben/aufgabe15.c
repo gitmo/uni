@@ -1,4 +1,4 @@
-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"		// Systemdefinitionen von TI fÃ¼r den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -17,7 +17,7 @@ void Aufgabe15()
     
     /*
      * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8
-     * Zählerstand 32768 für RESET
+     * ZÃ¤hlerstand 32768 fÃ¼r RESET
      */
 
     WDTCTL = WDTPW + WDTHOLD;   // Stop WDT
@@ -29,7 +29,7 @@ void Aufgabe15()
     powerState = LPM_4;
     watchdogSecCounter = 0;
     
-    // Taster 0 interruptfähig schalten
+    // Taster 0 interruptfÃ¤hig schalten
     CLEAR(P1IFG, TASTE0);
     SET(P1IE, TASTE0);
          

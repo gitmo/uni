@@ -1,4 +1,4 @@
-#include "msp430x16x.h"        // Systemdefinitionen von TI f¸r den MSP430F1612
+#include "msp430x16x.h"        // Systemdefinitionen von TI f√ºr den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -17,10 +17,10 @@ void Aufgabe16()
       
     powerState = LPM_4;
     
-    // Taster 0 interruptf‰hig schalten
+    // Taster 0 interruptf√§hig schalten
     CLEAR(P1IFG, TASTE0);
-    // Flanke auf 0 -> Interrupt beim dr¸cken (statt loslassen)
-    // f¸rdie invertierten Taster entspricht dies einer HF
+    // Flanke auf 0 -> Interrupt beim dr√ºcken (statt loslassen)
+    // f√ºrdie invertierten Taster entspricht dies einer HF
     CLEAR(P1IES, TASTE0);
     SET(P1IE, TASTE0);
          

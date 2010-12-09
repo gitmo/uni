@@ -1,4 +1,4 @@
-#include "msp430x16x.h"        // Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"        // Systemdefinitionen von TI fÃ¼r den MSP430F1612
 #include "../init.h"            // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"            // CC1100 Funktransceiver
 #include "../system.h"            // Systemfunktionen MSB430H
@@ -8,7 +8,7 @@
 #include "project.h"
 
 void Aufgabe7() {
-	// Taster 0 interruptfähig schalten
+	// Taster 0 interruptfÃ¤hig schalten
     CLEAR(P1IFG, TASTE0);
     SET(P1IE, TASTE0);
          

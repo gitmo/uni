@@ -1,4 +1,4 @@
-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+#include "msp430x16x.h"		// Systemdefinitionen von TI fÃ¼r den MSP430F1612
 #include "../init.h"        // Initialisierung des Mikrocontrollers
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
@@ -13,7 +13,7 @@ void Aufgabe9()
     
     /*
      * Watchdog auf Basis des ACLK-Takt mit dem Vorteiler 8
-     * Zählerstand 32768 für RESET
+     * ZÃ¤hlerstand 32768 fÃ¼r RESET
      */
 
     WDTCTL = WDTPW + WDTHOLD;                // Stop WDT
@@ -23,8 +23,8 @@ void Aufgabe9()
     /*
      * Falls der Watchdog feuert ensteht die skurille Situation das Programm
      * mit einer langsameren Taktfrequenz neu gestartet wird, da das DCOCTL
-     * Register zurückgesetzt wird. Dieses Register wird normalerweise bei
-     * Programmstart in DCO() in main.c initialisiert. Die Programmausführung
+     * Register zurÃ¼ckgesetzt wird. Dieses Register wird normalerweise bei
+     * Programmstart in DCO() in main.c initialisiert. Die ProgrammausfÃ¼hrung
      * setzt beim RESET bei vorigen Program Counter fort (hier fast immer in
      * wait_ms().
      */
