@@ -9,7 +9,7 @@
 void flash_read(unsigned int add, unsigned char* ptr, unsigned int len)
 	{ 
 	unsigned int l = 0;
-  	while(l<len)					// Blocklänge für..
+  	while(l<len)					// BlocklÃ¤nge fÃ¼r..
   		{							// ...lesen eines Flashwertes
     	ptr[l] = *(unsigned int*)(add + l);	
     	l++;
@@ -20,14 +20,14 @@ void flash_read(unsigned int add, unsigned char* ptr, unsigned int len)
 void flash_write(unsigned int add, unsigned char* ptr, unsigned int len)
 	{	
   	unsigned int i = 0; 
-  	for(i=0;i<len;i+=2)				// Blocklänge für..
+  	for(i=0;i<len;i+=2)				// BlocklÃ¤nge fÃ¼r..
   		{							// ...schreiben eines Flashwertes	
     	flash_prog((char*)(add + i), (ptr[i]));
 		}
 	}
 
 //=============================================================================
-void flash_erase( int *Data_ptr )	// Adresse im gewünschten Segment
+void flash_erase( int *Data_ptr )	// Adresse im gewÃ¼nschten Segment
 	{ 
 	// DCO(SMCLK) mit 7.372800MHz / 17 ~ 434000 Hz
 	// WDTCTL = WDTPW | WDTHOLD;	// Stop Watchdog
@@ -36,7 +36,7 @@ void flash_erase( int *Data_ptr )	// Adresse im gewünschten Segment
 	FCTL3 = FWKEY;               	// Lock = 0   
 	//while(FCTL3 & 0x0001) nop();  // Warten auf BUSY = 0
 	FCTL1 = FWKEY+ERASE;            // ERASE = 1 
-	*Data_ptr=0;                  	// löschen Flash Segment
+	*Data_ptr=0;                  	// lÃ¶schen Flash Segment
 	FCTL1 = FWKEY;               	// ERASE = 0 
 	FCTL3 = FWKEY+LOCK;            	// Lock = 1 
 	_bis_SR_register(GIE);			// alle Interrupte erlauben
@@ -64,7 +64,7 @@ void flash_prog( char *Data_ptr, char word )
 void writestr(char* str)				// Zeichenkettenausgabe RS232
 	{				
 	unsigned int j =0;					
-	for (j=0;j < strlen(str);j++)		// Zeichenkettenlänge
+	for (j=0;j < strlen(str);j++)		// ZeichenkettenlÃ¤nge
 		{		
 		while((U1TCTL & TXEPT)== 0x00);	// warten bis Sendepuffer leer
 		U1TXBUF = str[j];				// schreiben Sendepuffer

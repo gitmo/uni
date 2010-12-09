@@ -7,7 +7,7 @@
 #include "aufgaben/project.h"
 #include "aufgaben/aufgabe15.h"
 	
-//Interrupte folgendermaßen im Code einbinden:
+//Interrupte folgendermaÃŸen im Code einbinden:
 //
 // 		#pragma vector = TIMERA0_VECTOR
 //		__interrupt void TimerA0 (void)
@@ -16,7 +16,7 @@
 // 		}
 
 //
-//	Tabelle für die möglichen Interruptquellen zum Einsetzen in 
+//	Tabelle fÃ¼r die mÃ¶glichen Interruptquellen zum Einsetzen in 
 //	#pragma vector = ...
 
 //=======================================================================
@@ -50,8 +50,8 @@
 // Implementierung der ISR Routinen 
 // Achtung! Code in der ISR nicht zu lang machen,
 // da sonst Timing oder Stack Probleme drohen.
-// Für die benötigten ISR die Auskommentierungen entfernen
-// und eigenen Code für die jeweilige ISR einfügen
+// FÃ¼r die benÃ¶tigten ISR die Auskommentierungen entfernen
+// und eigenen Code fÃ¼r die jeweilige ISR einfÃ¼gen
 //==============================================================
 #include "aufgaben/common.h"
 #include "aufgaben/aufgabe19.h"
@@ -84,7 +84,7 @@ __interrupt void PORT2 (void) {
 		{ 
 		CLEAR(P2IFG, 0x01);
 		LEDTOGGLE;
-		res = receivePacket(); 	// CRC Rückgabe 
+		res = receivePacket(); 	// CRC RÃ¼ckgabe 
 		if (res)				// wenn Packet OK ...
 			{
 			printPacket();		// Packet auf Terminal ausgeben

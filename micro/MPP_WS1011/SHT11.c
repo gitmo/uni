@@ -34,7 +34,7 @@ char SHT11_Write_Byte(unsigned char value)
   	SHT11_DATA_IN;								// Datenleitung IN
   	SHT11_SCK_HIGH;	SHT11_SCK_LOW;				// Taktsignal
 	ack = SHT11_DATA;                 	// Daten einlesen - ack Bit 
-	return ack;		                    // Rückgabe ack=1 if no acknowledge
+	return ack;		                    // RÃ¼ckgabe ack=1 if no acknowledge
 	}
 
 
@@ -48,14 +48,14 @@ char SHT11_Read_Byte(unsigned char ack)
   		{
     	value = value << 1;             // value links schieben 
     	SHT11_SCK_HIGH;			
-    	if (SHT11_DATA) value++;        // wenn DATA=1 value um ein erhöhen
+    	if (SHT11_DATA) value++;        // wenn DATA=1 value um ein erhÃ¶hen
     	SHT11_SCK_LOW;
     	}
     if (ack == 0) SHT11_DATA_LOW;		// ack=0
     else SHT11_DATA_HIGH;				// ack=1
    	SHT11_DATA_OUT;                     // ack auf DATA
   	SHT11_SCK_HIGH; SHT11_SCK_LOW;		// Taktsignal						    
-  	return value;						// Rückgabe gelesener Wert
+  	return value;						// RÃ¼ckgabe gelesener Wert
 	}
 
 
@@ -146,7 +146,7 @@ char SHT11_Measure(unsigned char *p_value, unsigned char *p_checksum, unsigned c
   		}
   	for (i=0;i<65535;i++)
   		{
-  		wait(100);			// 1msek warten - Zeit hängt von der f ab !!!!!
+  		wait(100);			// 1msek warten - Zeit hÃ¤ngt von der f ab !!!!!
   		ack = SHT11_DATA;	// Wandlung kann zwischen 50..200mSek dauern
   		if(!ack) break;
 		} 
@@ -162,15 +162,15 @@ void SHT11_Read_Sensor(void) {
 	// Variablen und Konstanten
 	unsigned char error,checksum;
 	
-	// T = D1 + D2 * SO(T) Berechnungsgleichung für die Temperatur
+	// T = D1 + D2 * SO(T) Berechnungsgleichung fÃ¼r die Temperatur
 	// SO(T) ist Wert aus temp_float
-	const float D1=-39.6;			// für 14 Bit Werte
+	const float D1=-39.6;			// fÃ¼r 14 Bit Werte
 	const float	D2= 0.01;			// 
 	float T;						// Temperatur
 	
 	// HL = C1 + C2 * SORH + C3 * SO(RH) * SO(RH)  <= relative Feuchte linear	 
 	// SO(RH) ist Wert aus humi_float 
-	const float C1=-4.0;            // für 12 Bit Werte
+	const float C1=-4.0;            // fÃ¼r 12 Bit Werte
   	const float C2=+0.0405;         // 
   	const float C3=-0.0000028;      // 
   	float HL;						// relative Feuchtigkeit linear
@@ -203,7 +203,7 @@ void SHT11_Read_Sensor(void) {
 	
 	//=====Berechnung der Temperatur  	
   	T = D1 + D2 * temp_float;							// Gleichung
-  	sprintf(temp_char,"T=%-6.2f °C", T);				// float zu string
+  	sprintf(temp_char,"T=%-6.2f Â°C", T);				// float zu string
     //writestr(temp_char);
     
     //===== Berechnung der relativen Feuchtigkeit 

@@ -49,7 +49,7 @@ void flash_write(unsigned int add, unsigned char* ptr, unsigned int len);
 // schreibt Flash
 //=========================================================================
 void flash_erase( int *Data_ptr );		
-// löscht adressiertes Segment 
+// lÃ¶scht adressiertes Segment 
 //=========================================================================
 void flash_prog( char *Data_ptr, char word );
 // schreibt ein Byte
@@ -66,7 +66,7 @@ extern void writechar(char c);			// Zeichenausgabe RS232
 
 
 //=========================================================================
-// Funktionen für Verzögerungen
+// Funktionen fÃ¼r VerzÃ¶gerungen
 //=========================================================================
 // Funktion die c * 10 us wartet (bei 7.
 void wait(unsigned int c);				
@@ -75,7 +75,7 @@ void wait(unsigned int c);
 #define wait_120us(c)	(wait((unsigned int)c*12))
 //=========================================================================
 // Funktion liefert Zufallszahl
-unsigned int irand(unsigned int max);	// Funktion für Rand 0 <= x <= max
+unsigned int irand(unsigned int max);	// Funktion fÃ¼r Rand 0 <= x <= max
 //=========================================================================
 
 

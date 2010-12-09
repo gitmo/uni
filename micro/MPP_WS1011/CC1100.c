@@ -16,7 +16,7 @@ unsigned char ID = 1;
 unsigned char channel = 8;
 
 //=============================================================================			  
-// PATABLE sollte überarbeitet werden
+// PATABLE sollte Ã¼berarbeitet werden
 //=============================================================================
 unsigned char paTableIndex = PATABLE;	// Current PATABLE Index
 unsigned char paTable[] = {    0x00,		// -52 dBm	0
@@ -69,10 +69,10 @@ char conf[] = {
   0x0F, // FIFOTHR	Bytes in FIFO
   0x9B, // SYNC1	Sync Word HighByte 0x9B
   0xAD, // SYNC0	Sync Word Low Byte 0xAD
-  0x3F, // PKTLEN	Packetlänge = 63 bei variabler Packetlänge 
-  0x06, // PKTCTRL1	2 Status Bytes anfügen; Adresscheck ON Broadcastadresse 0
-  0x45, // PKTCTRL0	variable Packetlänge ON; whitening ON,  
-  0xFF, // ADDR		Addresse für Packetfilterung (Knotenadresse)
+  0x3F, // PKTLEN	PacketlÃ¤nge = 63 bei variabler PacketlÃ¤nge 
+  0x06, // PKTCTRL1	2 Status Bytes anfÃ¼gen; Adresscheck ON Broadcastadresse 0
+  0x45, // PKTCTRL0	variable PacketlÃ¤nge ON; whitening ON,  
+  0xFF, // ADDR		Addresse fÃ¼r Packetfilterung (Knotenadresse)
   0x00, // CHANNR	
   0x0B, // FSCTRL1	
   0x00, // FSCTRL0
@@ -82,7 +82,7 @@ char conf[] = {
   0x2D, // MDMCFG4
   0xF8, // MDMCFG3
   0x73, // MDMCFG2	Modulationsformat MSK
-  0x42, // MDMCFG1	8 Präambel Bytes, 
+  0x42, // MDMCFG1	8 PrÃ¤ambel Bytes, 
   0xF8, // MDMCFG0
   0x00, // DEVIATN
   0x07, // MCSM2 	(RX_TIME = until end of packet)
@@ -107,7 +107,7 @@ char conf[] = {
 
 
 //=============================================================================				  
-// Funktion wartet bis die SPI des CC1100 verfügbar ist
+// Funktion wartet bis die SPI des CC1100 verfÃ¼gbar ist
 //=============================================================================
 void spiInitTrx(void)	// schaltet P3.2 auf Input und CS=0 und wartet bis
 	{					// GDO1=0(SPI CC1100 bereit), dann P3.2 in den SPI Mode
@@ -118,15 +118,15 @@ void spiInitTrx(void)	// schaltet P3.2 auf Input und CS=0 und wartet bis
 	P3SEL |= 0x04;			// P3.2 in SPI mode
 	}
 //=============================================================================
-// Funktion sendet und empfängt ein Byte über die SPI des MSP430
+// Funktion sendet und empfÃ¤ngt ein Byte Ã¼ber die SPI des MSP430
 //=============================================================================
 unsigned char trx_spi(unsigned char data)
 	{		
-	IFG1 &= ~URXIFG0;			// zurücksetzen des URXIFG0 Flags
+	IFG1 &= ~URXIFG0;			// zurÃ¼cksetzen des URXIFG0 Flags
 	while(!(IFG1 & UTXIFG0));	// warten bis TX Buffer leer ist
 	TXBUF0 = data;				// ein Byte senden
 	while(!(IFG1 & URXIFG0));	// warten auf empfangenes Byte
-	return RXBUF0;				// Rückgabe des empfangenen Byte
+	return RXBUF0;				// RÃ¼ckgabe des empfangenen Byte
 	}
 //=============================================================================
 // Funktion zum Schreiben eines einzelnen CC1100 Registers
@@ -143,7 +143,7 @@ void spiWriteReg(unsigned char addr, unsigned char value)
 //=============================================================================
 unsigned char spiReadReg(unsigned char addr)
 	{
-	unsigned char x;			// Variable Rückgabewert
+	unsigned char x;			// Variable RÃ¼ckgabewert
 	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
 	trx_spi(addr | CC1100_READ_SINGLE); // Kommando schreiben
 	x = trx_spi(NOBYTE);		// Wert lesen
@@ -303,7 +303,7 @@ void initCC1100_POWERDOWN(void)
 	}	
 		
 //=============================================================================
-// Funktion setzt die Adresse des CC1100 (ist im Bereich von 0...255 möglich)
+// Funktion setzt die Adresse des CC1100 (ist im Bereich von 0...255 mÃ¶glich)
 //=============================================================================
 void setUid(unsigned char id) 
 	{
@@ -311,7 +311,7 @@ void setUid(unsigned char id)
 	spiStrobe(CC1100_SIDLE);				  // in den IDLE Mode setzen
 	spiWriteReg(CC1100_ADDR, id);			  // Adressregister schreiben
 	spiStrobe(CC1100_SRX);					  // in den RX Mode schalten	
-	wait(12);								  // 12µSek warten
+	wait(12);								  // 12ÂµSek warten
 	}
 //=============================================================================
 // Funktion setzt die Sendeleistung des CC1100 siehe auch paTable 
@@ -325,19 +325,19 @@ char setOutputPower(unsigned char paIdx)
 		spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]); // PA Wert schreiben
 		spiStrobe(CC1100_SRX);		// CC1100 in den RX Mode setzen
 		wait(12);					// warten 
-		return true;				// Rückgabe true 
+		return true;				// RÃ¼ckgabe true 
 		}
-	return false;					// Rückgabe false da paIdx zu groß
+	return false;					// RÃ¼ckgabe false da paIdx zu groÃŸ
 	}
 
 //=============================================================================
 //  void sendPacket(unsigned char ziel,unsigned char quelle,char *data,unsigned char length)
 //
 //  Funktion:
-//      Sendet Packete mit Längen bis zu 62Byte.
-//      GDO2 muß so konfiguriert werden das es gesetzt wird wenn das sync word
-//		gesendet ist und und rückgesetzt wird wenn das packet gesendet ist.
-//		Dafür erforderlich ist spiWriteReg(CC1100_IOCFG0, 0x06);
+//      Sendet Packete mit LÃ¤ngen bis zu 62Byte.
+//      GDO2 muÃŸ so konfiguriert werden das es gesetzt wird wenn das sync word
+//		gesendet ist und und rÃ¼ckgesetzt wird wenn das packet gesendet ist.
+//		DafÃ¼r erforderlich ist spiWriteReg(CC1100_IOCFG0, 0x06);
 //      Das GDO2 Bit wird in der Funktion gepollt.
 //      
 //  Parameter:
@@ -346,29 +346,29 @@ char setOutputPower(unsigned char paIdx)
 //		unsigned char quelle
 //			Zieladresse des Knotens an die das Packet gesendet werden soll (0..255) 
 //     	char *data
-//          Pointer auf einen Buffer der die Sendedaten enthält.
+//          Pointer auf einen Buffer der die Sendedaten enthÃ¤lt.
 //      unsigned char length
-//          Länge des Buffers mit den Sendedaten (length <= 60)
+//          LÃ¤nge des Buffers mit den Sendedaten (length <= 60)
 //=============================================================================
 
 void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned char length)
 	{
 	//	| 0 | 1 | 2 | 3  |....| 62 | data[3..62] = 59 
 	//	  L   Z   Q   D1  ....  D59 => 62 Byte
-	// 	L_Länge,Z_Ziel;Q_Quelle,D_Datenbyte
+	// 	L_LÃ¤nge,Z_Ziel;Q_Quelle,D_Datenbyte
 	unsigned char i;
 	if (length > MAX_DATA_LENGTH-1 )	// max 59 Byte  
 		{
-		length = MAX_DATA_LENGTH-1 ;	// zu große Packete werden auf 59 Byte begrenzt 
+		length = MAX_DATA_LENGTH-1 ;	// zu groÃŸe Packete werden auf 59 Byte begrenzt 
 		}
-	// Packetlänge = 1 Byte (Zieladdresse) + data length
+	// PacketlÃ¤nge = 1 Byte (Zieladdresse) + data length
 	TxCC1100.length = 2 + length;
 	// Zieladresse eintragen
 	TxCC1100.dest = ziel;
 	TxCC1100.source = quelle;
 	
 	// Quelladresse eintragen
-	//Sendepuffer füllen
+	//Sendepuffer fÃ¼llen
 	for (i = 0; i < length; i++)
 		{
 		TxCC1100.data[i] = data[i];
@@ -377,9 +377,9 @@ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned c
 	CLEAR(P2IE, 0x01);
 	// setzt CC1100 in den IDLE Mode
 	spiStrobe(CC1100_SIDLE);
-    // löscht den TX FIFO des CC1100
+    // lÃ¶scht den TX FIFO des CC1100
     spiStrobe(CC1100_SFTX);
-	// Packet in TX FIFO schreiben +Länge+Ziel+Quelle
+	// Packet in TX FIFO schreiben +LÃ¤nge+Ziel+Quelle
 	spiWriteBurstReg(CC1100_TXFIFO, (char *) &TxCC1100, length+3);
 	// setzt CC1100 in den Tx Mode
 	spiStrobe(CC1100_STX);
@@ -397,13 +397,13 @@ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned c
 //  bool receivePacket()
 //
 //  Funktion:
-//      Die Funktion empfängt ein Packet variabler Länge.
-//		Das erste Byte im Packet ist die Länge des Packetes.
-// 		Um diese Funktion zu nutzen muß der APPEND_STATUS im PKTCTRL1 Register
+//      Die Funktion empfÃ¤ngt ein Packet variabler LÃ¤nge.
+//		Das erste Byte im Packet ist die LÃ¤nge des Packetes.
+// 		Um diese Funktion zu nutzen muÃŸ der APPEND_STATUS im PKTCTRL1 Register
 //		gesetzt werden. RSSI und CRC des Packetes werden beim Lesen angehangen.
-//      Die Funktion wird durch die ISR für P2.0 aufgerufen.
+//      Die Funktion wird durch die ISR fÃ¼r P2.0 aufgerufen.
 //		Ist getriggert durch das GDO2 Signal des CC1100 (an P2.0)
-//		für den Empfang eines Packetes. Siehe auch Register IOCFG2. 
+//		fÃ¼r den Empfang eines Packetes. Siehe auch Register IOCFG2. 
 //      Das RXBYTES Register zeigt ob Bytes im FIFO stehen.
 // 		Ist notwendig da das GDO Signal auch signalisier wenn:
 //			***ein synch 
@@ -416,7 +416,7 @@ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned c
 //  Parameter:
 //		keine
 //          
-//  Rückgabewert:
+//  RÃ¼ckgabewert:
 //      bool
 //          true:   CRC OK
 //          false:  CRC NOT OK or
@@ -425,21 +425,21 @@ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned c
 //=============================================================================
 char receivePacket()
 	{
-	// für RSSI und CRC Status vorbereiten
+	// fÃ¼r RSSI und CRC Status vorbereiten
 	char status[2];
-	// mit 0 initialisieren um aktuelle Länge zu speichern
+	// mit 0 initialisieren um aktuelle LÃ¤nge zu speichern
 	unsigned char packetLength = 0;
 	// Wenn Bytes im RX FIFO vorhanden sind dann...
 	if ((spiReadStatus(CC1100_RXBYTES) & BYTES_IN_RXFIFO))
 		{
-		// Längenbyte des aktuellen Packetes aus dem RX FIFO lesen (erstes Byte)
-        packetLength = spiReadReg(CC1100_RXFIFO); //Das erste Byte ist LängenByte
-		// Wenn Packetlänge OK dann...
+		// LÃ¤ngenbyte des aktuellen Packetes aus dem RX FIFO lesen (erstes Byte)
+        packetLength = spiReadReg(CC1100_RXFIFO); //Das erste Byte ist LÃ¤ngenByte
+		// Wenn PacketlÃ¤nge OK dann...
         if (packetLength <= PACKET_LENGTH)
 			{
-			// Längenbyte in den RxCC1100 Puffer schreiben
+			// LÃ¤ngenbyte in den RxCC1100 Puffer schreiben
 			RxCC1100.length = packetLength;// packetLength;
-			// Den Rest des Packetes in RxCC1100 mit aktueller Länge schreiben
+			// Den Rest des Packetes in RxCC1100 mit aktueller LÃ¤nge schreiben
             spiReadBurstReg(CC1100_RXFIFO,(char *)RxCC1100.data, packetLength);
             // Lesen der zwei Status Bytes (status[0] = RSSI, status[1] = LQI)
             spiReadBurstReg(CC1100_RXFIFO, status, 2);
@@ -451,7 +451,7 @@ char receivePacket()
 			RxCC1100.dest = RxCC1100.data[0]; 
 			// Quelladresse in den RxCC1100 Puffer schreiben
 			RxCC1100.source = RxCC1100.data[1];
-			// Rückgabewert CRC true or false
+			// RÃ¼ckgabewert CRC true or false
 			return RxCC1100.CRC;
         	}
     	//...sonst...
@@ -459,16 +459,16 @@ char receivePacket()
 			{
 			// ...CC1100 in den IDLE Mode setzen um... 
             spiStrobe(CC1100_SIDLE);
-            // ...den RX FIFO zu löschen...
+            // ...den RX FIFO zu lÃ¶schen...
             spiStrobe(CC1100_SFRX);
-			// ...und Wert für Rückgabe ist false
+			// ...und Wert fÃ¼r RÃ¼ckgabe ist false
             return false;
         	}
 		}
 	// ...sonst da keine Bytes im RX FIFO	
 	else
 		{
-		// ...Rückgabe false 
+		// ...RÃ¼ckgabe false 
 		return false;
 		}
 	}
@@ -485,7 +485,7 @@ void printPacket(void)
 	char i;
 	char text[20];
 	char z[] = "\n\r";
-	sprintf(text,"\n\rPaketlänge = %u", RxCC1100.length);
+	sprintf(text,"\n\rPaketlÃ¤nge = %u", RxCC1100.length);
 	writestr(text);	
 	sprintf(text,"\n\rZieladresse = %u", RxCC1100.dest);
 	writestr(text);

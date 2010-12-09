@@ -2,7 +2,7 @@
 #define CC1100_H_
 
 //=============================================================================
-// zentrale Daten für den CC1100 Funkchip
+// zentrale Daten fÃ¼r den CC1100 Funkchip
 //=============================================================================
 // RxCC1100 	Empfangsbuffer
 // TxCC1100 	Sendebuffer
@@ -198,7 +198,7 @@ extern unsigned char paTableIndex;	//PA Tabelle
 //=============================================================================
 typedef struct RCC1100
 	{
-	unsigned char length;	// Längenbyte muß <= 62 sein
+	unsigned char length;	// LÃ¤ngenbyte muÃŸ <= 62 sein
 	unsigned char dest;		// Zieladresse des empfangenen Packetes
 	unsigned char source;	// Quelladresse des empfangenen Packetes
 	char data[61];			// RxCC1100.data[0] Zieladresse
@@ -213,11 +213,11 @@ extern volatile  CC1100_Rx RxCC1100;
 
 
 //=============================================================================
-// CC1100 Funk Sendepuffer TxCC1100 für variable Datenlängen
+// CC1100 Funk Sendepuffer TxCC1100 fÃ¼r variable DatenlÃ¤ngen
 //=============================================================================
 typedef struct TCC1100
 	{
-	unsigned char length;	// Länge Daten 	(max 59)
+	unsigned char length;	// LÃ¤nge Daten 	(max 59)
 	unsigned char dest;		// Zieladresse	(0..255)
 	unsigned char source;	// Quelladresse (0..255)
 	char data[59];			// Daten     	(max 60)
@@ -241,23 +241,23 @@ void reset(void);
 // Reset des CC1100 Transceiver
 //=============================================================================
 void setUid(unsigned char id);
-//	Setzt Adresse des CC1100 Transceiver 0...255 möglich
+//	Setzt Adresse des CC1100 Transceiver 0...255 mÃ¶glich
 //=============================================================================
 char setOutputPower(unsigned char paIdx);
 //	Setzt die Sendeleistung des CC1100 Transceiver
 //	paIdx siehe paTable 
 //=============================================================================
 void switchFreq(unsigned char  c); 
-// Setzt den Sendekanal des CC1100 Transceiver 0...9 möglich
+// Setzt den Sendekanal des CC1100 Transceiver 0...9 mÃ¶glich
 //=============================================================================
 void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned char length);
 // Sendet ein Funkpaket siehe auch TxCC1100 Puffer
 //=============================================================================
 char receivePacket(void);
-// Empfängt ein Funkpacket siehe auch RxCC1100 Puffer
+// EmpfÃ¤ngt ein Funkpacket siehe auch RxCC1100 Puffer
 //=============================================================================
 char receivePacket(void);
-// Empfängt ein Funkpacket siehe auch RxCC1100 Puffer
+// EmpfÃ¤ngt ein Funkpacket siehe auch RxCC1100 Puffer
 //=============================================================================
 void printPacket(void);
 // Gibt den Packetinhalt auf das Terminal aus

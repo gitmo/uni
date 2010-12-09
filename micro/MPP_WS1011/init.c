@@ -99,7 +99,7 @@ void initUART0_SPI(void)
 			+	SWRST			// Software Reset = 1
 			+	MM; 			// USART ist Master
 	// USART Transmit Control Register
-	UTCTL0 = 	CKPL			// Datenübernahme mit LH Flanke
+	UTCTL0 = 	CKPL			// DatenÃ¼bernahme mit LH Flanke
 			+ 	SSEL1			// Taktquelle SMCLK
 			+	SSEL0			// Taktquelle SMCLK
 			+	STC;			// 3 Leitungsmode der SPI
@@ -114,7 +114,7 @@ void initUART0_SPI(void)
   	// USART Modul Enable Register
 	ME1 |= USPIE0;         // Enable USART0 TXD/RXD
 	// USART Control Register
-	UCTL0  &= ~SWRST;      // Reset Bit löschen 
+	UCTL0  &= ~SWRST;      // Reset Bit lÃ¶schen 
 	}
 	
 	
@@ -141,8 +141,8 @@ void DCO (void)				// f(DCO) = DELTA*(32768Hz) = 7372800Hz
 	unsigned int Compare, Oldcapture = 0;	
 	WDTCTL = WDTPW + WDTHOLD;	// Stop WDT
 	BCSCTL2 |= DCOR;		// ROSC (extern) einschalten
-	BCSCTL2 &= ~SELM1;		// DCO als Taktquelle für MCLK		
-	BCSCTL2 &= ~SELS;		// DCO als Taktquelle für SMCLK 	
+	BCSCTL2 &= ~SELM1;		// DCO als Taktquelle fÃ¼r MCLK		
+	BCSCTL2 &= ~SELS;		// DCO als Taktquelle fÃ¼r SMCLK 	
 	BCSCTL1	|= XT2OFF;		// XT2 ausschalten 
 	CCTL2 = CM_1 + CCIS_1 + CAP; 		// CAP, ACLK
 	TACTL = TASSEL_2 + MC_2 + TACLR;    // SMCLK, cont-mode, clear
