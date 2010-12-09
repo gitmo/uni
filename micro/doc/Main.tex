@@ -61,7 +61,7 @@
 \renewcommand{\labelenumii}{$\bullet$}
 
 % define a macro ausgabe which takes as argument
-% your ausgabe.txt file’s name 
+% your ausgabe.txt file’s name
 \newcommand{\ausgabe}[1] {\hrule\small\verbatiminput{#1}\normalsize\hrule}
 
 \definecolor{light-gray}{gray}{0.95}
@@ -104,10 +104,10 @@
 Die überwältigende Mehrheit zukünftiger Computersysteme wird durch miteinander kommunizierende, eingebettete Systeme geprägt sein.
 Diese finden sich in Maschinensteuerungen, Haushaltsgeräten, Kraftfahrzeugen, Flugzeugen, intelligenten Gebäuden etc. und
 werden zukünftig immer mehr in Netze wie dem Internet eingebunden sein.
-Das Praktikum wird auf die Architektur eingebetteter Systeme eingehen und die Unterschiede zu traditionellen PC-Architekturen 
-(z.B. Echtzeitfähigkeit, Interaktion mit der Umgebung) anhand praktischer Beispiele aufzeigen. 
-Das Praktikum basiert auf einem MSP430 Mikrocontrollersystem. 
-Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind: 
+Das Praktikum wird auf die Architektur eingebetteter Systeme eingehen und die Unterschiede zu traditionellen PC-Architekturen
+(z.B. Echtzeitfähigkeit, Interaktion mit der Umgebung) anhand praktischer Beispiele aufzeigen.
+Das Praktikum basiert auf einem MSP430 Mikrocontrollersystem.
+Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind:
 \begin{enumerate}
     \item Registerstrukturen
     \item Speicherorganisation
@@ -184,9 +184,9 @@ Folgende Interruptquellen sind auf dem MSP430F1612 verfügbar:
     \item I/O PORT 2
     \item USART1 Senden
     \item USART1 Empfangen
-    \item I/O Port 
+    \item I/O Port
     \item TIMER A
-    \item A/D Wandler   
+    \item A/D Wandler
     \item USART0 Senden
     \item USART1 Empfangen
     \item Watchdog Timer
@@ -218,12 +218,23 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \begin{description}
     \item [aktiver Modus]
     \item [LPM 4]  Nur eine Flanke an den Port1 und Port2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
-    \item [LPM 3] Zzgl zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken. 
-    \item [LPM 2]  
-    \item [LPM 1] 
-    \item [LPM 0] 
+    \item [LPM 3] Zzgl zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken.
+    \item [LPM 2]
+    \item [LPM 1]
+    \item [LPM 0]
 \end{description}
 
 \input{aufgaben/14.tex}
 \input{aufgaben/15.tex}
+\input{aufgaben/16.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{Timer}
+
+\input{aufgaben/17.tex}
+\input{aufgaben/18.tex}
+\input{aufgaben/19.tex}
+
 \end{document}
