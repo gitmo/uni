@@ -1,2 +1,16 @@
 \subsection*{Aufgabe 7: Dynamische Taktfrequenzumschaltung}
-to add...
+\subsubsection*{Quelltext}
+
+\lstinputlisting[linerange=10-21,firstnumber=10,caption=aufgabe07.c]
+{../MPP_WS1011/aufgaben/aufgabe07.c}
+
+\begin{lstlisting}[caption=Macros]
+#define RSEL_RESET      (BCSCTL1 &= ~(RSEL0 | RSEL1 | RSEL2))
+#define DCO_RESET       (DCOCTL &= ~(DCO0 | DCO1 | DCO2))
+#define MOD_RESET       (DCOCTL  &= ~(MOD0 | MOD1 | MOD2 | MOD3 | MOD4))
+#define DIVM_RESET      (BCSCTL2 &= ~(DIVM0 | DIVM1))
+\end{lstlisting}
+
+\lstinputlisting[linerange=57-95,firstnumber=57,caption=interrupts\_a07.c]
+{../MPP_WS1011/aufgaben/interrupts_a07.c}
+

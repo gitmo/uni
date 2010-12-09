@@ -6,7 +6,7 @@
 #include "string.h"
 #include "aufgaben/project.h"
 #include "aufgaben/aufgabe15.h"
-    
+
 //Interrupte folgendermaßen im Code einbinden:
 //
 //      #pragma vector = TIMERA0_VECTOR
@@ -16,7 +16,7 @@
 //      }
 
 //
-//  Tabelle für die möglichen Interruptquellen zum Einsetzen in 
+//  Tabelle für die möglichen Interruptquellen zum Einsetzen in
 //  #pragma vector = ...
 
 //=======================================================================
@@ -47,7 +47,7 @@
 
 
 //==============================================================
-// Implementierung der ISR Routinen 
+// Implementierung der ISR Routinen
 // Achtung! Code in der ISR nicht zu lang machen,
 // da sonst Timing oder Stack Probleme drohen.
 // Für die benötigten ISR die Auskommentierungen entfernen
@@ -56,65 +56,65 @@
 
 enum FREQ_STATE {SLOW, FAST} freqState = FAST;
 
-#pragma vector = PORT1_VECTOR 
+#pragma vector = PORT1_VECTOR
 __interrupt void PORT1 (void)
 {
     if(freqState == SLOW) {
         //7,3728 Mhz
         RSEL_RESET;
         BCSCTL1 |= (RSEL0 | RSEL2);
-        
+
         DCO_RESET;
         DCOCTL |= (DCO0 | DCO2);
-        
+
         MOD_RESET;
         DCOCTL |= (MOD4 | MOD3 | MOD2 | MOD0);
-        
+
         DIVM_RESET;
-        
+
         freqState = FAST;
     } else {
         //4,096kHz      RSEL_RESET;
         BCSCTL1 |= (RSEL0 | RSEL1| RSEL2);
-        
+
         DCO_RESET;
         DCOCTL |= (DCO2);
-        
+
         MOD_RESET;
         DCOCTL |= (MOD3 | MOD1 | MOD0);
-        
+
         DIVM_RESET;
         BCSCTL2 |= (DIVM0);
-        
+
         freqState = SLOW;
     }
-    
-    
+
+
     //Interrupt Flag ausschalten
     CLEAR(P1IFG, 0xFF);
 }
-        
+
 //==============================================================
 //===INT:01====ADR:FFE2====PORT2================================
 //==============================================================
 #pragma vector = PORT2_VECTOR
 __interrupt void PORT2 (void) {
-    char res ;          // CRC Check 
+    char res ;          // CRC Check
     if (P2IFG & 0x01)   // Check P2IFG Bit P2.0 - CC1100 Rx Packet
-        { 
+        {
         CLEAR(P2IFG, 0x01);
         LEDTOGGLE;
-        res = receivePacket();  // CRC Rückgabe 
+        res = receivePacket();  // CRC Rückgabe
         if (res)                // wenn Packet OK ...
             {
             printPacket();      // Packet auf Terminal ausgeben
             }
         else
-            {   
+            {
             spiStrobe(CC1100_SIDLE);    // Switch to IDLE
             spiStrobe(CC1100_SFRX);     // Flush the RX FIFO
             }
-        }   
+        }
     else
         {
         CLEAR(P2IFG, 0xFF);             // Clear all flags
