@@ -1,4 +1,4 @@
-#include "msp430x16x.h"        // Systemdefinitionen von TI fÃ¼r den MSP430F1612
+#include "msp430x16x.h"        // Systemdefinitionen von TI für den MSP430F1612
 #include "init.h"            // Initialisierung des Mikrocontrollers
 #include "CC1100.h"            // CC1100 Funktransceiver
 #include "system.h"            // Systemfunktionen MSB430H
@@ -13,7 +13,7 @@
  Board-Belegung:
     P4.0 LED          rot
     P4.1 LED          gelb
-    P4.2 LED          grÃ¼n
+    P4.2 LED          grün
     P4.3 Beeper
 */
 #define ROT 0
@@ -35,7 +35,7 @@ int Aufgabe1 (void) {
     a = P4IN & 0x07;    // 0x01 & 0x07 = 0x01
     P4OUT &= 0x00;      // Alle Bits werden auf LOW gesetzt (LEDs leuchten)
     P4OUT |= 0x01;      // P4.0 wird auf HIGH gesetzt (rote LED aus)
-    P4OUT |= LEDRT;     // Es Ã¤ndert sich nichts, da 0x01 | 0x01 = 0x01
+    P4OUT |= LEDRT;     // Es ändert sich nichts, da 0x01 | 0x01 = 0x01
     P4OUT &= ~LEDRT;    // ~0x01 = 0xFE -> 0x01 & 0xFE = 0x00
                         // Effekt: alle LEDs auf LOW und leuchten somit
     P4OUT ^= LEDRT;     // 0x00 ^ 0x01 = 0x01 (gelbe und gruene LED leuchten)
@@ -48,7 +48,7 @@ int Aufgabe1 (void) {
         /*
          * Schreiben Sie ein kleines Programm, welches den Durchlauf einer
          * Ampelsignalsequenz mit den Phasen (rt,rt-gb,gr,gb,rt) simuliert.
-         * Nutzen Sie dazu die bereitgestellte Funktion fÃ¼r eine Zeitschleife.
+         * Nutzen Sie dazu die bereitgestellte Funktion für eine Zeitschleife.
         */
 
         //rot

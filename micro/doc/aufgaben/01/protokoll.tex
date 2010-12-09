@@ -1,0 +1,17 @@
+\subsection*{Aufgabe 1: Portleitung als Output}
+
+Jeder Pin kann mittels den 8-Bit Registern PXDIR, PXOUT und PXIN konfiguiert beziehungsweise ausgelesen werden.
+X ist dabei ein Wert zwischen 0 und 5 - stehend für den jeweiligen Port.
+
+Mittels dem i-ten Bit des PXDIR-Registers wird der i-te Pin des X-Ports als Eingang oder Ausgang konfiguiert.
+Je nachdem kann im PXIN-Register der Wert gelesen bzw. im PXOUT-Register geschrieben werden.
+
+Die Pins selber können nur zwei Zustände annehmen: HIGH (logisch Eins) und LOW (logisch Null).
+\subsubsection*{Erläuterung von Befehlen}
+\lstinputlisting[linerange=29-41,firstnumber=29,caption=aufgabe01.c]
+{../MPP_WS1011/aufgaben/aufgabe01.c}
+
+\subsubsection*{Ampelschaltung}
+
+\lstinputlisting[linerange=46-70,firstnumber=46,caption=aufgabe01.c]
+{../MPP_WS1011/aufgaben/aufgabe01.c}

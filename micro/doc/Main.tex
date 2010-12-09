@@ -1,0 +1,229 @@
+%
+%  Mikroprozessor Praktikum Protokolle
+%
+%  Sebastian Raitza, Nico von Geyso 2010
+%
+\documentclass[11pt,german]{scrartcl}
+
+% See geometry.pdf to learn the layout options.
+\usepackage{geometry}
+\geometry{a4paper}
+
+% To begin paragraphs with an empty line
+\usepackage[parfill]{parskip}
+
+% Use utf-8 encoding for foreign characters
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Setup for fullpage use
+\usepackage{fullpage}
+
+% More symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{latexsym}
+
+% Surround parts of graphics with box
+\usepackage{boxedminipage}
+
+% Package for including code in the document
+\usepackage{listings}
+\usepackage{color}
+\usepackage{moreverb}
+\usepackage{courier}
+
+
+% This is now the recommended way for checking for PDFLaTeX:
+\usepackage{ifpdf}
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
+\fi
+
+\ifpdf
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+\else
+\DeclareGraphicsExtensions{.eps, .jpg}
+\fi
+
+\title{Mikroprozessor Praktikum\\Protokolle 1-15}
+\author{Sebastian Raitza, Nico von Geyso}
+
+% Activate to display a given date or no date
+%\date{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\labelenumi}{\alph{enumi})}
+\renewcommand{\labelenumii}{$\bullet$}
+
+% define a macro ausgabe which takes as argument
+% your ausgabe.txt file’s name 
+\newcommand{\ausgabe}[1] {\hrule\small\verbatiminput{#1}\normalsize\hrule}
+
+\definecolor{light-gray}{gray}{0.95}
+
+\lstset{
+  language=C,               % choose the language of the code
+  basicstyle=\ttfamily\scriptsize,   % size of fonts used for the code
+  numbers=left,             % where to put the line-numbers
+  numberstyle=\scriptsize,        % size of fonts for used line-numbers
+  stepnumber=1,             % step between line-numbers
+  numbersep=5pt,            % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % background color, add \usepackage{color}
+  showspaces=false,         % show spaces adding particular underscores
+  showstringspaces=false,   % underline spaces within strings
+  showtabs=false,           % show tabs within strings adding particular underscores
+  frame=single,             % adds a frame around the code
+  tabsize=4,                % sets default tabsize to 2 spaces
+  captionpos=b,             % sets the caption-position to bottom
+  breaklines=true,          % sets automatic line breaking
+  breakatwhitespace=false,  % sets if automatic breaks should only happen at whitespace
+  escapeinside={\%*}{*)},   % if you want to add a comment within your code
+  frameround=tttt,
+  extendedchars=true,
+  literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}2
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {°}{{}}0
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Modulbeschreibung des Mikroprozessor-Praktikum}
+Die überwältigende Mehrheit zukünftiger Computersysteme wird durch miteinander kommunizierende, eingebettete Systeme geprägt sein.
+Diese finden sich in Maschinensteuerungen, Haushaltsgeräten, Kraftfahrzeugen, Flugzeugen, intelligenten Gebäuden etc. und
+werden zukünftig immer mehr in Netze wie dem Internet eingebunden sein.
+Das Praktikum wird auf die Architektur eingebetteter Systeme eingehen und die Unterschiede zu traditionellen PC-Architekturen 
+(z.B. Echtzeitfähigkeit, Interaktion mit der Umgebung) anhand praktischer Beispiele aufzeigen. 
+Das Praktikum basiert auf einem MSP430 Mikrocontrollersystem. 
+Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind: 
+\begin{enumerate}
+    \item Registerstrukturen
+    \item Speicherorganisation
+    \item hardwarenahe Assembler- und Hochsprachenprogrammierung
+    \item I/O-System- und Timer-Programmierung
+    \item Interrupt-System
+    \item Watchdog-Logik
+    \item Analogschnittstellen
+    \item Bussystemanbindung von Komponenten
+    \item Kommunikation (seriell, CAN-Bus, Ethernet, Funk und USB)
+    \item Ansteuerung von Modellen und Nutzung unterschiedlichster Sensorik.
+\end{enumerate}
+
+
+\section{Entwicklungsboard MSB430H}
+Auf dem zum entwickelten Board handelt es sich um das Entwicklungsboard MSB430H.
+Der hier verwendete Mikrocontroller ist ein MSP430F1612 von Texas Instrument.
+Dieser verfügt neben einem universellen Clock-System unter anderem über 55 kByte Flash, 5kByte Ram, USART und einem Watchdog.
+Das Board ist zusätzlich mit einem 868MHz Transciever (CC1100),
+sowie einem Luftfeuchtigkeits- und Temperatursensor (SHT11), einem 3D-Beschleunigungssensor (MMA7260Q)
+und einer SD-Karte ausgestattet.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{I/O Portleitungen}
+Ein Kennzeichen von Mikrocontrollern sind seine I/O-Portleitungen.
+Auch bekannt unter dem Namen \textit{General Purpose Input/Output}.
+Diese Pins können als Eingang um digitale Signale zu lesen fungieren
+oder als Ausgang um andere Geräte zu kontrollieren oder mit ihnen zu kommunizieren.
+
+Die Konfiguration dieser kann mittels Software programmiert werden
+und überlässt so dem Entwickler große Freiheiten.
+Bei manchen Mikrocontrollern können einige I/O-Ports desweiteren als Interruptquellen definiert werden.
+
+Meist werden die I/O-Pins in unterschiedliche Ports gruppiert.
+Ein Port hat meistens acht I/O-Pins.
+
+Der von uns verwendete MSP430F1612 verfügt über sechs I/O-Ports mit jeweils acht Bit Breite.
+
+\input{aufgaben/01/protokoll.tex}
+\input{aufgaben/02/protokoll.tex}
+\input{aufgaben/03/protokoll.tex}
+\input{aufgaben/04/protokoll.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{Clock System}
+\input{aufgaben/05/protokoll.tex}
+\input{aufgaben/06/protokoll.tex}
+\input{aufgaben/07/protokoll.tex}
+\input{aufgaben/08/protokoll.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{Watchdog}
+\input{aufgaben/09/protokoll.tex}
+\input{aufgaben/10/protokoll.tex}
+\input{aufgaben/11/protokoll.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{Interrupt}
+Mittels Interrupt kann aufgrund von gewissen Ereignissen die normale Programmabarbeitung unterbrochen werden.
+Dies ist hilfreich um auf Ereignisse an I/O-Ports oder Peripheriegeräten sofort reagieren zu können.
+
+Folgende Interruptquellen sind auf dem MSP430F1612 verfügbar:
+\begin{enumerate}
+    \item DA/Wandler und DMA
+    \item I/O PORT 2
+    \item USART1 Senden
+    \item USART1 Empfangen
+    \item I/O Port 
+    \item TIMER A
+    \item A/D Wandler   
+    \item USART0 Senden
+    \item USART1 Empfangen
+    \item Watchdog Timer
+    \item Comparator A
+    \item TImer B
+    \item NMI
+    \item RESET
+\end{enumerate}
+
+Um mit Interrupts arbeiten zu können müssen diese global aktiviert sein.
+Hierfür ist das GIE-Bit im SR-Register zuständig.
+Desweiteren müssen in jeder Interruptquelle dieser nochmal erlaubt werden.
+
+Wurde ein Interrupt ausgelöst so wird die dafür geschriebene Interrupt Service Routine (ISR) abgearbeitet. Anzumerken sei, dass die ISR dafür zuständig ist, dass jeweilige Interrupt-Flag wieder zurückzugesetzt wird.
+Wird dies nicht getan, so springt der Microcontroller sofort wieder in die ISR und es kommt zu einer Endlosschleife.
+
+\input{aufgaben/12/protokoll.tex}
+\input{aufgaben/13/protokoll.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section*{LPM-Modi}
+Viele meist batteriebetriebene Mikrocontroller besitzen so genannte low power-Modi.
+In diesen Modi ist der Takt stark reduziert oder die CPU gänzlich ausgeschaltet. Der Effekt davon ist ein minimaler Stromverbrauch.
+Mittels Interrupts ist es möglich bei einer auschalteten CPU diese wieder zu aktiveren und die Programmabarbeitung fortzuführen.
+
+Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
+\begin{description}
+    \item [aktiver Modus]
+    \item [LPM 4]  Nur eine Flanke an den Port1 und Port2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
+    \item [LPM 3] Zzgl zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken. 
+    \item [LPM 2]  
+    \item [LPM 1] 
+    \item [LPM 0] 
+\end{description}
+
+\input{aufgaben/14/protokoll.tex}
+\input{aufgaben/15/protokoll.tex}
+\end{document}
