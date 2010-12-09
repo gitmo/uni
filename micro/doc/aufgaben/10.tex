@@ -1,4 +1,24 @@
 \subsection*{Aufgabe 10: Nutzung des Watchdog bei lokalen Problemen}
 
+\subsubsection*{Programm}
+Wird die äußere While-Schleife, in der der Watchdogzähler zurückgesetzt wird, zu lange
+blockiert, ohne das dies im blockierendem Code beachtet wird, kann es zu unerwarteten
+Resets durch den Watchdog kommen. Abhilfe ist hier natürlich in der innere Schleife, die
+während eines Tastendrucks blockt, den Counter gesondert zu löschen.
+
+
+\subsubsection*{Quellcode}
 \lstinputlisting[linerange=9-45,firstnumber=9,caption=aufgabe10.c]
 {../MPP_WS1011/aufgaben/aufgabe10.c}
+
+\begin{comment}
+Wie können Sie registrieren und speichern, wann und an welcher Programmstelle der Watchdog das System neu gestartet hat.
+
+Skizzieren Sie einen Lösungsansatz. Als Hilfestellung hier folgende Stichwörter:
+
+    NMI-Interrupt
+    Stackpointer
+    Programcounter
+    Softwarereset
+    INFOMEM
+\end{comment}

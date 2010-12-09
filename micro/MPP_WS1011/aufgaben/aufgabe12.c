@@ -21,7 +21,7 @@ void Aufgabe12()
 
     enableInterrupt();
 
-    //Schaltet Interrupt fuer Button1 an
+    // Schaltet Interrupt fuer Button1 an
     _bis_SR_register(GIE);
 
 

@@ -1,4 +1,15 @@
 \subsection*{Aufgabe 11: Reset per Software}
 
+\subsubsection*{Vorbereitung}
+
+Für diese Aufgabe kann man ausnutzen, dass das Kontrollregister WDTCTL
+des Watchdog-Moduls mit einem Passwortschutz ausgestattet ist. Bei jedem
+Schreibzugriff muss die Sequenz 0x54 in das obere Byte des 16-Bit
+Registers geschrieben werden sonst wird ein Systemreset ausgelöst
+({\it User Guide, Kap 10-4, S.195}). Dieser Effekt wird hier gezielt missbraucht,
+indem einfach auf WDTCTL der Wert 0 geschrieben wird.
+
+\subsubsection*{Quelltext}
+
 \lstinputlisting[linerange=9-21,firstnumber=9,caption=aufgabe11.c]
 {../MPP_WS1011/aufgaben/aufgabe11.c}

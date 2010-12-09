@@ -16,25 +16,24 @@ void Aufgabe9()
      * Zählerstand 32768 für RESET
      */
 
-    WDTCTL = WDTPW + WDTHOLD;                // Stop WDT
-    BCSCTL1 |= DIVA_3;                        // ACLK Divider 3: /8    (DIVA0 + DIVA1)
-    WDTCTL = WDTPW + WDTCNTCL + WDTSSEL;     // Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)
+    WDTCTL = WDTPW + WDTHOLD;               // Stop WDT
+    BCSCTL1 |= DIVA_3;                      // ACLK Divider 3: /8    (DIVA0 + DIVA1)
+    WDTCTL = WDTPW + WDTCNTCL + WDTSSEL;    // Start WDT with ACLK /32768 (TIS0 + TIS1 = 0)
 
     /*
      * Falls der Watchdog feuert ensteht die skurille Situation das Programm
-     * mit einer langsameren Taktfrequenz neu gestartet wird, da das DCOCTL
-     * Register zurückgesetzt wird. Dieses Register wird normalerweise bei
-     * Programmstart in DCO() in main.c initialisiert. Die Programmausführung
-     * setzt beim RESET bei vorigen Program Counter fort (hier fast immer in
-     * wait_ms().
+     * mit einer langsameren Taktfrequenz neu gestartet wird, da die MOD-Bits
+     * im DCOCTL Register zurückgesetzt werden. Diese Taktfrequenz-Modifikatoren
+     * werden bei Programmstart in DCO() in main.c initialisiert und jedesmal
+     * neu justiert.
      */
 
     while(true) {
         wait_ms(500);
-        SET(P4OUT, BIT0);    // Red LED off
+        SET(P4OUT, BIT0);       // Red LED off
         // Reset watchdog counter, preserve lower 8 bits
         WDTCTL = WDTPW + WDTCNTCL + (WDTCTL & 0x0F);
         wait_ms(500);
-        CLEAR(P4OUT, BIT0);        // Red LED on
+        CLEAR(P4OUT, BIT0);     // Red LED on
     }
 }

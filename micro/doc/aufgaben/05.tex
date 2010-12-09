@@ -3,36 +3,36 @@
 \subsubsection*{Vorbereitung}
 \begin{lstlisting}
 void Aufgabe5() {
-    P5SEL |= BIT4;    // P5 MCLK 
+    P5SEL |= BIT4;    // P5 MCLK
 }\end{lstlisting}
 
 \subsubsection*{Messwerte}
 \paragraph{LFXT1CL} \texttt{(SELM = 11b)}
 \begin{description}
-	\item [LF-Mode] \texttt{(XTS = 0)}
-		\begin{enumerate}
-			\item minimal: 12,29kHz, DIVM=11b
-			\item maximal: 32,769, DIVM=00
-		\end{enumerate}
+    \item [LF-Mode] \texttt{(XTS = 0)}
+        \begin{enumerate}
+            \item minimal: 12,29kHz, DIVM=11b
+            \item maximal: 32,769, DIVM=00
+        \end{enumerate}
 
-	\item [HF-Mode] \texttt{(XTS = 1)}
-		\begin{enumerate}
-			\item minimal: 636,5kHz, DIVM=11b
-			\item maximal: 1,695 MHz, DIVM=00
-		\end{enumerate}
+    \item [HF-Mode] \texttt{(XTS = 1)}
+        \begin{enumerate}
+            \item minimal: 636,5kHz, DIVM=11b
+            \item maximal: 1,695 MHz, DIVM=00
+        \end{enumerate}
 \end{description}
 
 \paragraph{XT2CL} \texttt{(SELM = 11b, XT2OFF=0)}
 \begin{enumerate}
-	\item minimal: 635 KHz, DIVM=11b
-	\item maximal: 1,695 MHz, DIVM=00
+    \item minimal: 635 KHz, DIVM=11b
+    \item maximal: 1,695 MHz, DIVM=00
 \end{enumerate}
 
 \paragraph{DCOCLK} \texttt{(SELM = 00b)}
 \begin{enumerate}
-	\item minimal: 393,2 kHz, DCO=000b, RSEL=000b, DIVM=11b, MOD = 00000b
-	\item normal: 7,36 mHz, DCO=011b, RSEL=100b, DIVM=00b, MOD = 11101b
-	\item maximal: 11,59Mhz, DCO=111b, RSEL=111b, DIVM=00b, MOD hat keinen Effekt 
+    \item minimal: 393,2 kHz, DCO=000b, RSEL=000b, DIVM=11b, MOD = 00000b
+    \item normal: 7,36 mHz, DCO=011b, RSEL=100b, DIVM=00b, MOD = 11101b
+    \item maximal: 11,59Mhz, DCO=111b, RSEL=111b, DIVM=00b, MOD hat keinen Effekt
 \end{enumerate}
 
 \paragraph{Erläutern Sie, wie der externe Widerstand für den DCOCLK-Taktgenerator nutzbar gemacht wir?}

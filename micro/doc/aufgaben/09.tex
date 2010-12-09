@@ -1,4 +1,36 @@
-\subsection*{Aufgabe 9}
+\subsection*{Aufgabe 9: Nutzung des Watchdog}
+
+\subsubsection*{Vorbereitung}
+
+Kapitel 10 des \emph{User Guide}s beschreibt Funktionsweise des
+WDT-Moduls und die Register zu dessen Ansteuerung. Für diese Aufgabe
+sind folgende Bits des Kontrollregisters WDTCTL relevant:
+
+\begin{description}
+    \item [WDTPW]    Passwortschutz (mehr in Aufgabe 11)
+    \item [WDTHOLD]  Der User-Guide empfielt das WDT-Modul vor einem
+Intervallwechsel anzuhalten
+    \item [WDTCNTCL] Setzt den Timer-Zähler auf
+0 zurück \item [WDTSSEL]  Auswahl des Taktquelle (0 SMCLK, 1 ACLK)
+    \item [WDTISx]   2 Bits selektieren den Teiler für die Taktquelle (0 für
+$/32768$) \end{description}
+
+\subsubsection*{Programm}
+
+Ohne Programmierung der Taktquelle ist der Watchdog-Counter nach dem
+Einschalten auf ein $32 ms$ Intervall initialisiert. Die LED würde nie
+eingeschaltet.
+
+Die ACLK-Taktquelle des \emph{Basic Clock Moduls} wird auf den Vorteiler
+$/8$ programmiert ($4096 Hz$) und für den Watchdog-Timer ausgewählt. Das
+Watchdog-Interval wird nach $32768 / 4096 Hz = 8 s$ erreicht, d.h. die
+LED wird bei 0,5 Sek. Schaltzyklus 8-mal blinken, falls der
+Watchdog-Counter nicht zurückgesetzt wurde.
+
+Es ist nun völlig ausreichend den Watchdog pro Schleifendurchlauf (Dauer
+$1 s$) über \texttt{WDTCNTCL} zurückzusetzen.
+
+\subsubsection*{Quelltext}
 
 \lstinputlisting[linerange=9-40,firstnumber=9,caption=aufgabe09.c]
 {../MPP_WS1011/aufgaben/aufgabe09.c}
