@@ -6,7 +6,7 @@
 #include "string.h"
 #include "aufgaben/project.h"
 #include "aufgaben/aufgabe15.h"
-
+    
 //Interrupte folgendermaßen im Code einbinden:
 //
 //      #pragma vector = TIMERA0_VECTOR
@@ -16,7 +16,7 @@
 //      }
 
 //
-//  Tabelle für die möglichen Interruptquellen zum Einsetzen in
+//  Tabelle für die möglichen Interruptquellen zum Einsetzen in 
 //  #pragma vector = ...
 
 //=======================================================================
@@ -47,46 +47,54 @@
 
 
 //==============================================================
-// Implementierung der ISR Routinen
+// Implementierung der ISR Routinen 
 // Achtung! Code in der ISR nicht zu lang machen,
 // da sonst Timing oder Stack Probleme drohen.
 // Für die benötigten ISR die Auskommentierungen entfernen
 // und eigenen Code für die jeweilige ISR einfügen
 //==============================================================
+#include "aufgaben/common.h"
+#include "aufgaben/aufgabe19.h"
 
-//#pragma vector = USART1TX_VECTOR
-//__interrupt void USART1TX_ISR (void)
-//{
-//
-//}
+extern day_time_t dayTime;
 
-#pragma vector = USART1RX_VECTOR
-__interrupt void USART1RX_ISR (void)
+#pragma vector = TIMERB0_VECTOR
+__interrupt void TIMERB0_ISR (void)
 {
+    dayTime.ss = ++dayTime.ss % 60;
+    
+    if(dayTime.ss == 0) {
+        dayTime.mm = ++dayTime.mm % 60;
 
+        if(dayTime.mm == 0) {
+            dayTime.hh = ++dayTime.hh % 24;
+        }
+    }
+    // Clears the interrupt flag
+    CLEAR(TBCCTL0, CCIFG);
 }
-
+        
 //==============================================================
 //===INT:01====ADR:FFE2====PORT2================================
 //==============================================================
 #pragma vector = PORT2_VECTOR
 __interrupt void PORT2 (void) {
-    char res ;          // CRC Check
+    char res ;          // CRC Check 
     if (P2IFG & 0x01)   // Check P2IFG Bit P2.0 - CC1100 Rx Packet
-        {
+        { 
         CLEAR(P2IFG, 0x01);
         LEDTOGGLE;
-        res = receivePacket();  // CRC Rückgabe
+        res = receivePacket();  // CRC Rückgabe 
         if (res)                // wenn Packet OK ...
             {
             printPacket();      // Packet auf Terminal ausgeben
             }
         else
-            {
+            {   
             spiStrobe(CC1100_SIDLE);    // Switch to IDLE
             spiStrobe(CC1100_SFRX);     // Flush the RX FIFO
             }
-        }
+        }   
     else
         {
         CLEAR(P2IFG, 0xFF);             // Clear all flags

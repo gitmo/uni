@@ -7,4 +7,7 @@ typedef struct day_time_t {
     int ss;
 } day_time_t;
 
+
+bool laterThan( day_time_t x1, day_time_t x2 );
+
 #endif /*AUFGABE19_H_*/

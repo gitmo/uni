@@ -6,7 +6,7 @@ void initPort () {
 //====PORT1================================================================
 WDTCTL = WDTPW | WDTHOLD;   // Watchdog ausschalten
 P1SEL = 0x00;       // Port1 Zweitfunktion
-P1OUT = 0x00;       // Port1 Ausgangsregister: 00000000 = 0x00 
+P1OUT = 0x00;       // Port1 Ausgangsregister: 00000000 = 0x00
 P1DIR = 0xFC;       // Port1 Direction: 11111100 = 0xFC
                     //   0 - P1.0 [EINGANG] - JP1_9 Taster gb
                     //   0 - P1.1 [EINGANG] - JP1_8 Taster sw
@@ -25,7 +25,7 @@ P2DIR = 0x1C;       // Port2 Direction: 00011100 = 0x1C
                     //   1 - P2.2 [AUSGANG] - ungenutzt
                     //   1 - P2.3 [AUSGANG] - ungenutzt
                     //   1 - P2.4 [AUSGANG] - ungenutzt
-                    //   0 - P2.5 [EINGANG] - ROSC 
+                    //   0 - P2.5 [EINGANG] - ROSC
                     //   0 - P2.6 [EINGANG] - SD-KARTE Protect
                     //   0 - P2.7 [EINGANG] - SD-KARTE Detect
 //====PORT3================================================================
@@ -47,9 +47,9 @@ P4DIR = 0xFF;       // Port4 Direction: 11111111 = 0xFF
                     //   1 - P4.0 [AUSGANG] - JP2_15 LED rt
                     //   1 - P4.1 [AUSGANG] - JP1_16 LED gb
                     //   1 - P4.2 [AUSGANG] - JP1_15 LED gr
-                    //   1 - P4.3 [AUSGANG] - JP1_14 
-                    //   1 - P4.4 [AUSGANG] - JP1_13 
-                    //   1 - P4.5 [AUSGANG] - JP1_12 
+                    //   1 - P4.3 [AUSGANG] - JP1_14
+                    //   1 - P4.4 [AUSGANG] - JP1_13
+                    //   1 - P4.5 [AUSGANG] - JP1_12
                     //   1 - P4.6 [AUSGANG] - JP1_11
                     //   1 - P4.7 [AUSGANG] - JP1_10
 //===PORT5=================================================================
@@ -75,7 +75,7 @@ P6DIR = 0xC8;       // Port6 Direction: 11111111 = 0xFF
                     //   1 - P6.4 [EINGANG] - ADC4 JP2_5
                     //   1 - P6.5 [EINGANG] - ADC5 JP2_4
                     //   1 - P6.6 [AUSGANG] - DAC6 JP2_3
-                    //   1 - P6.7 [AUSGANG] - DAC7 JP2_2 
+                    //   1 - P6.7 [AUSGANG] - DAC7 JP2_2
 }
 
 
@@ -104,46 +104,46 @@ void initUART0_SPI(void)
             +   SSEL0           // Taktquelle SMCLK
             +   STC;            // 3 Leitungsmode der SPI
     // USART Receive Control Register
-    URCTL0 = 0x00;              //      
+    URCTL0 = 0x00;              //
     // USART Baudrate Register 0
     UBR00 = 0x02;               // Taktquelle=SMCLK/2, SMCLK = 7,3728 MHz
     // USART Baudrate Register 1
-    UBR10 = 0x00;               
+    UBR10 = 0x00;
     // USART Modulation Control Register
     UMCTL0 = 0x00;
     // USART Modul Enable Register
     ME1 |= USPIE0;         // Enable USART0 TXD/RXD
     // USART Control Register
-    UCTL0  &= ~SWRST;      // Reset Bit löschen 
+    UCTL0  &= ~SWRST;      // Reset Bit löschen
     }
-    
-    
+
+
 //=========================================================================
 void initUART1(void)
     {
-//  P3SEL .....;            // USART RX und TX dem Modul zuweisen
-//  U1CTL .....;            // Reset
-//  U1CTL .....;            // Format 8N1
-//  U1TCTL.....;            // Taktquelle SMCLK
-//  U1BR0 .....;            // Teiler Low-Teil, da 7372800/64 ca. 115200
-//  U1BR1 .....;            // Teiler High-Teil
-//  U1MCTL ....;            // Modulationskontrolle
-//  ME2 .......;            // Enable USART1 TXD/RXD
-//  U1CTL .....;            // Reset
-//  IE2 .......;            // Enable Interrupt
+    P3SEL |= 0xC0;          // USART RX und TX dem Modul zuweisen
+    U1CTL = SWRST;          // Reset
+    U1CTL |= CHAR;          // Format 8N1
+    U1TCTL |= SSEL1;        // Taktquelle SMCLK
+    U1BR0 = 0x40;           // Teiler Low-Teil, da 7372800/64 ca. 115200
+    U1BR1 = 0x00;           // Teiler High-Teil
+    U1MCTL = 0x00;          // Modulationskontrolle
+    ME2 |= URXE1 + UTXE1;   // Enable USART1 TXD/RXD
+    U1CTL &= ~SWRST;        // Reset
+    IE2 |= URXIE1;          // Enable Interrupt
     }
-    
-    
+
+
 //=========================================================================
 void DCO (void)             // f(DCO) = DELTA*(32768Hz) = 7372800Hz
     {                       // ROSC P2SEL = 0x20 beachten
     #define DELTA (225)     // DELTA * 32768Hz = 7372800Hz
-    unsigned int Compare, Oldcapture = 0;   
+    unsigned int Compare, Oldcapture = 0;
     WDTCTL = WDTPW + WDTHOLD;   // Stop WDT
     BCSCTL2 |= DCOR;        // ROSC (extern) einschalten
-    BCSCTL2 &= ~SELM1;      // DCO als Taktquelle für MCLK     
-    BCSCTL2 &= ~SELS;       // DCO als Taktquelle für SMCLK    
-    BCSCTL1 |= XT2OFF;      // XT2 ausschalten 
+    BCSCTL2 &= ~SELM1;      // DCO als Taktquelle für MCLK
+    BCSCTL2 &= ~SELS;       // DCO als Taktquelle für SMCLK
+    BCSCTL1 |= XT2OFF;      // XT2 ausschalten
     CCTL2 = CM_1 + CCIS_1 + CAP;        // CAP, ACLK
     TACTL = TASSEL_2 + MC_2 + TACLR;    // SMCLK, cont-mode, clear
     while (1)
@@ -154,20 +154,20 @@ void DCO (void)             // f(DCO) = DELTA*(32768Hz) = 7372800Hz
         Compare = Compare - Oldcapture; // SMCLK difference
         Oldcapture = CCR2;              // Save current captured SMCLK
         if (DELTA == Compare) break;    // If equal, leave "while(1)"
-        else if (DELTA < Compare)       // DCO zu schnell 
-            {         
+        else if (DELTA < Compare)       // DCO zu schnell
+            {
             DCOCTL--;                   // verlangsamen
-            if (DCOCTL == 0xFF)         //  
+            if (DCOCTL == 0xFF)         //
                 {                       // Did DCO roll under?, Sel lower RSEL
                 if (!(BCSCTL1 == (XT2OFF))) BCSCTL1--; //schaltet XT2 aus
                 }
             }
-        else 
+        else
             {
             DCOCTL++;
             if (DCOCTL == 0x00)
                 {                       // Did DCO roll over? Sel higher RSEL
-                if (!(BCSCTL1 == (XT2OFF + 0x07))) BCSCTL1++;              
+                if (!(BCSCTL1 == (XT2OFF + 0x07))) BCSCTL1++;
                 }
             }
         }
@@ -175,9 +175,9 @@ void DCO (void)             // f(DCO) = DELTA*(32768Hz) = 7372800Hz
     TACTL = 0;                          // Stop Timer_A
     TBCCTL0 &= ~CCIFG;                  // Clears compare IFG
     TBR=0;
-    }   
-    
-    
+    }
+
+
 //============================================================================
 void XT2 (void)                     // Funktion schaltet XT2 ein
     {                               // und setzt XT2 als Taktquelle
@@ -188,17 +188,17 @@ void XT2 (void)                     // Funktion schaltet XT2 ein
         IFG1 &= ~OFIFG;             // Clear OSCFault flag
         for (i = 0xFF; i > 0; i--); // Time for flag to set
     }
-    while ((IFG1 & OFIFG) != 0);    // OSCFault flag still set?                
+    while ((IFG1 & OFIFG) != 0);    // OSCFault flag still set?
     BCSCTL2 |= SELM1 + SELS;        // MCLK und SMCLK = XT2 (7372800Hz)
     }
 
 
 //============================================================================
 void init_timer (void) {
-//  TACCR0 ...;                 // jede Sekunde einen Interrupt 
+//  TACCR0 ...;                 // jede Sekunde einen Interrupt
 //  TACTL ....;                 // Taktquelle Uhrenquarz count up to
 //  TACCTL0 ..;                 // Interrupt freigeben
     }
 
 
-//============================================================================  
+//============================================================================
