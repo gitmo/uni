@@ -18,7 +18,6 @@ public class ConcurrentEvent implements Event {
 	/**
 	 * Löscht ein Ticket von der Event-Liste
 	 */
-	@Override
 	public synchronized void cancel(Ticket t) {
 		if (this.map.containsKey(t))
 			this.map.remove(t);
@@ -28,7 +27,6 @@ public class ConcurrentEvent implements Event {
 	 * Sendet an alle angemeldeten Outputstreams, ausser dem Sender, den String
 	 * s
 	 */
-	@Override
 	public synchronized void propagate(String s, Ticket t) {
 		Set<Ticket> keys = this.map.keySet();
 		for (Ticket key : keys) {
@@ -43,7 +41,6 @@ public class ConcurrentEvent implements Event {
 	/**
 	 * Registriert einen neuen OutputStream
 	 */
-	@Override
 	public synchronized Ticket register(OutputStream s) {
 		Ticket ticket = new Ticket() {
 		};

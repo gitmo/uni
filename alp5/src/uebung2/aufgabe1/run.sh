@@ -10,8 +10,6 @@ exercise1a() {
 
 exercise1b() {
   java $package.Denglish "$@"
-  # There's also an ant target 
-  #ant Denglish -Dargs="$@"
 }
 
 demo(){
@@ -41,7 +39,7 @@ package=uebung2.aufgabe1
 # During the 'ant init' task (which build depends on) the resource
 # files (english.txt, etc.) are copied to bin/. The build-task then 
 # compiles all sources to bin/ as well.
-ant clean build
+ant -find build.xml clean build
 
 demo $USER
 

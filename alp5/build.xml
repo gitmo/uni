@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="../../.." default="build" name="alp5">
+<project basedir="." default="build" name="alp5">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.6"/>
-    <property name="source" value="1.6"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
     <path id="alp5.classpath">
         <pathelement location="bin"/>
     </path>
@@ -24,25 +24,18 @@
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}"
-            includeAntRuntime="false"
-            excludes="**/*Test.java"
-            listfiles="true">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}" includeAntRuntime="false" excludes="**/*Test.java" listfiles="true">
             <src path="src"/>
             <classpath refid="alp5.classpath"/>
         </javac>
     </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target name="Denglish">
-        <java classname="uebung2.aufgabe1.Denglish" failonerror="true" fork="yes">
-            <arg line="${args}"/>
-            <classpath refid="alp5.classpath"/>
-        </java>
-    </target>
-    <target name="Filter">
-        <java classname="uebung2.aufgabe1.Filter" failonerror="true" fork="yes">
-            <arg line="${args}"/>
-            <classpath refid="alp5.classpath"/>
-        </java>
+    <target name="tar">
+        <tar destfile="release/G110_alp5.tar.gz" compression="gzip">
+            <tarfileset dir="." prefix="G110_alp5">
+                <include name="src/"/>
+                <include name="doc/**/*.pdf"/>
+                <include name="build.xml"/>
+            </tarfileset>
+        </tar>
     </target>
 </project>

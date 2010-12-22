@@ -28,6 +28,7 @@ public class ForeignRMI extends Foreign {
 
 	private Dictionary dictionary = new Dictionary();
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void analyse() {
 		Registry registry = null;

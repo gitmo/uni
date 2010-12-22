@@ -80,7 +80,6 @@ public class Multicast {
 		BufferedReader input = new BufferedReader(new InputStreamReader(
 				System.in));
 
-		@Override
 		public void run() {
 			System.out.print(PROMPT);
 			try {
@@ -108,7 +107,6 @@ public class Multicast {
 		byte[] buf = new byte[1024];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 
-		@Override
 		public void run() {
 			try {
 				while (true) {

@@ -48,7 +48,6 @@ public class Chatroom {
 			System.out.println("New client \"" + hostName + "\" connected");
 
 			Runnable workerClient = new Runnable() {
-				@Override
 				public void run() {
 					Event.Ticket ticket = null;
 					BufferedReader br = null;

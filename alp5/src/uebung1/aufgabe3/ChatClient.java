@@ -38,7 +38,6 @@ public class ChatClient {
 
 		// Thread für das Versenden von eingegeben Nachrichten
 		Runnable inputWorker = new Runnable() {
-			@Override
 			public void run() {
 				while (true) {
 					String inputMessage = null;
@@ -66,7 +65,6 @@ public class ChatClient {
 
 		// Thread für die Abarbeitung einkommender Nachrichten
 		Runnable incomingWorker = new Runnable() {
-			@Override
 			public void run() {
 				while (true) {
 					String incomingMessage = null;

@@ -15,7 +15,6 @@ public class RemoteSet<T> implements IRemoteSet<T> {
 		return set.addAll(collection);
 	}
 
-	@Override
 	public Set<T> remoteGetAll() throws RemoteException {
 		return set;
 	}

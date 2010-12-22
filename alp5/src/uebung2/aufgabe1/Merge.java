@@ -25,8 +25,7 @@ public class Merge {
 					e.printStackTrace();
 				}
 			}
-			
-			@Override
+
 			public void run() {
 				if(reader == null) {
 					System.err.println("No input given");

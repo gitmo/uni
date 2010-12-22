@@ -19,13 +19,10 @@ fi
 # During the 'ant init' task (which build depends on) the resource
 # files (english.txt, etc.) are copied to bin/. The build-task then 
 # compiles all sources to bin/ as well.
-ant -q build
+ant -find build.xml
 
 echo
 echo "Exercise 1b)"
 echo "============"
 java $package.Denglish "$@"
-
-# There's also an ant target instead: 
-#ant Denglish -Dargs="$@"
 
