@@ -1,0 +1,6 @@
+General instructions:
+
+$ ant
+$ cd src/uebungX
+# ... Connect to VPN (if necessary for this particular exercise)
+$ aufgabeY/run.sh [args ...] 
