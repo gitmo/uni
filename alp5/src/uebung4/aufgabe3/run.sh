@@ -6,15 +6,30 @@
 # Usage:
 #   $ USER=joe ./run.sh 20 100 andorra nawab lounge
 
-# For VPN connections set the local vpn endpoint
-# so that the workers will find the master's objects
-if netstat -rn | grep ppp0 >/dev/null; then
-  IP=`netstat -rn | grep ppp0 | grep UH | tr -s ' ' | cut -f 2 -d ' '`  
-  VPNPROP=-Djava.rmi.server.hostname=$IP
-fi
-
 # Change to the same directory this script is in
 cd `dirname $0`
+
+# For VPN connections we need to set the local vpn endpoint
+# so that the workers will find the master's objects
+if netstat -rn | grep ppp0 >/dev/null; then
+  if [[ -z $VPNPROP ]]; then
+    # Try to autodetect local IP address
+    IP=`netstat -rn | grep ppp0 | grep UH | tr -s ' ' | cut -f 2 -d ' '`
+    # If valid address, set Java sytem property for RMI
+    if [[ $IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      echo "DETECTED VPN: Setting 'java.rmi.server.hostname'"
+      echo "to the local endpoint's address $IP"
+      echo "================================================"
+      VPNPROP=-Djava.rmi.server.hostname=$IP
+    else
+      echo "There seems to be a VPN running but I could not detect the"
+      echo "IP address of its local endpoint."
+      echo "Please set it manually first, e.g.:"
+      echo "  $ export VPNPROP=-Djava.rmi.server.hostname=impXXXXXX.vpn.mi.fu-berlin.de"
+      exit 1
+    fi
+  fi
+fi
 
 # Setup class path: assume we're in */{src,bin}/uebungX/aufgabeX
 export CLASSPATH=$(pwd)/../../../bin
@@ -25,17 +40,19 @@ export CLASSPATH=$(pwd)/../../../bin
 export CLASSPATH=git/uni/alp5/bin:$CLASSPATH
 
 # To build project:
-ant -find build.xml
+ant -q -find build.xml
+echo "================================================"
 
 PACKAGE=uebung4.aufgabe1
 
-N=$1; shift
+MASTERARGS="$1 $2"; shift 2
+
 for host in $*; do
   ssh -q -o "BatchMode yes" "$host" "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
   PIDS="$! $PIDS"
 done
 
-java $VPNPROP uebung4.aufgabe2.MandelMaster $N $* || \
+java $VPNPROP uebung4.aufgabe2.MandelMaster $MASTERARGS $* || \
   { if [ $? -gt 128 ]; then
       echo " Master: Killed. Cleaning hanging java processed"
       for host in $*; do

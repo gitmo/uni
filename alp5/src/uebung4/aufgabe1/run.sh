@@ -24,7 +24,7 @@ export CLASSPATH=$(pwd)/../../../bin
 export CLASSPATH=git/uni/alp5/bin:$CLASSPATH
 
 # To build project:
-ant -find build.xml
+ant -q -find build.xml
 
 PACKAGE=uebung4.aufgabe1
 
