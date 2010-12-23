@@ -1,9 +1,10 @@
 #!/bin/bash
 #
-# Demo of the RMI master/worker pattern
+# Demo of the RMI master/worker pattern:
+# Mandelbrot fractal computation
 #
 # Usage:
-#   $ USER=joe ./run.sh 7 andorra nawab lounge
+#   $ USER=joe ./run.sh 20 100 andorra nawab lounge
 
 # For VPN connections set the local vpn endpoint
 # so that the workers will find the master's objects
@@ -30,11 +31,11 @@ PACKAGE=uebung4.aufgabe1
 
 N=$1; shift
 for host in $*; do
-  ssh -q -o "BatchMode yes" "$USER@$host" "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
+  ssh -q -o "BatchMode yes" "$host" "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
   PIDS="$! $PIDS"
 done
 
-java $VPNPROP $PACKAGE.Master $N $* || \
+java $VPNPROP uebung4.aufgabe2.MandelMaster $N $* || \
   { if [ $? -gt 128 ]; then
       echo " Master: Killed. Cleaning hanging java processed"
       for host in $*; do
