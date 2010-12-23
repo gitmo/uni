@@ -1,41 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="alp5">
-    <property environment="env"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.5"/>
-    <property name="source" value="1.5"/>
-    <path id="alp5.classpath">
-        <pathelement location="bin"/>
-    </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src">
-                <exclude name="**/*.launch"/>
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="clean">
-        <delete dir="bin"/>
-    </target>
-    <target depends="clean" name="cleanall"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}" includeAntRuntime="false" excludes="**/*Test.java" listfiles="true">
-            <src path="src"/>
-            <classpath refid="alp5.classpath"/>
-        </javac>
-    </target>
-    <target name="tar">
-        <tar destfile="release/G110_alp5.tar.gz" compression="gzip">
-            <tarfileset dir="." prefix="G110_alp5">
-                <include name="src/"/>
-                <include name="doc/**/*.pdf"/>
-                <include name="build.xml"/>
-            </tarfileset>
-        </tar>
-    </target>
+  <property environment="env"/>
+  <property name="debuglevel" value="source,lines,vars"/>
+  <property name="target" value="1.5"/>
+  <property name="source" value="1.5"/>
+  <path id="alp5.classpath">
+    <pathelement location="bin"/>
+  </path>
+  <target name="init">
+    <mkdir dir="bin"/>
+    <copy includeemptydirs="false" todir="bin">
+      <fileset dir="src">
+        <exclude name="**/*.launch"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+  </target>
+  <target name="clean">
+    <delete dir="bin"/>
+  </target>
+  <target depends="clean" name="cleanall"/>
+  <target depends="build-subprojects,build-project" name="build"/>
+  <target name="build-subprojects"/>
+  <target depends="init" name="build-project">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}" includeAntRuntime="false" excludes="**/*Test.java" listfiles="true">
+      <src path="src"/>
+      <classpath refid="alp5.classpath"/>
+    </javac>
+  </target>
+  <target name="tar">
+    <tar destfile="release/G110_alp5-snapshot.tar.gz" compression="gzip">
+      <tarfileset dir="." prefix="G110_alp5">
+        <include name="src/"/>
+        <include name="doc/**/*.pdf"/>
+        <include name="build.xml"/>
+      </tarfileset>
+    </tar>
+  </target>
+  <property name="dist.name" value="G110_Ueb${dist.exnum}${dist.suffix}"/>
+  <target name="tarX">
+    <tar longfile="gnu" destfile="release/${dist.name}.tar.gz" compression="gzip">
+      <tarfileset dir="." prefix="${dist.name}" filemode="755">
+        <include name="src/uebung${dist.exnum}/**/*.sh"/>
+      </tarfileset>
+      <tarfileset dir="." prefix="${dist.name}">
+        <exclude name="src/uebung${dist.exnum}/**/*.sh"/>
+        <include name="src/uebung${dist.exnum}/"/>
+        <include name="build.xml"/>
+        <include name="README"/>
+      </tarfileset>
+    </tar>
+  </target>
+
 </project>
