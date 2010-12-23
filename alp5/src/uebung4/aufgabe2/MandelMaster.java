@@ -2,11 +2,11 @@ package uebung4.aufgabe2;
 
 import java.rmi.RemoteException;
 
-import thirdparty.Painter;
 import uebung4.aufgabe1.Master;
 import uebung4.aufgabe1.Pool;
 import uebung4.aufgabe1.PoolImpl;
 import uebung4.aufgabe1.WorkerImpl;
+import uebung4.thirdparty.Painter;
 
 public class MandelMaster extends Master {
 

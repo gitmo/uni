@@ -1,4 +1,4 @@
-package thirdparty;
+package uebung4.thirdparty;
 
 /*
  * @(#)Painter.java 1.00 28.11.2008
