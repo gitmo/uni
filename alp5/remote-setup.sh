@@ -3,7 +3,6 @@
 # Change to the same directory this script is in
 cd `dirname $0`
 
-USER=foux
 FU=$USER@lounge
 REMDIR=git/uni/alp5
 

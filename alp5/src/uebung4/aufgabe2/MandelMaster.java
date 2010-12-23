@@ -70,7 +70,7 @@ public class MandelMaster extends Master {
 	private void feed(int width, int heigth, int segments)
 			throws RemoteException {
 
-		// Truncated division: Some of the last pixels might be missing.
+		// Truncated division: Some of the last pixel rows might be missing.
 		int segmentsize = heigth / segments;
 
 		System.out.printf("MandelMaster.feed(): Splitting bitmap of %d rows "
