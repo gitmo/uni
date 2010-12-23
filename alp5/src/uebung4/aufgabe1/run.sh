@@ -3,7 +3,7 @@
 # Demo of the RMI master/worker pattern
 #
 # Usage:
-#   $ USER=joe ./run.sh 7 andorra nawab lounge
+#   $ ./run.sh 7 user@andorra user@nawab user@lounge
 
 # For VPN connections set the local vpn endpoint
 # so that the workers will find the master's objects
@@ -30,7 +30,7 @@ PACKAGE=uebung4.aufgabe1
 
 N=$1; shift
 for host in $*; do
-  ssh -q -o "BatchMode yes" "$USER@$host" "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
+  ssh -q -o "BatchMode yes" $host "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
   PIDS="$! $PIDS"
 done
 
@@ -38,7 +38,7 @@ java $VPNPROP $PACKAGE.Master $N $* || \
   { if [ $? -gt 128 ]; then
       echo " Master: Killed. Cleaning hanging java processed"
       for host in $*; do
-        ssh -f -o "BatchMode yes" $USER@$host 'killall -u $USER java' >/dev/null 2>&1
+        ssh -f -o "BatchMode yes" $host 'killall -u $USER java' >/dev/null 2>&1
       done
     fi; }
 

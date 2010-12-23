@@ -4,7 +4,7 @@
 # Mandelbrot fractal computation
 #
 # Usage:
-#   $ USER=joe ./run.sh 20 100 andorra nawab lounge
+#   $ ./run.sh 20 100 user@andorra user@nawab user@lounge
 
 # Change to the same directory this script is in
 cd `dirname $0`
@@ -48,7 +48,7 @@ PACKAGE=uebung4.aufgabe1
 MASTERARGS="$1 $2"; shift 2
 
 for host in $*; do
-  ssh -q -o "BatchMode yes" "$host" "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
+  ssh -q -o "BatchMode yes" $host "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
   PIDS="$! $PIDS"
 done
 
@@ -56,7 +56,7 @@ java $VPNPROP uebung4.aufgabe2.MandelMaster $MASTERARGS $* || \
   { if [ $? -gt 128 ]; then
       echo " Master: Killed. Cleaning hanging java processed"
       for host in $*; do
-        ssh -f -o "BatchMode yes" $USER@$host 'killall -u $USER java' >/dev/null 2>&1
+        ssh -f -o "BatchMode yes" $host 'killall -u $USER java' >/dev/null 2>&1
       done
     fi; }
 
