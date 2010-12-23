@@ -10,7 +10,7 @@ public class TaskMax implements Task<Integer[], Integer> {
 
 	public Integer exec(Integer[] a) {
 
-		trace(a);
+		// trace(a);
 
 		int max = Integer.MIN_VALUE;
 		for (Integer i : a)
@@ -19,6 +19,7 @@ public class TaskMax implements Task<Integer[], Integer> {
 		return max;
 	}
 
+	@SuppressWarnings("unused")
 	private void trace(Integer[] a) {
 		try {
 			System.out.println(InetAddress.getLocalHost()

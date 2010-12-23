@@ -11,7 +11,7 @@ public class PoolImpl<T> extends UnicastRemoteObject implements Pool<T> {
 
 	Queue<T> queue = new ConcurrentLinkedQueue<T>();
 
-	protected PoolImpl() throws RemoteException {
+	public PoolImpl() throws RemoteException {
 		super();
 	}
 

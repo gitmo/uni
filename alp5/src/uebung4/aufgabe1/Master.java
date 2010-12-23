@@ -38,12 +38,13 @@ public class Master {
 
 		// Start TaskMax on each host.
 		for (int i = 1; i < args.length; i++) {
-			cli.start(args[i] + ":" + WorkerImpl.PORT, new TaskMax());
+			cli.start(args[i] + ":" + WorkerImpl.PORT, new TaskMax(), argpool,
+					respool);
 		}
 
 		// Evaluate the result pool.
 		int max = cli.gather(n);
-		cli.exit();
+		cli.exit(argpool, respool);
 
 		// Re-calculate biggest element for reference
 		Arrays.sort(arr);
@@ -55,24 +56,24 @@ public class Master {
 	}
 
 	/** Pool of arguments for unprocessed computation */
-	private final Pool<Integer[]> argpool;
+	private static Pool<Integer[]> argpool;
 
 	/** Pool of processed results */
-	private final Pool<Integer> respool;
+	private static Pool<Integer> respool;
 
 	public Master() throws RemoteException {
 		argpool = new PoolImpl<Integer[]>();
 		respool = new PoolImpl<Integer>();
 	}
 
-	private void delay(int ms) {
+	public void delay(int ms) {
 		try {
 			Thread.sleep(ms);
 		} catch (InterruptedException e1) {
 		}
 	}
 
-	private void exit() {
+	public <A, R> void exit(Pool<A> argpool, Pool<R> respool) {
 		try {
 			// Remove the pools from the RMI runtime
 			UnicastRemoteObject.unexportObject(argpool, false);
@@ -82,18 +83,18 @@ public class Master {
 		}
 	}
 
-	private void feed(int parts, byte[] arr) throws RemoteException {
+	private void feed(int n, byte[] arr) throws RemoteException {
 
 		// Ceiled division: How big are the chunks to contain all N items?
-		int chunksize = (arr.length + parts - 1) / parts;
+		int chunksize = (arr.length + n - 1) / n;
 
 		System.out.printf("Master.feed(): Splitting array of %d numbers "
-				+ "in %d chunks of %d elements each.\n", arr.length, parts,
+				+ "in %d chunks of %d elements each.\n", arr.length, n,
 				chunksize);
 
 		Integer[] chunk;
 
-		for (int segment = 0; segment < chunksize * parts; segment += chunksize) {
+		for (int segment = 0; segment < chunksize * n; segment += chunksize) {
 			/*
 			 * Fill up a chunk. If the last chunk is bigger and cannot be
 			 * completed fill up with some elements from the start of the array.
@@ -123,7 +124,8 @@ public class Master {
 		return max;
 	}
 
-	void start(String host, Task<Integer[], Integer> t) {
+	public <Argument, Result> void start(String host, Task<Argument, Result> t,
+			Pool<Argument> argpool, Pool<Result> respool) {
 
 		// Reference of the remote object.
 		Worker obj = null;
@@ -131,12 +133,18 @@ public class Master {
 		System.out.println("Master.start(): Connecting to worker on " + host);
 		while (obj == null)
 			try {
-				obj = (Worker) Naming.lookup("//" + host + "/RmiServer");
+				obj = (Worker) Naming.lookup("//" + just(host) + "/RmiServer");
 				obj.start(t, argpool, respool);
 			} catch (Exception e) {
 				System.out.println("Master.start(): Retrying " + host);
 				delay(1000);
 			}
 		System.out.println("Master.start(): Successful connection to " + host);
+	}
+
+	// Discards a user@ prefix from host string.
+	private String just(String host) {
+		String[] split = host.split("@");
+		return split[split.length - 1];
 	}
 }
