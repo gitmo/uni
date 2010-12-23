@@ -30,7 +30,7 @@ PACKAGE=uebung4.aufgabe1
 
 N=$1; shift
 for host in $*; do
-  ssh -q -o "BatchMode yes" $host "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
+  ssh -o "BatchMode yes" $host "java -cp $CLASSPATH $PACKAGE.WorkerImpl" &
   PIDS="$! $PIDS"
 done
 
