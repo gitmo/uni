@@ -147,14 +147,14 @@ und einer SD-Karte ausgestattet.
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040100.html}
 {I/O Portleitungen}}
 
-Ein Kennzeichen von Mikrocontrollern sind seine I/O-Portleitungen.
+Ein Kennzeichen von Mikrocontrollern sind ihre I/O-Portleitungen.
 Auch bekannt unter dem Namen \textit{General Purpose Input/Output}.
 Diese Pins können als Eingang um digitale Signale zu lesen fungieren
 oder als Ausgang um andere Geräte zu kontrollieren oder mit ihnen zu kommunizieren.
 
 Die Konfiguration dieser kann mittels Software programmiert werden
 und überlässt so dem Entwickler große Freiheiten.
-Bei manchen Mikrocontrollern können einige I/O-Ports desweiteren als Interruptquellen definiert werden.
+Bei manchen Mikrocontrollern können einige I/O-Ports des Weiteren als Interruptquellen definiert werden.
 
 Meist werden die I/O-Pins in unterschiedliche Ports gruppiert.
 Ein Port hat meistens acht I/O-Pins.
@@ -221,9 +221,9 @@ Folgende Interruptquellen sind auf dem MSP430F1612 verfügbar:
 
 Um mit Interrupts arbeiten zu können müssen diese global aktiviert sein.
 Hierfür ist das GIE-Bit im SR-Register zuständig.
-Desweiteren müssen in jeder Interruptquelle dieser nochmal erlaubt werden.
+Des Weiteren müssen für jede Interruptquelle, der Interrupt explizit erlaubt werden.
 
-Wurde ein Interrupt ausgelöst so wird die dafür geschriebene Interrupt Service Routine (ISR) abgearbeitet. Anzumerken sei, dass die ISR dafür zuständig ist, dass jeweilige Interrupt-Flag wieder zurückzugesetzt wird.
+Wurde ein Interrupt ausgelöst, so wird die dafür geschriebene Interrupt Service Routine (ISR) abgearbeitet. Anzumerken sei, dass die ISR dafür zuständig ist, dass die jeweilige Interrupt-Flag wieder zurückgesetzt wird.
 Wird dies nicht getan, so springt der Microcontroller sofort wieder in die ISR und es kommt zu einer Endlosschleife.
 
 \input{aufgaben/12.tex}
@@ -238,13 +238,13 @@ Wird dies nicht getan, so springt der Microcontroller sofort wieder in die ISR u
 
 Viele meist batteriebetriebene Mikrocontroller besitzen so genannte low power-Modi.
 In diesen Modi ist der Takt stark reduziert oder die CPU gänzlich ausgeschaltet. Der Effekt davon ist ein minimaler Stromverbrauch.
-Mittels Interrupts ist es möglich bei einer auschalteten CPU diese wieder zu aktiveren und die Programmabarbeitung fortzuführen.
+Mittels Interrupts ist es möglich bei einer ausgeschalteten CPU diese wieder zu aktiveren und die Programmabarbeitung fortzuführen.
 
 Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \begin{description}
     \item [aktiver Modus]
-    \item [LPM 4]  Nur eine Flanke an den Port1 und Port2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
-    \item [LPM 3] Zzgl zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken.
+    \item [LPM 4]  Nur eine Flanke an den Ports 1 und 2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
+    \item [LPM 3] Zzgl. zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken.
     \item [LPM 2]
     \item [LPM 1]
     \item [LPM 0]
