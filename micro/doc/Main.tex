@@ -118,7 +118,7 @@ Das Praktikum wird auf die Architektur eingebetteter Systeme eingehen und die Un
 (z.B. Echtzeitfähigkeit, Interaktion mit der Umgebung) anhand praktischer Beispiele aufzeigen.
 Das Praktikum basiert auf einem MSP430 Mikrocontrollersystem.
 Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind:
-\begin{enumerate}
+\begin{itemize}
     \item Registerstrukturen
     \item Speicherorganisation
     \item hardwarenahe Assembler- und Hochsprachenprogrammierung
@@ -129,7 +129,7 @@ Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind:
     \item Bussystemanbindung von Komponenten
     \item Kommunikation (seriell, CAN-Bus, Ethernet, Funk und USB)
     \item Ansteuerung von Modellen und Nutzung unterschiedlichster Sensorik.
-\end{enumerate}
+\end{itemize}
 
 
 \section{Entwicklungsboard MSB430H}
@@ -201,7 +201,8 @@ Mittels Interrupt kann aufgrund von gewissen Ereignissen die normale Programmaba
 Dies ist hilfreich um auf Ereignisse an I/O-Ports oder Peripheriegeräten sofort reagieren zu können.
 
 Folgende Interruptquellen sind auf dem MSP430F1612 verfügbar:
-\begin{enumerate}
+
+\begin{itemize}
     \item DA/Wandler und DMA
     \item I/O PORT 2
     \item USART1 Senden
@@ -213,10 +214,10 @@ Folgende Interruptquellen sind auf dem MSP430F1612 verfügbar:
     \item USART1 Empfangen
     \item Watchdog Timer
     \item Comparator A
-    \item TImer B
+    \item Timer B
     \item NMI
     \item RESET
-\end{enumerate}
+\end{itemize}
 
 Um mit Interrupts arbeiten zu können müssen diese global aktiviert sein.
 Hierfür ist das GIE-Bit im SR-Register zuständig.

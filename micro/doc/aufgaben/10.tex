@@ -4,7 +4,7 @@
 
 \subsubsection*{Programm}
 Wird die äußere While-Schleife, in der der Watchdogzähler zurückgesetzt wird, zu lange
-blockiert, ohne das dies im blockierendem Code beachtet wird, kann es zu unerwarteten
+blockiert, ohne dass dies im blockierendem Code beachtet wird, kann es zu unerwarteten
 Resets durch den Watchdog kommen. Abhilfe ist hier natürlich in der innere Schleife, die
 während eines Tastendrucks blockt, den Counter gesondert zu löschen.
 
