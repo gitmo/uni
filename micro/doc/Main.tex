@@ -49,6 +49,16 @@
 \DeclareGraphicsExtensions{.eps, .jpg}
 \fi
 
+% Create hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,       % false: boxed links; true: colored links
+    linkcolor=red,          % color of internal links
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+
 \title{Mikroprozessor Praktikum\\Protokolle 1-15}
 \author{Sebastian Raitza, Nico von Geyso}
 
@@ -133,7 +143,10 @@ und einer SD-Karte ausgestattet.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{I/O Portleitungen}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040100.html}
+{I/O Portleitungen}}
+
 Ein Kennzeichen von Mikrocontrollern sind seine I/O-Portleitungen.
 Auch bekannt unter dem Namen \textit{General Purpose Input/Output}.
 Diese Pins können als Eingang um digitale Signale zu lesen fungieren
@@ -157,7 +170,10 @@ Der von uns verwendete MSP430F1612 verfügt über sechs I/O-Ports mit jeweils ac
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{Clock System}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040200.html}
+{Clock System}}
+
 \input{aufgaben/05.tex}
 \input{aufgaben/06.tex}
 \input{aufgaben/07.tex}
@@ -166,7 +182,10 @@ Der von uns verwendete MSP430F1612 verfügt über sechs I/O-Ports mit jeweils ac
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{Watchdog}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040300.html}
+{Watchdog}}
+
 \input{aufgaben/09.tex}
 \input{aufgaben/10.tex}
 \input{aufgaben/11.tex}
@@ -174,7 +193,10 @@ Der von uns verwendete MSP430F1612 verfügt über sechs I/O-Ports mit jeweils ac
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{Interrupt}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040400.html}
+{Interrupt}}
+
 Mittels Interrupt kann aufgrund von gewissen Ereignissen die normale Programmabarbeitung unterbrochen werden.
 Dies ist hilfreich um auf Ereignisse an I/O-Ports oder Peripheriegeräten sofort reagieren zu können.
 
@@ -209,7 +231,10 @@ Wird dies nicht getan, so springt der Microcontroller sofort wieder in die ISR u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{LPM-Modi}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040500.html}
+{LPM-Modi}}
+
 Viele meist batteriebetriebene Mikrocontroller besitzen so genannte low power-Modi.
 In diesen Modi ist der Takt stark reduziert oder die CPU gänzlich ausgeschaltet. Der Effekt davon ist ein minimaler Stromverbrauch.
 Mittels Interrupts ist es möglich bei einer auschalteten CPU diese wieder zu aktiveren und die Programmabarbeitung fortzuführen.
@@ -231,7 +256,9 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{Timer}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040600.html}
+{Timer}}
 
 \input{aufgaben/17.tex}
 \input{aufgaben/18.tex}
@@ -240,7 +267,9 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{USART}
+\section*
+{\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040700.html}
+{USART}}
 
 \input{aufgaben/20.tex}
 \input{aufgaben/21.tex}
