@@ -1,7 +1,8 @@
 \subsection*
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040401.html}
 {Aufgabe 12: Interrupt Quelle Taster}}
-
+Jeder Tastendruck wird in derselben Interruptroutine abgehandelt. Je nachdem welche Taste und wie oft diese schon gedrückt wurde, wird die jeweilige LED an- bzw. ausgeschaltet. Die blinkende LED wird mittels einer Endlosschleife implementiert.
+Um eine \textit{non-blocking} Lösung dafür zu erreichen, kann das \textit{togglen} der LED in eine Timer- oder Watchdog-Interruptroutine ausgelagert werden.
 \lstinputlisting[linerange=9-49,firstnumber=9,caption=aufgabe12.c]
 {../MPP_WS1011/aufgaben/aufgabe12.c}
 
