@@ -20,6 +20,7 @@ local.properties
 *.aux
 *.synctex.gz
 *.texshop
+*.toc
 
 # Mac OS X goodness
 .DS_Store
