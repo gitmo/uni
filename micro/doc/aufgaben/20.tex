@@ -3,8 +3,6 @@
 {Aufgabe 20: Ein Zeichen Senden}}
 
 \subsubsection*{Quelltext}
-\lstinputlisting[caption=aufgabe20.h]
-{../MPP_WS1011/aufgaben/aufgabe20.h}
-
+Mit Hilfe der Hilfsfunktion \texttt{uart1\_put\_char()} können einzelne Zeichen über die serielle Verbindung gesendet werden. Hierzu wird überprüft ob das Senderegister leer ist. Ist dem nicht so, so wird blockierend gewartet. Ansonsten wird das Zeichen im Datenregister hinterlegt und vom Mikrocontroller automatisch gesendet.
 \lstinputlisting[linerange=8-22,firstnumber=8,caption=aufgabe20.c]
 {../MPP_WS1011/aufgaben/aufgabe20.c}

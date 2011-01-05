@@ -271,6 +271,11 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \section*
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040700.html}
 {USART}}
+Um die serielle Verbindung des Mikrocontrollers nutzen zu können, muss hierfür unter anderem das Format, die Taktquelle, die Baudrate konfiguriert werden. Die gegebene Funktion \texttt{initUART1} wurde dementsprechend folgedermaßen initialisiert:
+\lstinputlisting[caption=initUART1, linerange=122-134, firstnumber=122]
+{../MPP_WS1011/init.c}
+
+Empfangene Daten werde im Register \texttt{UxRXBUF} hinterlegt. Meistens wird das Auslesen über eine eigene Interruptserviceroutine abgearbeitet. Will man Daten senden, so muss im Register \texttt{U1TCTL} überprüft werden ob das Datenregister \texttt{UxTXBUF} frei ist. Dafür ist das Bit \texttt{TXEPT} zuständig. Ist dies der fall so hinterlegt man seine Daten im Datenrgister und der Mikrocontrollersystem sendet diese dann automatisch über die serielle Verbindung.
 
 \input{aufgaben/20.tex}
 \input{aufgaben/21.tex}
