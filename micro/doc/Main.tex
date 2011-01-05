@@ -261,6 +261,8 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040600.html}
 {Timer}}
 
+Der Mikrokontroller besitzt neben der Watchdog-Einheit noch zwei Timer A und B, die in programmierbaren Zeitintervalen Timer-Interrupts auslösen, auf die in der Software reagiert werden kann. Damit lassen sich verschiedenste zeitabhängige Anwendungen realisieren, wie u.a. Zeitmessungen, Generierung von Impulsen und das Reagieren auf bzw. Auslösen von Ereignissen in wiederholten Zeit-Abschnitten.
+
 \input{aufgaben/17.tex}
 \input{aufgaben/18.tex}
 \input{aufgaben/19.tex}
@@ -271,7 +273,7 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \section*
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040700.html}
 {USART}}
-Um die serielle Verbindung des Mikrocontrollers nutzen zu können, muss hierfür unter anderem das Format, die Taktquelle, die Baudrate konfiguriert werden. Die gegebene Funktion \texttt{initUART1} wurde dementsprechend folgedermaßen initialisiert:
+Um die serielle Verbindung des Mikrocontrollers nutzen zu können, muss hierfür unter anderem das Format, die Taktquelle und die Baudrate konfiguriert werden. Die gegebene Funktion \texttt{initUART1} wurde dementsprechend folgedermaßen initialisiert:
 \lstinputlisting[caption=initUART1, linerange=122-134, firstnumber=122]
 {../MPP_WS1011/init.c}
 
