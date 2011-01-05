@@ -2,12 +2,14 @@
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040204.html}
 {Aufgabe 8: Abarbeitungszeit eines Befehls}}
 
+Mit Hilfe eines digitalen Taktzählers wird die Zeit zwischen unterschiedlichen Spannungswerten am Port \texttt{P5OUT} gemessen.
 \subsubsection*{Messungen}
 \begin{itemize}
     \item bei steigendender Flanke: $0,7 \mu s$
     \item bei fallender Flanke: $0,9 \mu s$
 \end{itemize}
-
+Bei steigender Flanke wird die Dauer von zwei \texttt{XOR}-Instruktionen gemessen.
+Währenddessen bei fallender Flanke alle Befehle vom zweiten \texttt{XOR} bis zum erneuten Schleifeneintritt und der ersten \texttt{XOR}-Instruktionen gemessen werden. Dies beinhaltet einen weiteren \texttt{JMP}-Befehl und dauert somit länger.
 \subsubsection*{Quelltext}
 
 \lstinputlisting[linerange=10-20,firstnumber=10,caption=aufgabe08.c]
