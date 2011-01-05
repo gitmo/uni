@@ -26,3 +26,5 @@ local.properties
 
 # Project specific
 release/
+
+!doc/aufgaben/**/*.pdf
