@@ -243,11 +243,11 @@ Mittels Interrupts ist es möglich bei einer ausgeschalteten CPU diese wieder zu
 Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \begin{description}
     \item [aktiver Modus]
-    \item [LPM 4]  Nur eine Flanke an den Ports 1 und 2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
-    \item [LPM 3] Zzgl. zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken.
-    \item [LPM 2]
-    \item [LPM 1]
-    \item [LPM 0]
+    \item [LPM 4]  CPU und alle Taktgeber sind aus. Nur eine Flanke an den Ports 1 und 2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
+    \item [LPM 3] Zzgl. zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken (ACLK On).
+    \item [LPM 2] Zusätzlich zu LPM3 ist der DC-Generator eingeschaltet.
+    \item [LPM 1] Zusätzlich zu LPM2 ist SMCLK aktiv. DC-Generator ist nur aktiv wenn DCO für MCLK oder SMCLK gebraucht wird.
+    \item [LPM 0] Wie LPM1, DCO ist immer aktiv.
 \end{description}
 
 \input{aufgaben/14.tex}
