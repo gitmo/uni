@@ -1,4 +1,4 @@
-char trafficSignalsAnimation = 0;
+extern char trafficSignalsAnimation;
 
 #pragma vector = WDT_VECTOR
 __interrupt void WDT_ISR (void)

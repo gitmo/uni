@@ -7,4 +7,6 @@
 
 #define a_sec 100
 
+char trafficSignalsAnimation = 0;
+
 #endif /*AUFGABE13_H_*/
