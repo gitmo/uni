@@ -54,17 +54,31 @@
 // und eigenen Code für die jeweilige ISR einfügen
 //==============================================================
 
-//#pragma vector = USART1TX_VECTOR
-//__interrupt void USART1TX_ISR (void)
-//{
-//
-//}
+extern bool readyToSend;
+extern int buffer_counter;
 
+#include "aufgaben/aufgabe20.h"
 #pragma vector = USART1RX_VECTOR
 __interrupt void USART1RX_ISR (void)
 {
-
+	char c;
+	//check for errors
+	if(U1RCTL & RXERR != 666) {
+	    c = U1RXBUF;
+		buffer_counter++;
+	    
+		uart1_put_char(c);
+		
+		if(c == '\n') {
+			readyToSend = true;
+//			buffer_counter = 0;
+//		} else {
+		}
+	}
+	
+    CLEAR(IFG2, URXIFG1); 
 }
+
 
 //==============================================================
 //===INT:01====ADR:FFE2====PORT2================================

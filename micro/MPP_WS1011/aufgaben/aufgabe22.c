@@ -8,15 +8,22 @@
 #include "project.h"
 #include "aufgabe20.h"
 #include "aufgabe21.h"
+#include "aufgabe22.h"
 
-bool bufferContainsStr = false;
-char uart_buffer[32];
+
 
 void Aufgabe22()
 {
     char tmpBuffer[32];
-    while(bufferContainsStr) {
-        sprintf(tmpBuffer,"String Länge: %d", strlen(uart_buffer));
-        uart1_put_str(tmpBuffer);
-    }
+
+	// Interrupts global einschalten
+    _bis_SR_register(GIE);
+    
+    uart1_put_str("Initialized!");
+    
+    while(!readyToSend);
+
+    sprintf(tmpBuffer,"String Länge: %d", buffer_counter);
+    uart1_put_str("asd");
+    readyToSend = false;
 }

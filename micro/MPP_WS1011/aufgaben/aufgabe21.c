@@ -9,6 +9,7 @@
 #include "aufgabe19.h"
 #include "aufgabe20.h"
 #include "aufgabe21.h"
+#include "common.h"
 
 extern char humi_char[12];
 extern char temp_char[15];
@@ -33,5 +34,8 @@ void Aufgabe21() {
         uart1_put_str(humi_char);
         uart1_put_str(temp_char);
         uart1_put_str("\r\n");
+        
+        wait_ms(1000);
+        
     }
 }
