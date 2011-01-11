@@ -23,6 +23,9 @@ local.properties
 *.synctex.gz
 *.texshop
 *.out
+*.nav
+*.snm
+*.toc
 
 # Mac OS X goodness
 .DS_Store
