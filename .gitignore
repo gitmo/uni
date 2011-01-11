@@ -33,4 +33,5 @@ local.properties
 # Project specific
 release/
 
+*.persistence
 *.command

@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class ServerWorker extends BaseWorker implements Runnable {
 
-	final static String persistenceFileName = "counter.persist";
+	final static String persistenceFileName = "counter.persistence";
 	int port;
 	
 	public ServerWorker(int port) {
