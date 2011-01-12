@@ -1,32 +1,22 @@
 package uebung5.uebung2;
 
+import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.BorderLayout;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import java.awt.GridBagLayout;
 import javax.swing.JTextField;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 public class Gui {
 
@@ -72,9 +62,9 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes panelTabs	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
+	 * This method initializes panelTabs
+	 * 
+	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getPanelTabs() {
 		if (panelTabs == null) {
@@ -86,9 +76,9 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes panelAddress	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes panelAddress
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getPanelAddress() {
 		if (panelAddress == null) {
@@ -113,9 +103,9 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes tab	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes tab
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getTab() {
 		if (tab == null) {
@@ -128,9 +118,9 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes textUrl	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes textUrl
+	 * 
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTextUrl() {
 		if (textUrl == null) {
@@ -141,23 +131,23 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes tabMain	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes tabMain
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getTabMain() {
 		if (tabMain == null) {
 			tabMain = new JPanel();
-			tabMain.setLayout(new GridBagLayout());
+			tabMain.setLayout(new BorderLayout());
 		}
-		
+
 		return tabMain;
 	}
 
 	/**
-	 * This method initializes newTab	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes newTab
+	 * 
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getNewTab() {
 		if (newTab == null) {
@@ -169,32 +159,30 @@ public class Gui {
 	}
 
 	/**
-	 * This method initializes buttonUrl	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes buttonUrl
+	 * 
+	 * @return javax.swing.JButton
 	 */
 	private JButton getButtonUrl() {
 		if (buttonUrl == null) {
 			buttonUrl = new JButton();
 			buttonUrl.setText("Go");
-			
+
 			buttonUrl.addActionListener(new ActionListener() {
 				SimpleBrowser simpleBrowser = new SimpleBrowser();
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					tabMain.removeAll();
-
-					JLabel label = new JLabel("Loading...");
-					tabMain.add(label);
+					tabMain.add(new JLabel("Loading..."));
 					tabMain.repaint();
-					
 					buttonUrl.setEnabled(false);
-					
-					label = simpleBrowser.dispatchUrl(getTextUrl().getText());
+
+					JPanel panel = simpleBrowser.dispatchUrl(getTextUrl()
+							.getText());
 
 					tabMain.removeAll();
-					tabMain.add(label);
+					tabMain.add(panel);
 					tabMain.repaint();
 					buttonUrl.setEnabled(true);
 				}

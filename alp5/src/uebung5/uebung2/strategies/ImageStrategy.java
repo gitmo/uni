@@ -8,13 +8,16 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import uebung5.uebung2.*;
 
-public class ImageStrategy implements JLabelStrategy{
+public class ImageStrategy implements JPanelStrategy{
 
 	@Override
-	public JLabel getJLabelForContent(InputStream inputStream) {
+	public JPanel getJPanelForContent(InputStream inputStream) {
+		JPanel panel = new JPanel();
 		JLabel label = null;
 		Image image = null;
 		
@@ -30,7 +33,9 @@ public class ImageStrategy implements JLabelStrategy{
 			label = new JLabel("Invalid graphic file!");
 		}
 		
-		return label;
+		panel.add(new JScrollPane(label));
+		
+		return panel;
 	}
 
 }
