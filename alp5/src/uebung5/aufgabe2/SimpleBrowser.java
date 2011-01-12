@@ -1,4 +1,4 @@
-package uebung5.uebung2;
+package uebung5.aufgabe2;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import uebung5.uebung2.strategies.ImageStrategy;
-import uebung5.uebung2.strategies.TextStrategy;
+import uebung5.aufgabe2.strategies.ImageStrategy;
+import uebung5.aufgabe2.strategies.TextStrategy;
 
 public class SimpleBrowser {
 
@@ -24,6 +24,7 @@ public class SimpleBrowser {
 
 		Map<String, Class<? extends JPanelStrategy>> textTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
 		textTypes.put("plain", TextStrategy.class);
+		textTypes.put("html", TextStrategy.class);
 
 		supportedContentTypes.put("text", textTypes);
 	}
@@ -54,8 +55,6 @@ public class SimpleBrowser {
 
 		String contentGroupStr = contentType.substring(0, separatorIndex)
 				.trim();
-		String contentElementStr = contentType.substring(separatorIndex + 1)
-				.trim();
 		if (!supportedContentTypes.containsKey(contentGroupStr)) {
 			System.err.println("unsupported content type (group: "
 					+ contentGroupStr + ")");
@@ -66,6 +65,13 @@ public class SimpleBrowser {
 		Map<String, Class<? extends JPanelStrategy>> contentGroup = supportedContentTypes
 				.get(contentGroupStr);
 
+		
+		String contentElementStr = contentType.substring(separatorIndex + 1)
+		.trim();
+		separatorIndex = contentElementStr.indexOf(";");
+		if(separatorIndex != -1)
+			contentElementStr = contentElementStr.substring(0, separatorIndex);
+		
 		Class<? extends JPanelStrategy> strategyClass = contentGroup
 				.get(contentElementStr);
 		if (strategyClass == null) {

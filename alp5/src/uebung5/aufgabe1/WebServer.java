@@ -1,4 +1,4 @@
-package uebung5.uebung1;
+package uebung5.aufgabe1;
 
 public class WebServer {
 	

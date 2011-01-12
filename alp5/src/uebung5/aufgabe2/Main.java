@@ -1,4 +1,4 @@
-package uebung5.uebung2;
+package uebung5.aufgabe2;
 
 import javax.swing.SwingUtilities;
 

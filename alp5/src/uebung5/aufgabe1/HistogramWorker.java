@@ -1,4 +1,4 @@
-package uebung5.uebung1;
+package uebung5.aufgabe1;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

@@ -1,4 +1,4 @@
-package uebung5.uebung2.strategies;
+package uebung5.aufgabe2.strategies;
 
 import java.awt.Image;
 import java.io.BufferedInputStream;
@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import uebung5.uebung2.*;
+import uebung5.aufgabe2.*;
 
 public class ImageStrategy implements JPanelStrategy{
 
