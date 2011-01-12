@@ -1,5 +1,6 @@
 package uebung5.aufgabe1;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
@@ -23,6 +24,9 @@ public class HistogramWorker extends BaseWorker implements Runnable {
 				Socket connection = socket.accept();
 				
 				OutputStreamWriter responseStream = new OutputStreamWriter(connection.getOutputStream());
+				responseStream.append("HTTP/1.1 200 OK\r\n");
+				responseStream.append("Content-Type: text/html\r\n");
+				responseStream.append("\r\n");
 				responseStream.append(getHistogramString());
 				responseStream.flush();
 				connection.close();
@@ -34,12 +38,26 @@ public class HistogramWorker extends BaseWorker implements Runnable {
 	}
 	
 	String getHistogramString() {
+		String htmlTemplate = "";
+		try {
+			htmlTemplate = this.getFileContent("histogram.html");
+		} catch (FileNotFoundException e) {
+		}
+		
 		Map<String, Integer> histogram = this.loadHistogram();
-		StringBuilder builder = new StringBuilder();
-		builder.append("Histogram\n");
-		for (String word : histogram.keySet())
-			builder.append(word + ":\t" + histogram.get(word));
-		return builder.toString();
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<table>\n");
+		
+		for (String browser : histogram.keySet()) {
+			sb.append("<tr>\n");
+			sb.append("<td>" + browser + "</td><td>" + histogram.get(browser) + "</td>\n");
+			sb.append("</tr>\n");
+		}
+
+		sb.append("</table>\n");
+		
+		return htmlTemplate.replace("<!-- Histogram -->", sb.toString());
 	}
 
 }

@@ -1,8 +1,10 @@
 package uebung5.aufgabe1;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -50,5 +52,19 @@ public class BaseWorker {
 		}
 		
 		
+	}
+
+	public String getFileContent(String fileName) throws FileNotFoundException {
+		//Reads file content
+		BufferedReader reader = new BufferedReader(new FileReader(WebServer.class.getResource(fileName).getPath()));
+		StringBuilder stringBuilder = new StringBuilder();
+		String line = null;
+		try {
+			while((line = reader.readLine()) != null)
+				stringBuilder.append(line + "\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return stringBuilder.toString();
 	}
 }

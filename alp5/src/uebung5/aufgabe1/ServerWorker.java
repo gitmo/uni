@@ -1,10 +1,10 @@
 package uebung5.aufgabe1;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,41 +25,32 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		this.port = port;
 	}
 	
-	public String getFileContent(String fileName) throws FileNotFoundException {
-		//Reads file content
-		BufferedReader reader = new BufferedReader(new FileReader(WebServer.class.getResource(fileName).getPath()));
-		StringBuilder stringBuilder = new StringBuilder();
-		String line = null;
-		try {
-			while((line = reader.readLine()) != null)
-				stringBuilder.append(line + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return stringBuilder.toString();
-	}
-	
 	public Map<String, String> getHeaderFields(InputStream stream) {
 		BufferedReader requestStream = new BufferedReader(new InputStreamReader(stream));
 		
 		Map<String, String> map = new HashMap<String,String>();
-		String line = null;
 		
-		/*TODO* error checking */
-		try {
-			map.put(null, requestStream.readLine());
-		while(!(line = requestStream.readLine()).equals("")) {
-				int colonIndex = line.indexOf(':');
-				
-				String fieldName = line.substring(0,colonIndex).trim();
-				String fieldValue = line.substring(colonIndex+1).trim();
-				
-				map.put(fieldName, fieldValue);
+		if(requestStream != null) {
+			
+			String line = null;
+			
+			/*TODO* error checking */
+			try {
+				map.put(null, requestStream.readLine());
+			while((line = requestStream.readLine()) != null && !line.equals("")) {
+					int colonIndex = line.indexOf(':');
+					
+					if(colonIndex != -1) {
+						String fieldName = line.substring(0,colonIndex).trim();
+						String fieldValue = line.substring(colonIndex+1).trim();
+						
+						map.put(fieldName, fieldValue);
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		
 		return map;
 	}
 	
@@ -101,23 +92,30 @@ public class ServerWorker extends BaseWorker implements Runnable {
 			while (true) {
 				// Anfrage entgegennehmen
 				Socket connection = socket.accept();
-	
+				
 				String responseMessage = loadCounter(getFileContent("404.html"));
 	
 				Map<String, String> fieldMap = this.getHeaderFields(connection.getInputStream());
 				
 				OutputStreamWriter responseStream = new OutputStreamWriter(connection.getOutputStream());
+				responseStream.append("HTTP/1.1 200 OK\r\n");
+				responseStream.append("Content-Type: text/html\r\n");
+				responseStream.append("\r\n");
 				responseStream.append(responseMessage);
 				responseStream.flush();
 				connection.close();
 				
 				Map<String, Integer> histogram = this.loadHistogram();
 				String userAgent = fieldMap.get("User-Agent");
-				if (histogram .containsKey(userAgent))
-					histogram.put(userAgent, histogram.get(userAgent) + 1);
-				else
-					histogram.put(userAgent, 1);
-				this.saveHistogram(histogram);
+				
+				if(userAgent != null) {
+					if (histogram .containsKey(userAgent))
+						histogram.put(userAgent, histogram.get(userAgent) + 1);
+					else
+						histogram.put(userAgent, 1);
+					
+					this.saveHistogram(histogram);
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
