@@ -174,7 +174,7 @@ public class Gui {
 				public void actionPerformed(ActionEvent e) {
 					tabMain.removeAll();
 					tabMain.add(new JLabel("Loading..."));
-					tabMain.repaint();
+					tabMain.validate();
 					buttonUrl.setEnabled(false);
 
 					JPanel panel = simpleBrowser.dispatchUrl(getTextUrl()
@@ -182,7 +182,7 @@ public class Gui {
 
 					tabMain.removeAll();
 					tabMain.add(panel);
-					tabMain.repaint();
+					tabMain.validate();
 					buttonUrl.setEnabled(true);
 				}
 			});

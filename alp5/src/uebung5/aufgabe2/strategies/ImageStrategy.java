@@ -37,4 +37,8 @@ public class ImageStrategy implements JPanelStrategy{
 		return panel;
 	}
 
+	public boolean warnBeforeDispatch() {
+		return false;
+	}
+
 }
