@@ -15,7 +15,6 @@ import uebung5.aufgabe2.*;
 
 public class ImageStrategy implements JPanelStrategy{
 
-	@Override
 	public JPanel getJPanelForContent(InputStream inputStream) {
 		JPanel panel = new JPanel();
 		JLabel label = null;

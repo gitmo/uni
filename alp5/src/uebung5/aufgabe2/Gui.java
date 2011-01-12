@@ -171,7 +171,6 @@ public class Gui {
 			buttonUrl.addActionListener(new ActionListener() {
 				SimpleBrowser simpleBrowser = new SimpleBrowser();
 
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					tabMain.removeAll();
 					tabMain.add(new JLabel("Loading..."));

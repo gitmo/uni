@@ -94,7 +94,6 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		
 		return responseMsg.replace(placeholder, counter.toString());
 	}
-	@Override
 	public void run() {
 		ServerSocket socket;
 		try {

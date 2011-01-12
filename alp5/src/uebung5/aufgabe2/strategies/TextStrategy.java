@@ -13,7 +13,6 @@ import uebung5.aufgabe2.JPanelStrategy;
 
 public class TextStrategy implements JPanelStrategy {
 
-	@Override
 	public JPanel getJPanelForContent(InputStream inputStream) {
 		JPanel panel = new JPanel();
 		
