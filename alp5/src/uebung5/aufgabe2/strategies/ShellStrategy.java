@@ -1,18 +1,13 @@
 package uebung5.aufgabe2.strategies;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import uebung5.aufgabe2.JPanelStrategy;
