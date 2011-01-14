@@ -9,7 +9,9 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import uebung5.aufgabe2.strategies.HtmlStrategy;
 import uebung5.aufgabe2.strategies.ImageStrategy;
 import uebung5.aufgabe2.strategies.ShellStrategy;
 import uebung5.aufgabe2.strategies.TextStrategy;
@@ -25,7 +27,7 @@ public class SimpleBrowser {
 
 		Map<String, Class<? extends JPanelStrategy>> textTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
 		textTypes.put("plain", TextStrategy.class);
-		textTypes.put("html", TextStrategy.class);
+		textTypes.put("html", HtmlStrategy.class);
 		supportedContentTypes.put("text", textTypes);
 		
 		Map<String, Class<? extends JPanelStrategy>> shTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
@@ -120,5 +122,14 @@ public class SimpleBrowser {
 
 		return panel;
 
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Gui application = new Gui();
+				application.getSimpleBrowser().setVisible(true);
+			}
+		});
 	}
 }
