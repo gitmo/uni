@@ -118,7 +118,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * Liefert eine HTML-Website aus und speichert die User-Agents
 	 */
 	public void run() {
-		ServerSocket socket;
+		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(port);
 			while (true) {
@@ -157,8 +157,15 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					this.saveStatistic(statistic);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(socket != null)
+					socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -20,7 +20,7 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 	 * hergestellt, so wird eine HTML-Browser-Statistik-Website zurückgegeben.
 	 */
 	public void run() {
-		ServerSocket socket;
+		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(port);
 			while (true) {
@@ -40,8 +40,15 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 				responseStream.close();
 				connection.close();
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(socket != null)
+					socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
