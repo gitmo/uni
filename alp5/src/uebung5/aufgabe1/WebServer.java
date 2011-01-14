@@ -38,6 +38,9 @@ public class WebServer {
 					System.out.println("Started statistic thread on " + statisticPort
 							+ " Port.");
 				}
+				
+				serverThread.join(1000);
+				statisticThread.join(1000);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
