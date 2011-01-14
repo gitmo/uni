@@ -27,7 +27,7 @@ public abstract class BaseWorker {
 	 */
 	@SuppressWarnings("unchecked")
 	protected synchronized Map<String, Integer> loadStatistic() {
-		Map<String, Integer> statistic = null;
+		Map<String, Integer> statistic = new HashMap<String, Integer>();
 
 		ObjectInputStream ois;
 		try {
@@ -36,7 +36,6 @@ public abstract class BaseWorker {
 			statistic = (Map<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
-			statistic = new HashMap<String, Integer>();
 			this.saveStatistic(statistic);
 		} catch (IOException e) {
 			e.printStackTrace();
