@@ -11,17 +11,28 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaseWorker {
+/**
+ * 
+ * Stellt mehrfach gebrauchte Funktionalität zur Verfügung
+ * 
+ */
+public abstract class BaseWorker {
 
 	final String persistenceHistogramFileName = "histogram.persistence";
-	
+
+	/**
+	 * Läd eine serialisierte Map-Datenstruktur und gibt diese zurück
+	 * 
+	 * @return Map<String, Integer
+	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, Integer> loadHistogram(){
-		 Map<String, Integer> histogram = null;
-		
+	protected Map<String, Integer> loadHistogram() {
+		Map<String, Integer> histogram = null;
+
 		ObjectInputStream ois;
 		try {
-			ois = new ObjectInputStream(new FileInputStream(persistenceHistogramFileName));
+			ois = new ObjectInputStream(new FileInputStream(
+					persistenceHistogramFileName));
 			histogram = (Map<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
@@ -36,11 +47,17 @@ public class BaseWorker {
 		return histogram;
 	}
 
+	/**
+	 * Serialisiert eine Map-Datenstruktur und speichert diese als Datei ab
+	 * 
+	 * @param histogram
+	 */
 	protected void saveHistogram(Map<String, Integer> histogram) {
 
 		ObjectOutputStream oos;
 		try {
-			oos = new ObjectOutputStream(new FileOutputStream(persistenceHistogramFileName));
+			oos = new ObjectOutputStream(new FileOutputStream(
+					persistenceHistogramFileName));
 			oos.writeObject(histogram);
 			oos.close();
 		} catch (FileNotFoundException e) {
@@ -50,17 +67,24 @@ public class BaseWorker {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
+	/**
+	 * Lädt den Inhalt einer Datei in einen String
+	 * 
+	 * @param fileName
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public String getFileContent(String fileName) throws FileNotFoundException {
-		//Reads file content
-		BufferedReader reader = new BufferedReader(new FileReader(WebServer.class.getResource(fileName).getPath()));
+		// Reads file content
+		BufferedReader reader = new BufferedReader(new FileReader(
+				WebServer.class.getResource(fileName).getPath()));
 		StringBuilder stringBuilder = new StringBuilder();
 		String line = null;
 		try {
-			while((line = reader.readLine()) != null)
+			while ((line = reader.readLine()) != null)
 				stringBuilder.append(line + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();

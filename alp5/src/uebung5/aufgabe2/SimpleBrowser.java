@@ -18,18 +18,25 @@ import uebung5.aufgabe2.strategies.TextStrategy;
 
 public class SimpleBrowser {
 
+	// Mit Hilfe der Map-Datenstruktur supportedContent kann auf einfacer Art
+	// und Weise die jeweilige Klasse zur Bearbeitung des jeweiligen
+	// ContentTypes ausgewählt werden.
 	Map<String, Map<String, Class<? extends JPanelStrategy>>> supportedContentTypes = new HashMap<String, Map<String, Class<? extends JPanelStrategy>>>();
 
 	public SimpleBrowser() {
+		// Bilder-Unterstützung
 		Map<String, Class<? extends JPanelStrategy>> imageTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
+		imageTypes.put("gif", ImageStrategy.class);
 		imageTypes.put("jpeg", ImageStrategy.class);
 		supportedContentTypes.put("image", imageTypes);
 
+		// Text- und Html-Unterstützung
 		Map<String, Class<? extends JPanelStrategy>> textTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
 		textTypes.put("plain", TextStrategy.class);
 		textTypes.put("html", HtmlStrategy.class);
 		supportedContentTypes.put("text", textTypes);
-		
+
+		// Shell-Skript Unterstützung
 		Map<String, Class<? extends JPanelStrategy>> shTypes = new HashMap<String, Class<? extends JPanelStrategy>>();
 		shTypes.put("x-sh", ShellStrategy.class);
 		shTypes.put("x-shellscript", ShellStrategy.class);
@@ -37,11 +44,19 @@ public class SimpleBrowser {
 		supportedContentTypes.put("application", shTypes);
 	}
 
+	/**
+	 * dispathUrl stellt eine Verbindung zu einer URL her und versucht je nach
+	 * Content-Type die Daten visuell darzustellen.
+	 * 
+	 * @param urlString
+	 * @return
+	 */
 	JPanel dispatchUrl(String urlString) {
 		JPanel panel = new JPanel();
 		URL url = null;
 		URLConnection connection = null;
 
+		// Verbindungsherstellung
 		try {
 			url = new URL(urlString);
 			connection = url.openConnection();
@@ -51,10 +66,10 @@ public class SimpleBrowser {
 			return panel;
 		}
 
+		// Ermittlung des MIME-Types (ContentTypes)
 		String contentType = connection.getHeaderField("Content-Type");
 
-		System.out.println(contentType);
-		
+		// Ist der Content-Type richtig formatiert?
 		int separatorIndex = contentType.indexOf("/");
 		if (separatorIndex == -1) {
 			System.err.println("invalind content type separator");
@@ -63,6 +78,7 @@ public class SimpleBrowser {
 			return panel;
 		}
 
+		// Unterstützt unser Browser die Oberklasse des ContentTypes
 		String contentGroupStr = contentType.substring(0, separatorIndex)
 				.trim();
 		if (!supportedContentTypes.containsKey(contentGroupStr)) {
@@ -75,13 +91,13 @@ public class SimpleBrowser {
 		Map<String, Class<? extends JPanelStrategy>> contentGroup = supportedContentTypes
 				.get(contentGroupStr);
 
-		
+		// Unterstützt unser Browser den MIME-Type?
 		String contentElementStr = contentType.substring(separatorIndex + 1)
-		.trim();
+				.trim();
 		separatorIndex = contentElementStr.indexOf(";");
-		if(separatorIndex != -1)
+		if (separatorIndex != -1)
 			contentElementStr = contentElementStr.substring(0, separatorIndex);
-		
+
 		Class<? extends JPanelStrategy> strategyClass = contentGroup
 				.get(contentElementStr);
 		if (strategyClass == null) {
@@ -94,28 +110,25 @@ public class SimpleBrowser {
 		JPanelStrategy strategy = null;
 		try {
 			strategy = strategyClass.newInstance();
-			
-			if(strategy.warnBeforeDispatch()) {
-				int n = JOptionPane.showConfirmDialog(
-					    panel,
-					    "Should the bash script executed?",
-					    "Warning",
-					    JOptionPane.YES_NO_OPTION);
-				
+
+			// Soll vor dem ausführen eine Warnung erscheinen?
+			if (strategy.warnBeforeDispatch()) {
+				int n = JOptionPane.showConfirmDialog(panel,
+						"Should the bash script executed?", "Warning",
+						JOptionPane.YES_NO_OPTION);
+
 				System.out.println(n);
-				if(n == 1)
+				if (n == 1)
 					throw new Exception("do not run!");
 			}
-			
+
+			// Führ die jeweilige Klasse zur Visulisierung der Daten aus
 			panel = strategy.getJPanelForContent(connection.getInputStream());
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
 		}
@@ -123,7 +136,12 @@ public class SimpleBrowser {
 		return panel;
 
 	}
-	
+
+	/**
+	 * Main Methode führt das Program aus
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

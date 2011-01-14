@@ -13,27 +13,29 @@ import javax.swing.JScrollPane;
 
 import uebung5.aufgabe2.*;
 
-public class ImageStrategy implements JPanelStrategy{
+/**
+ * Ermöglicht das Darstellen von Bildern
+ */
+public class ImageStrategy implements JPanelStrategy {
 
 	public JPanel getJPanelForContent(InputStream inputStream) {
 		JPanel panel = new JPanel();
 		JLabel label = null;
 		Image image = null;
-		
+
 		try {
-			// Read from an input stream
-		    InputStream is = new BufferedInputStream(inputStream);
-		    image = ImageIO.read(is);
+			// Bild laden
+			InputStream is = new BufferedInputStream(inputStream);
+			image = ImageIO.read(is);
 
-
-			// Use a label to display the image
+			// Bild darstellen
 			label = new JLabel(new ImageIcon(image));
 		} catch (IOException e) {
 			label = new JLabel("Invalid graphic file!");
 		}
-		
+
 		panel.add(new JScrollPane(label));
-		
+
 		return panel;
 	}
 

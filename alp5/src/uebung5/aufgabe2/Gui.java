@@ -87,7 +87,8 @@ public class Gui {
 			gridLayout.setColumns(1);
 			labelUrl = new JLabel();
 			labelUrl.setText("Url");
-			labelUrl.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+			labelUrl
+					.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			labelUrl.setDisplayedMnemonic(KeyEvent.VK_UNDEFINED);
 			labelUrl.setSize(new Dimension(5, 15));
 			labelUrl.setHorizontalAlignment(SwingConstants.CENTER);
@@ -125,7 +126,7 @@ public class Gui {
 	private JTextField getTextUrl() {
 		if (textUrl == null) {
 			textUrl = new JTextField();
-			textUrl.setText("http://www....");
+			textUrl.setText("http://localhost:8080");
 		}
 		return textUrl;
 	}
@@ -168,6 +169,8 @@ public class Gui {
 			buttonUrl = new JButton();
 			buttonUrl.setText("Go");
 
+			// Wird der Button gedrückt, so wird versucht die URL zu laden und
+			// den Inhalt je nach COntent-Type visuell darzustellen
 			buttonUrl.addActionListener(new ActionListener() {
 				SimpleBrowser simpleBrowser = new SimpleBrowser();
 
