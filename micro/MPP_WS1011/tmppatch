@@ -1,0 +1,2518 @@
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/CC1100.c ./CC1100.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/CC1100.c	Thu Nov  4 17:07:17 2010
++++ ./CC1100.c	Thu Jan 13 17:53:09 2011
+@@ -1,10 +1,10 @@
+ #include "msp430x16x.h"
+ #include "CC1100.h"
+ #include "system.h"
+-#include "stdio.h"
++#include "stdio.h"
+ #include "string.h"
+ 
+-//=============================================================================			  
++//=============================================================================           
+ // Rx Tx Buffer 
+ //=============================================================================
+ volatile  CC1100_Rx RxCC1100;
+@@ -15,490 +15,490 @@
+ unsigned char ID = 1;
+ unsigned char channel = 8;
+ 
+-//=============================================================================			  
+-// PATABLE sollte überarbeitet werden
++//=============================================================================           
++// PATABLE sollte Ã¼berarbeitet werden
+ //=============================================================================
+-unsigned char paTableIndex = PATABLE;	// Current PATABLE Index
+-unsigned char paTable[] = {    0x00,		// -52 dBm	0
+-							   0x23, 		// -15 dBm	1
+-							   0x33, 		// -12 dBm	2
+-							   0x34, 		// -10 dBm	3
+-							   0x28, 		// -8 dBm	4
+-							   0x2B, 		// -6 dBm	5
+-							   0x57, 		// -4 dBm	6
+-							   0x54, 		// -2 dBm	7
+-							   0x3F, 		// 0 dBm	8
+-							   0x8C, 		// +2 dBm	9
+-							   0x8A, 		// +3 dBm	10
+-							   0x87, 		// +4 dBm	11
+-							   0x84, 		// +5 dBm	12
+-							   0xCE, 		// +6 dBm	13
+-							   0xCC, 		// +7 dBm	14
+-							   0xC9, 		// +8 dBm	15
+-							   0xC6, 		// +9 dBm	16
+-							   0xC3  		// +10 dBm	17
+-							};
+-//=============================================================================	
+-						
+-							
+-//=============================================================================			  
++unsigned char paTableIndex = PATABLE;   // Current PATABLE Index
++unsigned char paTable[] = {    0x00,        // -52 dBm  0
++                               0x23,        // -15 dBm  1
++                               0x33,        // -12 dBm  2
++                               0x34,        // -10 dBm  3
++                               0x28,        // -8 dBm   4
++                               0x2B,        // -6 dBm   5
++                               0x57,        // -4 dBm   6
++                               0x54,        // -2 dBm   7
++                               0x3F,        // 0 dBm    8
++                               0x8C,        // +2 dBm   9
++                               0x8A,        // +3 dBm   10
++                               0x87,        // +4 dBm   11
++                               0x84,        // +5 dBm   12
++                               0xCE,        // +6 dBm   13
++                               0xCC,        // +7 dBm   14
++                               0xC9,        // +8 dBm   15
++                               0xC6,        // +9 dBm   16
++                               0xC3         // +10 dBm  17
++                            };
++//============================================================================= 
++                        
++                            
++//=============================================================================           
+ // Function switchchannel - 9 fest definierte Kanalfrequenzen
+ //=============================================================================
+ unsigned char FREQ2[]={0x21,0x21,0x21,0x21,0x21,0x21,0x21,0x21,0x21}; 
+ unsigned char FREQ1[]={0x71,0x6E,0x6B,0x68,0x65,0x41,0x3F,0x3C,0x39};
+ unsigned char FREQ0[]={0x7A,0x85,0x91,0x9D,0xA9,0xF8,0x03,0x0F,0x1B};
+-//Index		 frequency	 	Arbeitsplatz
+-//channel=0, f=869.525MHz  	Notrufkanal    
+-//channel=1, f=869.225MHz  	HWP1  
+-//channel=2, f=868.925MHz  	HWP2 
+-//channel=3, f=868.625MHz  	HWP3 
+-//channel=4, f=868.325MHz  	HWP4  
+-//channel=5, f=864.700MHz	HWP5 	 
++//Index      frequency      Arbeitsplatz
++//channel=0, f=869.525MHz   Notrufkanal    
++//channel=1, f=869.225MHz   HWP1  
++//channel=2, f=868.925MHz   HWP2 
++//channel=3, f=868.625MHz   HWP3 
++//channel=4, f=868.325MHz   HWP4  
++//channel=5, f=864.700MHz   HWP5     
+ //channel=6, f=864.400MHz   HWP6
+-//channel=7, f=864.100MHz  	HWP7
+-//channel=8, f=863.800MHz  	HWP8 
+-							
+-//=============================================================================			  
++//channel=7, f=864.100MHz   HWP7
++//channel=8, f=863.800MHz   HWP8 
++                            
++//=============================================================================           
+ // 400 KBit/s, 869.525 MHz, MSK, Quartz: 26 MHz, Addresse=255
+ //=============================================================================
+ char conf[39];
+ char conf[] = {
+-  0x06, // IOCFG2	GDO2 Signal Konfigurierung Table 34 Packet,CRC,FIFO
+-  0x2E, // IOCFG1	GDO1 Signal Konfigurierung Table 34 Tristate
+-  0x0E, // IOCFG0	GDO0 Signal Konfigurierung Table 34 Carrier Sense	
+-  0x0F, // FIFOTHR	Bytes in FIFO
+-  0x9B, // SYNC1	Sync Word HighByte 0x9B
+-  0xAD, // SYNC0	Sync Word Low Byte 0xAD
+-  0x3F, // PKTLEN	Packetlänge = 63 bei variabler Packetlänge 
+-  0x06, // PKTCTRL1	2 Status Bytes anfügen; Adresscheck ON Broadcastadresse 0
+-  0x45, // PKTCTRL0	variable Packetlänge ON; whitening ON,  
+-  0xFF, // ADDR		Addresse für Packetfilterung (Knotenadresse)
+-  0x00, // CHANNR	
+-  0x0B, // FSCTRL1	
++  0x06, // IOCFG2   GDO2 Signal Konfigurierung Table 34 Packet,CRC,FIFO
++  0x2E, // IOCFG1   GDO1 Signal Konfigurierung Table 34 Tristate
++  0x0E, // IOCFG0   GDO0 Signal Konfigurierung Table 34 Carrier Sense   
++  0x0F, // FIFOTHR  Bytes in FIFO
++  0x9B, // SYNC1    Sync Word HighByte 0x9B
++  0xAD, // SYNC0    Sync Word Low Byte 0xAD
++  0x3F, // PKTLEN   PacketlÃ¤nge = 63 bei variabler PacketlÃ¤nge 
++  0x06, // PKTCTRL1 2 Status Bytes anfÃ¼gen; Adresscheck ON Broadcastadresse 0
++  0x45, // PKTCTRL0 variable PacketlÃ¤nge ON; whitening ON,  
++  0xFF, // ADDR     Addresse fÃ¼r Packetfilterung (Knotenadresse)
++  0x00, // CHANNR   
++  0x0B, // FSCTRL1  
+   0x00, // FSCTRL0
+-  0x21, // FREQ2	Frequenz Control Word High Byte 
+-  0x71, // FREQ1	Frequenz Control Word Middle Byte 
+-  0x7A, // FREQ0	Frequenz Control Word Low Byte
++  0x21, // FREQ2    Frequenz Control Word High Byte 
++  0x71, // FREQ1    Frequenz Control Word Middle Byte 
++  0x7A, // FREQ0    Frequenz Control Word Low Byte
+   0x2D, // MDMCFG4
+   0xF8, // MDMCFG3
+-  0x73, // MDMCFG2	Modulationsformat MSK
+-  0x42, // MDMCFG1	8 Präambel Bytes, 
++  0x73, // MDMCFG2  Modulationsformat MSK
++  0x42, // MDMCFG1  8 PrÃ¤ambel Bytes, 
+   0xF8, // MDMCFG0
+   0x00, // DEVIATN
+-  0x07, // MCSM2 	(RX_TIME = until end of packet)
+-  0x03, // MCSM1 	(TX_OFFMODE = RX)
+-  0x18, // MCSM0	(autom. Frequenzkalibrierung bei IDLE->Tx und IDLE->Rx ON)
++  0x07, // MCSM2    (RX_TIME = until end of packet)
++  0x03, // MCSM1    (TX_OFFMODE = RX)
++  0x18, // MCSM0    (autom. Frequenzkalibrierung bei IDLE->Tx und IDLE->Rx ON)
+   0x1D, // FOCCFG
+   0x1C, // BSCFG
+-  0xC0, // AGCCTRL2	AGC Control Gain 
+-  0x49, // AGCCTRL1	AGC Control Carrier Sense Level
+-  0xB2, // AGCCTRL0	AGC Control 
++  0xC0, // AGCCTRL2 AGC Control Gain 
++  0x49, // AGCCTRL1 AGC Control Carrier Sense Level
++  0xB2, // AGCCTRL0 AGC Control 
+   0x87, // WOREVT1
+   0x6B, // WOREVT0
+-  0xF8, // WORCTRL	WOR Control 
+-  0xB6, // FREND1	Front End Rx 
+-  0x10, // FREND0	Front End TX - PA Power settings
++  0xF8, // WORCTRL  WOR Control 
++  0xB6, // FREND1   Front End Rx 
++  0x10, // FREND0   Front End TX - PA Power settings
+   0xEA, // FSCAL3
+   0x2A, // FSCAL2
+   0x00, // FSCAL1
+   0x1F  // FSCAL0
+ };
+-//=============================================================================			  
++//=============================================================================           
+ 
+ 
+-//=============================================================================				  
+-// Funktion wartet bis die SPI des CC1100 verfügbar ist
++//=============================================================================               
++// Funktion wartet bis die SPI des CC1100 verfÃ¼gbar ist
+ //=============================================================================
+-void spiInitTrx(void)	// schaltet P3.2 auf Input und CS=0 und wartet bis
+-	{					// GDO1=0(SPI CC1100 bereit), dann P3.2 in den SPI Mode
+-	P3SEL &= ~0x04;			// P3.2 in Port Mode
+-	P3DIR &= ~0x04;			// P3.2 Input
+-	CC1100_CS_LOW;			// CS to low
+-	while (CC1100_GDO1);	// warten bist GDO1 0 
+-	P3SEL |= 0x04;			// P3.2 in SPI mode
+-	}
++void spiInitTrx(void)   // schaltet P3.2 auf Input und CS=0 und wartet bis
++    {                   // GDO1=0(SPI CC1100 bereit), dann P3.2 in den SPI Mode
++    P3SEL &= ~0x04;         // P3.2 in Port Mode
++    P3DIR &= ~0x04;         // P3.2 Input
++    CC1100_CS_LOW;          // CS to low
++    while (CC1100_GDO1);    // warten bist GDO1 0 
++    P3SEL |= 0x04;          // P3.2 in SPI mode
++    }
+ //=============================================================================
+-// Funktion sendet und empfängt ein Byte über die SPI des MSP430
++// Funktion sendet und empfÃ¤ngt ein Byte Ã¼ber die SPI des MSP430
+ //=============================================================================
+ unsigned char trx_spi(unsigned char data)
+-	{		
+-	IFG1 &= ~URXIFG0;			// zurücksetzen des URXIFG0 Flags
+-	while(!(IFG1 & UTXIFG0));	// warten bis TX Buffer leer ist
+-	TXBUF0 = data;				// ein Byte senden
+-	while(!(IFG1 & URXIFG0));	// warten auf empfangenes Byte
+-	return RXBUF0;				// Rückgabe des empfangenen Byte
+-	}
++    {       
++    IFG1 &= ~URXIFG0;           // zurÃ¼cksetzen des URXIFG0 Flags
++    while(!(IFG1 & UTXIFG0));   // warten bis TX Buffer leer ist
++    TXBUF0 = data;              // ein Byte senden
++    while(!(IFG1 & URXIFG0));   // warten auf empfangenes Byte
++    return RXBUF0;              // RÃ¼ckgabe des empfangenen Byte
++    }
+ //=============================================================================
+ // Funktion zum Schreiben eines einzelnen CC1100 Registers
+ //=============================================================================
+ void spiWriteReg(unsigned char addr, unsigned char value)
+-	{	
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(addr);				// Adresse schreiben
+-	trx_spi(value);				// Wert schreiben
+-	CC1100_CS_HIGH;				// CS = 1
+-	}
++    {   
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(addr);              // Adresse schreiben
++    trx_spi(value);             // Wert schreiben
++    CC1100_CS_HIGH;             // CS = 1
++    }
+ //=============================================================================
+ // Funktion zum Lesen eines einzelnen CC1100 Registers
+ //=============================================================================
+ unsigned char spiReadReg(unsigned char addr)
+-	{
+-	unsigned char x;			// Variable Rückgabewert
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(addr | CC1100_READ_SINGLE); // Kommando schreiben
+-	x = trx_spi(NOBYTE);		// Wert lesen
+-	CC1100_CS_HIGH;				// CS = 1
+-	return x;
+-	}
++    {
++    unsigned char x;            // Variable RÃ¼ckgabewert
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(addr | CC1100_READ_SINGLE); // Kommando schreiben
++    x = trx_spi(NOBYTE);        // Wert lesen
++    CC1100_CS_HIGH;             // CS = 1
++    return x;
++    }
+ //=============================================================================
+ // Funktion zum Schreiben des Strobe Kommandos 
+ //=============================================================================
+ void spiStrobe(unsigned char strobe)
+-	{
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(strobe);
+-	CC1100_CS_HIGH;
+-	}
++    {
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(strobe);
++    CC1100_CS_HIGH;
++    }
+ //=============================================================================
+ // Funktion zum Schreiben der Register im Burst
+ //=============================================================================
+ void spiWriteBurstReg(unsigned char addr, char *buffer, unsigned char count)
+-	{
+-	unsigned char i;					// Variable
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(addr | CC1100_WRITE_BURST);
+-	for (i = 0; i < count; i++) {
+-		trx_spi(buffer[i]);
+-		}
+-	CC1100_CS_HIGH;
+-	}
++    {
++    unsigned char i;                    // Variable
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(addr | CC1100_WRITE_BURST);
++    for (i = 0; i < count; i++) {
++        trx_spi(buffer[i]);
++        }
++    CC1100_CS_HIGH;
++    }
+ 
+ //=============================================================================
+ // Funktion zum Lesen der Register des CC1100 im Burst
+ //=============================================================================
+ void spiReadBurstReg(unsigned char addr, char *buffer, unsigned char count)
+-	{
+-	unsigned char i;			// Variable
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(addr | CC1100_READ_BURST);
+-	for (i = 0; i < count; i++) {
+-		buffer[i] = trx_spi(NOBYTE);
+-		}
+-	CC1100_CS_HIGH;
+-	}
++    {
++    unsigned char i;            // Variable
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(addr | CC1100_READ_BURST);
++    for (i = 0; i < count; i++) {
++        buffer[i] = trx_spi(NOBYTE);
++        }
++    CC1100_CS_HIGH;
++    }
+ //=============================================================================
+ // Funktionen zum Lesen der Status Register des CC1100
+ //=============================================================================
+ unsigned char spiReadStatus(unsigned char addr)
+-	{
+-	unsigned char x;	// Variable
+-	spiInitTrx();		// Init SPI CS = 0 warten bis bereit
+-	trx_spi(addr | CC1100_READ_BURST);
+-	x = trx_spi(NOBYTE);
+-	CC1100_CS_HIGH;
+-	return x;			// Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
+-	}
++    {
++    unsigned char x;    // Variable
++    spiInitTrx();       // Init SPI CS = 0 warten bis bereit
++    trx_spi(addr | CC1100_READ_BURST);
++    x = trx_spi(NOBYTE);
++    CC1100_CS_HIGH;
++    return x;           // Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
++    }
+ unsigned char spiGetRxStatus(void)
+-	{
+-	unsigned char x;	// Variable
+-	spiInitTrx();		// Init SPI CS = 0 warten bis bereit
+-	// Strobe SNOP with the read byte set to get info on
+-	// current state and number of bits in the RX FIFO
+-	x = trx_spi(CC1100_SNOP | CC1100_READ_SINGLE);
+-	CC1100_CS_HIGH;		// CS = 1
+-	return x;			// Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
+-	}
++    {
++    unsigned char x;    // Variable
++    spiInitTrx();       // Init SPI CS = 0 warten bis bereit
++    // Strobe SNOP with the read byte set to get info on
++    // current state and number of bits in the RX FIFO
++    x = trx_spi(CC1100_SNOP | CC1100_READ_SINGLE);
++    CC1100_CS_HIGH;     // CS = 1
++    return x;           // Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
++    }
+ unsigned char spiGetTxStatus(void)
+-	{
+-	unsigned char x;	// Variable
+-	spiInitTrx();		// Init SPI CS = 0 warten bis bereit
+-	x = trx_spi(CC1100_SNOP);	// Strobe Kommando No Operation Zustand RXFIFO
+-	CC1100_CS_HIGH;		// CS = 1
+-	return x;			// Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
+-	}
++    {
++    unsigned char x;    // Variable
++    spiInitTrx();       // Init SPI CS = 0 warten bis bereit
++    x = trx_spi(CC1100_SNOP);   // Strobe Kommando No Operation Zustand RXFIFO
++    CC1100_CS_HIGH;     // CS = 1
++    return x;           // Chip Status Byte - Tabelle 17 im CC1100 Data Sheet
++    }
+ //=============================================================================
+ // Funktion RESET des CC1100  
+ //=============================================================================
+ void reset(void)
+-	{
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	trx_spi(CC1100_SRES);		// Strobe Kommando Reset
+-	spiInitTrx();				// Init SPI CS = 0 warten bis bereit
+-	CC1100_CS_HIGH;				// CS = 1
+-	}
++    {
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    trx_spi(CC1100_SRES);       // Strobe Kommando Reset
++    spiInitTrx();               // Init SPI CS = 0 warten bis bereit
++    CC1100_CS_HIGH;             // CS = 1
++    }
+ //=============================================================================
+-//	Funktion RESET des CC1100 nach power_on und warten bis bereit
++//  Funktion RESET des CC1100 nach power_on und warten bis bereit
+ //=============================================================================
+ void powerUpReset(void)
+-	{
+-	CC1100_CS_HIGH;
+-	NOPS;
+-	CC1100_CS_LOW;
+-	NOPS;
+-	CC1100_CS_HIGH;
+-	wait(4);
+-	reset();
+-	}
++    {
++    CC1100_CS_HIGH;
++    NOPS;
++    CC1100_CS_LOW;
++    NOPS;
++    CC1100_CS_HIGH;
++    wait(4);
++    reset();
++    }
+ //=============================================================================
+ // Funktion setzt den Funkkanal (im Bereich 0...8)
+ //=============================================================================
+ void switchFreq(unsigned char  c)
+-	{
+-	spiStrobe(CC1100_SIDLE);
+-	spiWriteReg(CC1100_FREQ2,(unsigned char)FREQ2[c]);
+-	spiWriteReg(CC1100_FREQ1,(unsigned char)FREQ1[c]);
+-	spiWriteReg(CC1100_FREQ0,(unsigned char)FREQ0[c]);
+-	spiStrobe(CC1100_SRX);
+-	spiStrobe(CC1100_SCAL);
+-	}
++    {
++    spiStrobe(CC1100_SIDLE);
++    spiWriteReg(CC1100_FREQ2,(unsigned char)FREQ2[c]);
++    spiWriteReg(CC1100_FREQ1,(unsigned char)FREQ1[c]);
++    spiWriteReg(CC1100_FREQ0,(unsigned char)FREQ0[c]);
++    spiStrobe(CC1100_SRX);
++    spiStrobe(CC1100_SCAL);
++    }
+ //=============================================================================
+ // Funktion initalisiert CC1100 und setzt CC1100 in den RX Mode
+ //=============================================================================
+ void initCC1100(void)
+-	{
+-	// Power up Reset CC1100
+-	powerUpReset();
+-	// Konfigurationsregister schreiben
+-	spiWriteBurstReg(0x00, conf, sizeof(conf));
+-	// aktuelle Sendeleistung des CC1100 setzen
+-	spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]);
+-	// Initialisieren der RSSI und CRC Werte im RxCC1100 Empfangspuffer
+-	RxCC1100.RSSI = 0x00;
+-	RxCC1100.CRC = false;
+-	// Enable interrupts on P2.0 for packet reception (CC1100 GDO2)
+-	_bic_SR_register(GIE);	// Disable all interrupts
+-	P2SEL = 0x00;			// must be <> 1 to use interrupts
+-	SET(P2IES, 0x01);		// Enables external interrupt on low edge (for GDO2)
+-	SET(P2IE, 0x01);		// Enable interrupt P2.0 
+-    CLEAR(P2IFG, 0x01);		// Clears the interrupt flag
+-	_bis_SR_register(GIE);	// Enable all Interrupts 
+-	spiStrobe(CC1100_SRX);	// Rx Mode
+-	wait(12);
+-	}
+-	
++    {
++    // Power up Reset CC1100
++    powerUpReset();
++    // Konfigurationsregister schreiben
++    spiWriteBurstReg(0x00, conf, sizeof(conf));
++    // aktuelle Sendeleistung des CC1100 setzen
++    spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]);
++    // Initialisieren der RSSI und CRC Werte im RxCC1100 Empfangspuffer
++    RxCC1100.RSSI = 0x00;
++    RxCC1100.CRC = false;
++    // Enable interrupts on P2.0 for packet reception (CC1100 GDO2)
++    _bic_SR_register(GIE);  // Disable all interrupts
++    P2SEL = 0x00;           // must be <> 1 to use interrupts
++    SET(P2IES, 0x01);       // Enables external interrupt on low edge (for GDO2)
++    SET(P2IE, 0x01);        // Enable interrupt P2.0 
++    CLEAR(P2IFG, 0x01);     // Clears the interrupt flag
++    _bis_SR_register(GIE);  // Enable all Interrupts 
++    spiStrobe(CC1100_SRX);  // Rx Mode
++    wait(12);
++    }
++    
+ //=============================================================================
+ // Funktion initalisiert CC1100 und setzt CC1100 in den Idle Mode
+ //=============================================================================
+ void initCC1100_IDLE(void)
+-	{
+-	// Power up Reset CC1100
+-	powerUpReset();
+-	// Konfigurationsregister schreiben
+-	spiWriteBurstReg(0x00, conf, sizeof(conf));
+-	// aktuelle Sendeleistung des CC1100 setzen
+-	spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]);
+-	// Initialisieren der RSSI und CRC Werte im RxCC1100 Empfangspuffer
+-	RxCC1100.RSSI = 0x00;
+-	RxCC1100.CRC = false;
+-	spiStrobe(CC1100_SIDLE);	// in den IDLE Mode setzen
+-	wait(12);
+-	}
++    {
++    // Power up Reset CC1100
++    powerUpReset();
++    // Konfigurationsregister schreiben
++    spiWriteBurstReg(0x00, conf, sizeof(conf));
++    // aktuelle Sendeleistung des CC1100 setzen
++    spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]);
++    // Initialisieren der RSSI und CRC Werte im RxCC1100 Empfangspuffer
++    RxCC1100.RSSI = 0x00;
++    RxCC1100.CRC = false;
++    spiStrobe(CC1100_SIDLE);    // in den IDLE Mode setzen
++    wait(12);
++    }
+ //=============================================================================
+ // Funktion setzt CC1100 in PowerDown
+ //=============================================================================
+ void initCC1100_POWERDOWN(void)
+-	{
+-	spiStrobe(CC1100_SPWD);		// in den PowerDown Mode setzen
+-	wait(12);
+-	}	
+-		
++    {
++    spiStrobe(CC1100_SPWD);     // in den PowerDown Mode setzen
++    wait(12);
++    }   
++        
+ //=============================================================================
+-// Funktion setzt die Adresse des CC1100 (ist im Bereich von 0...255 möglich)
++// Funktion setzt die Adresse des CC1100 (ist im Bereich von 0...255 mÃ¶glich)
+ //=============================================================================
+ void setUid(unsigned char id) 
+-	{
+-	if (id > MAX_UID || id < MIN_UID) return; // falsche Adresse abfangen
+-	spiStrobe(CC1100_SIDLE);				  // in den IDLE Mode setzen
+-	spiWriteReg(CC1100_ADDR, id);			  // Adressregister schreiben
+-	spiStrobe(CC1100_SRX);					  // in den RX Mode schalten	
+-	wait(12);								  // 12µSek warten
+-	}
++    {
++    if (id > MAX_UID || id < MIN_UID) return; // falsche Adresse abfangen
++    spiStrobe(CC1100_SIDLE);                  // in den IDLE Mode setzen
++    spiWriteReg(CC1100_ADDR, id);             // Adressregister schreiben
++    spiStrobe(CC1100_SRX);                    // in den RX Mode schalten    
++    wait(12);                                 // 12ÂµSek warten
++    }
+ //=============================================================================
+ // Funktion setzt die Sendeleistung des CC1100 siehe auch paTable 
+ //=============================================================================
+ char setOutputPower(unsigned char paIdx)
+-	{
+-	if (paIdx < 18)
+-		{
+-		spiStrobe(CC1100_SIDLE);	// CC1100 in den IDLE Mode setzen
+-		paTableIndex = paIdx;		// PA Index setzen
+-		spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]); // PA Wert schreiben
+-		spiStrobe(CC1100_SRX);		// CC1100 in den RX Mode setzen
+-		wait(12);					// warten 
+-		return true;				// Rückgabe true 
+-		}
+-	return false;					// Rückgabe false da paIdx zu groß
+-	}
++    {
++    if (paIdx < 18)
++        {
++        spiStrobe(CC1100_SIDLE);    // CC1100 in den IDLE Mode setzen
++        paTableIndex = paIdx;       // PA Index setzen
++        spiWriteReg(CC1100_PATABLE, paTable[paTableIndex]); // PA Wert schreiben
++        spiStrobe(CC1100_SRX);      // CC1100 in den RX Mode setzen
++        wait(12);                   // warten 
++        return true;                // RÃ¼ckgabe true 
++        }
++    return false;                   // RÃ¼ckgabe false da paIdx zu groÃŸ
++    }
+ 
+ //=============================================================================
+ //  void sendPacket(unsigned char ziel,unsigned char quelle,char *data,unsigned char length)
+ //
+ //  Funktion:
+-//      Sendet Packete mit Längen bis zu 62Byte.
+-//      GDO2 muß so konfiguriert werden das es gesetzt wird wenn das sync word
+-//		gesendet ist und und rückgesetzt wird wenn das packet gesendet ist.
+-//		Dafür erforderlich ist spiWriteReg(CC1100_IOCFG0, 0x06);
++//      Sendet Packete mit LÃ¤ngen bis zu 62Byte.
++//      GDO2 muÃŸ so konfiguriert werden das es gesetzt wird wenn das sync word
++//      gesendet ist und und rÃ¼ckgesetzt wird wenn das packet gesendet ist.
++//      DafÃ¼r erforderlich ist spiWriteReg(CC1100_IOCFG0, 0x06);
+ //      Das GDO2 Bit wird in der Funktion gepollt.
+ //      
+ //  Parameter:
+-//		unsigned char ziel
+-//			Zieladresse des Knotens an die das Packet gesendet werden soll (0..255) 
+-//		unsigned char quelle
+-//			Zieladresse des Knotens an die das Packet gesendet werden soll (0..255) 
+-//     	char *data
+-//          Pointer auf einen Buffer der die Sendedaten enthält.
++//      unsigned char ziel
++//          Zieladresse des Knotens an die das Packet gesendet werden soll (0..255) 
++//      unsigned char quelle
++//          Zieladresse des Knotens an die das Packet gesendet werden soll (0..255) 
++//      char *data
++//          Pointer auf einen Buffer der die Sendedaten enthÃ¤lt.
+ //      unsigned char length
+-//          Länge des Buffers mit den Sendedaten (length <= 60)
++//          LÃ¤nge des Buffers mit den Sendedaten (length <= 60)
+ //=============================================================================
+ 
+ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned char length)
+-	{
+-	//	| 0 | 1 | 2 | 3  |....| 62 | data[3..62] = 59 
+-	//	  L   Z   Q   D1  ....  D59 => 62 Byte
+-	// 	L_Länge,Z_Ziel;Q_Quelle,D_Datenbyte
+-	unsigned char i;
+-	if (length > MAX_DATA_LENGTH-1 )	// max 59 Byte  
+-		{
+-		length = MAX_DATA_LENGTH-1 ;	// zu große Packete werden auf 59 Byte begrenzt 
+-		}
+-	// Packetlänge = 1 Byte (Zieladdresse) + data length
+-	TxCC1100.length = 2 + length;
+-	// Zieladresse eintragen
+-	TxCC1100.dest = ziel;
+-	TxCC1100.source = quelle;
+-	
+-	// Quelladresse eintragen
+-	//Sendepuffer füllen
+-	for (i = 0; i < length; i++)
+-		{
+-		TxCC1100.data[i] = data[i];
+-		}
+-	// Interrupt P2.0 verbieten
+-	CLEAR(P2IE, 0x01);
+-	// setzt CC1100 in den IDLE Mode
+-	spiStrobe(CC1100_SIDLE);
+-    // löscht den TX FIFO des CC1100
++    {
++    //  | 0 | 1 | 2 | 3  |....| 62 | data[3..62] = 59 
++    //    L   Z   Q   D1  ....  D59 => 62 Byte
++    //  L_LÃ¤nge,Z_Ziel;Q_Quelle,D_Datenbyte
++    unsigned char i;
++    if (length > MAX_DATA_LENGTH-1 )    // max 59 Byte  
++        {
++        length = MAX_DATA_LENGTH-1 ;    // zu groÃŸe Packete werden auf 59 Byte begrenzt 
++        }
++    // PacketlÃ¤nge = 1 Byte (Zieladdresse) + data length
++    TxCC1100.length = 2 + length;
++    // Zieladresse eintragen
++    TxCC1100.dest = ziel;
++    TxCC1100.source = quelle;
++    
++    // Quelladresse eintragen
++    //Sendepuffer fÃ¼llen
++    for (i = 0; i < length; i++)
++        {
++        TxCC1100.data[i] = data[i];
++        }
++    // Interrupt P2.0 verbieten
++    CLEAR(P2IE, 0x01);
++    // setzt CC1100 in den IDLE Mode
++    spiStrobe(CC1100_SIDLE);
++    // lÃ¶scht den TX FIFO des CC1100
+     spiStrobe(CC1100_SFTX);
+-	// Packet in TX FIFO schreiben +Länge+Ziel+Quelle
+-	spiWriteBurstReg(CC1100_TXFIFO, (char *) &TxCC1100, length+3);
+-	// setzt CC1100 in den Tx Mode
+-	spiStrobe(CC1100_STX);
+-	// warten GDO2=1 - sync transmitted
+-	while (!CC1100_GDO2);
+-	// warten GDO2=0 - Packet Ende
+-	while (CC1100_GDO2);
+-	// Interrupt P2.0 erlauben
+-	CLEAR(P2IFG, 0x01);
+-	SET(P2IE, 0x01);
+-	}
++    // Packet in TX FIFO schreiben +LÃ¤nge+Ziel+Quelle
++    spiWriteBurstReg(CC1100_TXFIFO, (char *) &TxCC1100, length+3);
++    // setzt CC1100 in den Tx Mode
++    spiStrobe(CC1100_STX);
++    // warten GDO2=1 - sync transmitted
++    while (!CC1100_GDO2);
++    // warten GDO2=0 - Packet Ende
++    while (CC1100_GDO2);
++    // Interrupt P2.0 erlauben
++    CLEAR(P2IFG, 0x01);
++    SET(P2IE, 0x01);
++    }
+ 
+ 
+ //=============================================================================
+ //  bool receivePacket()
+ //
+ //  Funktion:
+-//      Die Funktion empfängt ein Packet variabler Länge.
+-//		Das erste Byte im Packet ist die Länge des Packetes.
+-// 		Um diese Funktion zu nutzen muß der APPEND_STATUS im PKTCTRL1 Register
+-//		gesetzt werden. RSSI und CRC des Packetes werden beim Lesen angehangen.
+-//      Die Funktion wird durch die ISR für P2.0 aufgerufen.
+-//		Ist getriggert durch das GDO2 Signal des CC1100 (an P2.0)
+-//		für den Empfang eines Packetes. Siehe auch Register IOCFG2. 
++//      Die Funktion empfÃ¤ngt ein Packet variabler LÃ¤nge.
++//      Das erste Byte im Packet ist die LÃ¤nge des Packetes.
++//      Um diese Funktion zu nutzen muÃŸ der APPEND_STATUS im PKTCTRL1 Register
++//      gesetzt werden. RSSI und CRC des Packetes werden beim Lesen angehangen.
++//      Die Funktion wird durch die ISR fÃ¼r P2.0 aufgerufen.
++//      Ist getriggert durch das GDO2 Signal des CC1100 (an P2.0)
++//      fÃ¼r den Empfang eines Packetes. Siehe auch Register IOCFG2. 
+ //      Das RXBYTES Register zeigt ob Bytes im FIFO stehen.
+-// 		Ist notwendig da das GDO Signal auch signalisier wenn:
+-//			***ein synch 
+-//			***Rx FIFO is flushed due to address filtering
+-//			***CRC	filtering
+-//			***packet length filtering.
++//      Ist notwendig da das GDO Signal auch signalisier wenn:
++//          ***ein synch 
++//          ***Rx FIFO is flushed due to address filtering
++//          ***CRC  filtering
++//          ***packet length filtering.
+ //
+-//		Packet wird in RxCC1100 Buffer geschrieben
++//      Packet wird in RxCC1100 Buffer geschrieben
+ //   
+ //  Parameter:
+-//		keine
++//      keine
+ //          
+-//  Rückgabewert:
++//  RÃ¼ckgabewert:
+ //      bool
+ //          true:   CRC OK
+ //          false:  CRC NOT OK or
+-//					storage buffer too short or
+-//					no packet was put in the RX FIFO due to filtering
++//                  storage buffer too short or
++//                  no packet was put in the RX FIFO due to filtering
+ //=============================================================================
+ char receivePacket()
+-	{
+-	// für RSSI und CRC Status vorbereiten
+-	char status[2];
+-	// mit 0 initialisieren um aktuelle Länge zu speichern
+-	unsigned char packetLength = 0;
+-	// Wenn Bytes im RX FIFO vorhanden sind dann...
+-	if ((spiReadStatus(CC1100_RXBYTES) & BYTES_IN_RXFIFO))
+-		{
+-		// Längenbyte des aktuellen Packetes aus dem RX FIFO lesen (erstes Byte)
+-        packetLength = spiReadReg(CC1100_RXFIFO); //Das erste Byte ist LängenByte
+-		// Wenn Packetlänge OK dann...
++    {
++    // fÃ¼r RSSI und CRC Status vorbereiten
++    char status[2];
++    // mit 0 initialisieren um aktuelle LÃ¤nge zu speichern
++    unsigned char packetLength = 0;
++    // Wenn Bytes im RX FIFO vorhanden sind dann...
++    if ((spiReadStatus(CC1100_RXBYTES) & BYTES_IN_RXFIFO))
++        {
++        // LÃ¤ngenbyte des aktuellen Packetes aus dem RX FIFO lesen (erstes Byte)
++        packetLength = spiReadReg(CC1100_RXFIFO); //Das erste Byte ist LÃ¤ngenByte
++        // Wenn PacketlÃ¤nge OK dann...
+         if (packetLength <= PACKET_LENGTH)
+-			{
+-			// Längenbyte in den RxCC1100 Puffer schreiben
+-			RxCC1100.length = packetLength;// packetLength;
+-			// Den Rest des Packetes in RxCC1100 mit aktueller Länge schreiben
++            {
++            // LÃ¤ngenbyte in den RxCC1100 Puffer schreiben
++            RxCC1100.length = packetLength;// packetLength;
++            // Den Rest des Packetes in RxCC1100 mit aktueller LÃ¤nge schreiben
+             spiReadBurstReg(CC1100_RXFIFO,(char *)RxCC1100.data, packetLength);
+             // Lesen der zwei Status Bytes (status[0] = RSSI, status[1] = LQI)
+             spiReadBurstReg(CC1100_RXFIFO, status, 2);
+-			// RSSI Werte in den RxCC1100 Puffer schreiben
+-			RxCC1100.RSSI = status[I_RSSI];
+-			// CRC Wert in den RxCC1100 Puffer schreiben 
+-			RxCC1100.CRC = (status[I_LQI] & CRC_OK) >> 7;
+-			// Zieladresse in den RxCC1100 Puffer schreiben
+-			RxCC1100.dest = RxCC1100.data[0]; 
+-			// Quelladresse in den RxCC1100 Puffer schreiben
+-			RxCC1100.source = RxCC1100.data[1];
+-			// Rückgabewert CRC true or false
+-			return RxCC1100.CRC;
+-        	}
+-    	//...sonst...
+-		else
+-			{
+-			// ...CC1100 in den IDLE Mode setzen um... 
++            // RSSI Werte in den RxCC1100 Puffer schreiben
++            RxCC1100.RSSI = status[I_RSSI];
++            // CRC Wert in den RxCC1100 Puffer schreiben 
++            RxCC1100.CRC = (status[I_LQI] & CRC_OK) >> 7;
++            // Zieladresse in den RxCC1100 Puffer schreiben
++            RxCC1100.dest = RxCC1100.data[0]; 
++            // Quelladresse in den RxCC1100 Puffer schreiben
++            RxCC1100.source = RxCC1100.data[1];
++            // RÃ¼ckgabewert CRC true or false
++            return RxCC1100.CRC;
++            }
++        //...sonst...
++        else
++            {
++            // ...CC1100 in den IDLE Mode setzen um... 
+             spiStrobe(CC1100_SIDLE);
+-            // ...den RX FIFO zu löschen...
++            // ...den RX FIFO zu lÃ¶schen...
+             spiStrobe(CC1100_SFRX);
+-			// ...und Wert für Rückgabe ist false
++            // ...und Wert fÃ¼r RÃ¼ckgabe ist false
+             return false;
+-        	}
+-		}
+-	// ...sonst da keine Bytes im RX FIFO	
+-	else
+-		{
+-		// ...Rückgabe false 
+-		return false;
+-		}
+-	}
++            }
++        }
++    // ...sonst da keine Bytes im RX FIFO   
++    else
++        {
++        // ...RÃ¼ckgabe false 
++        return false;
++        }
++    }
+ //=============================================================================
+ //  printPacket()
+ //
+ //  Funktion:
+ //      Die Funktion gibt empfangenes Datenpaket auf der seriellen 
+-//		Schnittstelle aus.      
++//      Schnittstelle aus.      
+ // 
+-//=============================================================================	
++//============================================================================= 
+ void printPacket(void)
+-	{
+-	char i;
+-	char text[20];
+-	char z[] = "\n\r";
+-	sprintf(text,"\n\rPaketlänge = %u", RxCC1100.length);
+-	writestr(text);	
+-	sprintf(text,"\n\rZieladresse = %u", RxCC1100.dest);
+-	writestr(text);
+-	sprintf(text,"\n\rQuelladresse= %u", RxCC1100.source);
+-	writestr(text);
+-	sprintf(text,"\n\rRSSI = %u", RxCC1100.RSSI);
+-	writestr(text);
+-	writestr(z);	
+-	writestr("\n\rDaten = ");
+-	for (i=2;i<((RxCC1100.length));i++)
+-		{
+-		writechar(RxCC1100.data[i]);
+-		}
+-	writestr(z);
+-	}
++    {
++    char i;
++    char text[20];
++    char z[] = "\n\r";
++    sprintf(text,"\n\rPaketlÃ¤nge = %u", RxCC1100.length);
++    writestr(text); 
++    sprintf(text,"\n\rZieladresse = %u", RxCC1100.dest);
++    writestr(text);
++    sprintf(text,"\n\rQuelladresse= %u", RxCC1100.source);
++    writestr(text);
++    sprintf(text,"\n\rRSSI = %u", RxCC1100.RSSI);
++    writestr(text);
++    writestr(z);    
++    writestr("\n\rDaten = ");
++    for (i=2;i<((RxCC1100.length));i++)
++        {
++        writechar(RxCC1100.data[i]);
++        }
++    writestr(z);
++    }
+ 
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/CC1100.h ./CC1100.h
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/CC1100.h	Fri Oct 15 08:21:56 2010
++++ ./CC1100.h	Thu Jan 13 17:53:09 2011
+@@ -2,75 +2,75 @@
+ #define CC1100_H_
+ 
+ //=============================================================================
+-// zentrale Daten für den CC1100 Funkchip
++// zentrale Daten fÃ¼r den CC1100 Funkchip
+ //=============================================================================
+-// RxCC1100 	Empfangsbuffer
+-// TxCC1100 	Sendebuffer
+-// ID 			Knoten Adresse
+-// channel		Funkkanal
+-// conf[39]		Konfigurationstabelle
++// RxCC1100     Empfangsbuffer
++// TxCC1100     Sendebuffer
++// ID           Knoten Adresse
++// channel      Funkkanal
++// conf[39]     Konfigurationstabelle
+ //=============================================================================
+ extern unsigned char ID ;           //Node ID 
+-extern unsigned char channel;		//Funkkanal
+-extern char conf[39];				//Konfigurationstabelle
+-extern unsigned char paTableIndex;	//PA Tabelle
++extern unsigned char channel;       //Funkkanal
++extern char conf[39];               //Konfigurationstabelle
++extern unsigned char paTableIndex;  //PA Tabelle
+ //=============================================================================
+ 
+ 
+ //=============================================================================
+-#define MAX_UID				(0xFF) 			// Maximum UID of a node is 255
+-#define MIN_UID				(0x01) 			// Minimum UID of a node is 1
++#define MAX_UID             (0xFF)          // Maximum UID of a node is 255
++#define MIN_UID             (0x01)          // Minimum UID of a node is 1
+ //=============================================================================
+-#define CC1100_CS_LOW		(P3OUT &= ~0x01)// CS set LOW
+-#define CC1100_CS_HIGH		(P3OUT |= 0x01) // CS set HIGH
++#define CC1100_CS_LOW       (P3OUT &= ~0x01)// CS set LOW
++#define CC1100_CS_HIGH      (P3OUT |= 0x01) // CS set HIGH
+ //=============================================================================
+-#define CC1100_GDO0         (P2IN & 0x02)	// read serial I/O (GDO0)
+-#define CC1100_GDO1         (P3IN & 0x04)	// read serial I/O (GDO1)
+-#define CC1100_GDO2         (P2IN & 0x01)	// read serial I/O (GDO2)
++#define CC1100_GDO0         (P2IN & 0x02)   // read serial I/O (GDO0)
++#define CC1100_GDO1         (P3IN & 0x04)   // read serial I/O (GDO1)
++#define CC1100_GDO2         (P2IN & 0x01)   // read serial I/O (GDO2)
+ //=============================================================================
+-#define NOBYTE				(0x00)		// No command, for reading.
+-#define PACKET_LENGTH		(0x3E)		// Packet length = 62 Bytes.
+-#define MAX_DATA_LENGTH		(0x3C)		// Maximum data length of layer 0 = 60 Bytes.
++#define NOBYTE              (0x00)      // No command, for reading.
++#define PACKET_LENGTH       (0x3E)      // Packet length = 62 Bytes.
++#define MAX_DATA_LENGTH     (0x3C)      // Maximum data length of layer 0 = 60 Bytes.
+ //=============================================================================
+-#define FIXED_PKTLEN		(0x00)		// Fixed length packets, length configured in PKTLEN register.
+-#define	VARIABLE_PKTLEN		(0x01)		// Variable length packets, packet length configured by the first
+-										// byte after synch word.
+-//=============================================================================										
+-#define PATABLE 			(17)		// Current PATABLE Index			
+-#define LOW_POWER 			(1)			// Sendeleistung auf -15 dBm setzen
+-#define MED_POWER 			(9)			// Sendeleistung auf  +2 dBm setzen
+-#define HIGH_POWER 			(16)		// Sendeleistung auf  +9 dBm setzen
++#define FIXED_PKTLEN        (0x00)      // Fixed length packets, length configured in PKTLEN register.
++#define VARIABLE_PKTLEN     (0x01)      // Variable length packets, packet length configured by the first
++                                        // byte after synch word.
++//=============================================================================                                     
++#define PATABLE             (17)        // Current PATABLE Index            
++#define LOW_POWER           (1)         // Sendeleistung auf -15 dBm setzen
++#define MED_POWER           (9)         // Sendeleistung auf  +2 dBm setzen
++#define HIGH_POWER          (16)        // Sendeleistung auf  +9 dBm setzen
+ //=============================================================================
+ 
+ 
+ //=============================================================================
+ // Bitmasks for reading out status register values
+ //=============================================================================
+-#define CRC_OK              (0x80)		// Bitmask (=10000000) for reading CRC_OK.
+-										// If CRC_OK == 1: CRC for received data OK (or CRC disabled).
+-										// If CRC_OK == 0: CRC error in received data.
+-#define LQI_EST				(0x7F)		// Bitmask (=01111111) for reading LQI_EST.
+-										// The Link Quality Indicator estimates how easily a received signal can be demodulated.
+-#define I_RSSI              (0x00)		// Index 0 contains RSSI information (from optionally appended packet status bytes).
+-#define I_LQI               (0x01)		// Index 1 contains LQI & CRC_OK information (from optionally appended packet status bytes).
+-#define MARC_STATE			(0x1F)		// Bitmask (=00011111) for reading MARC_STATE in MARCSTATE status register.
+-#define CS					(0x40)		// Bitmask (=01000000) for reading CS (Carrier Sense) in PKTSTATUS status register.
+-#define PQT_REACHED			(0x20)		// Bitmask (=00100000) for reading PQT_REACHED (Preamble Quality reached) in PKTSTATUS status register.
+-#define CCA					(0x10)		// Bitmask (=00010000) for reading CCA (clear channel assessment) in PKTSTATUS status register.
+-#define SFD					(0x08)		// Bitmask (=00001000) for reading SFD (Sync word found) in PKTSTATUS status register.
+-#define GDO2				(0x04)		// Bitmask (=00000100) for reading GDO2 (current value on GDO2 pin) in PKTSTATUS status register.
+-#define GDO1				(0x02)		// Bitmask (=00000010) for reading GDO1 (current value on GDO1 pin) in PKTSTATUS status register.
+-#define GDO0				(0x01)		// Bitmask (=00000001) for reading GDO0 (current value on GDO0 pin) in PKTSTATUS status register.
+-#define TXFIFO_UNDERFLOW	(0x80)		// Bitmask (=10000000) for reading TXFIFO_UNDERFLOW in TXBYTES status register.
+-#define BYTES_IN_TXFIFO		(0x7F)		// Bitmask (=01111111) for reading NUM_TXBYTES in TXBYTES status register.
+-#define RXFIFO_OVERFLOW		(0x80)		// Bitmask (=10000000) for reading RXFIFO_OVERFLOW in RXBYTES status register.
+-#define BYTES_IN_RXFIFO     (0x7F)		// Bitmask (=01111111) for reading NUM_RXBYTES in RXBYTES status register.
++#define CRC_OK              (0x80)      // Bitmask (=10000000) for reading CRC_OK.
++                                        // If CRC_OK == 1: CRC for received data OK (or CRC disabled).
++                                        // If CRC_OK == 0: CRC error in received data.
++#define LQI_EST             (0x7F)      // Bitmask (=01111111) for reading LQI_EST.
++                                        // The Link Quality Indicator estimates how easily a received signal can be demodulated.
++#define I_RSSI              (0x00)      // Index 0 contains RSSI information (from optionally appended packet status bytes).
++#define I_LQI               (0x01)      // Index 1 contains LQI & CRC_OK information (from optionally appended packet status bytes).
++#define MARC_STATE          (0x1F)      // Bitmask (=00011111) for reading MARC_STATE in MARCSTATE status register.
++#define CS                  (0x40)      // Bitmask (=01000000) for reading CS (Carrier Sense) in PKTSTATUS status register.
++#define PQT_REACHED         (0x20)      // Bitmask (=00100000) for reading PQT_REACHED (Preamble Quality reached) in PKTSTATUS status register.
++#define CCA                 (0x10)      // Bitmask (=00010000) for reading CCA (clear channel assessment) in PKTSTATUS status register.
++#define SFD                 (0x08)      // Bitmask (=00001000) for reading SFD (Sync word found) in PKTSTATUS status register.
++#define GDO2                (0x04)      // Bitmask (=00000100) for reading GDO2 (current value on GDO2 pin) in PKTSTATUS status register.
++#define GDO1                (0x02)      // Bitmask (=00000010) for reading GDO1 (current value on GDO1 pin) in PKTSTATUS status register.
++#define GDO0                (0x01)      // Bitmask (=00000001) for reading GDO0 (current value on GDO0 pin) in PKTSTATUS status register.
++#define TXFIFO_UNDERFLOW    (0x80)      // Bitmask (=10000000) for reading TXFIFO_UNDERFLOW in TXBYTES status register.
++#define BYTES_IN_TXFIFO     (0x7F)      // Bitmask (=01111111) for reading NUM_TXBYTES in TXBYTES status register.
++#define RXFIFO_OVERFLOW     (0x80)      // Bitmask (=10000000) for reading RXFIFO_OVERFLOW in RXBYTES status register.
++#define BYTES_IN_RXFIFO     (0x7F)      // Bitmask (=01111111) for reading NUM_RXBYTES in RXBYTES status register.
+ 
+ 
+ //=============================================================================
+ // Bitmasks for reading out configuration register values
+ //=============================================================================
+-#define PKT_LENGTH_CONFIG	(0x03)		// Bitmask (=00000011) for reading LENGTH_CONFIG in PKTCTRL0 configuration register.
++#define PKT_LENGTH_CONFIG   (0x03)      // Bitmask (=00000011) for reading LENGTH_CONFIG in PKTCTRL0 configuration register.
+ //=============================================================================
+ 
+ 
+@@ -95,7 +95,7 @@
+ #define CC1100_FREQ0    (0x0F) // Frequency control word, low byte
+ #define CC1100_MDMCFG4  (0x10) // Modem configuration
+ #define CC1100_MDMCFG3  (0x11) // Modem configuration
+-#define CC1100_MDMCFG2	(0x12) // Modem configuration
++#define CC1100_MDMCFG2  (0x12) // Modem configuration
+ #define CC1100_MDMCFG1  (0x13) // Modem configuration
+ #define CC1100_MDMCFG0  (0x14) // Modem configuration
+ #define CC1100_DEVIATN  (0x15) // Modem deviation setting
+@@ -130,9 +130,9 @@
+ //=============================================================================
+ // Strobe commands (14x)
+ //=============================================================================
+-#define CC1100_SRES         (0x30)	// Reset chip.
++#define CC1100_SRES         (0x30)  // Reset chip.
+ #define CC1100_SFSTXON      (0x31)  // Enable and calibrate frequency synthesizer (if MCSM0.FS_AUTOCAL=1).
+-									// If in RX/TX: Go to a wait state where only the synthesizer is
++                                    // If in RX/TX: Go to a wait state where only the synthesizer is
+                                     // running (for quick RX / TX turnaround).
+ #define CC1100_SXOFF        (0x32)  // Turn off crystal oscillator.
+ #define CC1100_SCAL         (0x33)  // Calibrate frequency synthesizer and turn it off
+@@ -158,17 +158,17 @@
+ //=============================================================================
+ // Status registers (12x)
+ //=============================================================================
+-#define CC1100_PARTNUM      (0x30)	// Part number of CC1100.
+-#define CC1100_VERSION      (0x31)	// Current version number.
+-#define CC1100_FREQEST      (0x32)	// Frequency Offset Estimate.
+-#define CC1100_LQI          (0x33)	// Demodulator estimate for Link Quality.
+-#define CC1100_RSSI         (0x34)	// Received signal strength indication.
+-#define CC1100_MARCSTATE    (0x35)	// Control state machine state.
+-#define CC1100_WORTIME1     (0x36)	// High byte of WOR timer.
+-#define CC1100_WORTIME0     (0x37)	// Low byte of WOR timer.
+-#define CC1100_PKTSTATUS    (0x38)	// Current GDOx status and packet status.
+-#define CC1100_VCO_VC_DAC   (0x39)	// Current setting from PLL calibration module.
+-#define CC1100_TXBYTES      (0x3A)	// Underflow and number of bytes in the TX FIFO.
++#define CC1100_PARTNUM      (0x30)  // Part number of CC1100.
++#define CC1100_VERSION      (0x31)  // Current version number.
++#define CC1100_FREQEST      (0x32)  // Frequency Offset Estimate.
++#define CC1100_LQI          (0x33)  // Demodulator estimate for Link Quality.
++#define CC1100_RSSI         (0x34)  // Received signal strength indication.
++#define CC1100_MARCSTATE    (0x35)  // Control state machine state.
++#define CC1100_WORTIME1     (0x36)  // High byte of WOR timer.
++#define CC1100_WORTIME0     (0x37)  // Low byte of WOR timer.
++#define CC1100_PKTSTATUS    (0x38)  // Current GDOx status and packet status.
++#define CC1100_VCO_VC_DAC   (0x39)  // Current setting from PLL calibration module.
++#define CC1100_TXBYTES      (0x3A)  // Underflow and number of bytes in the TX FIFO.
+ #define CC1100_RXBYTES      (0x3B)  // Overflow and number of bytes in the RX FIFO.
+ //=============================================================================
+ 
+@@ -176,20 +176,20 @@
+ //=============================================================================
+ // Multi byte registers
+ //=============================================================================
+-#define CC1100_PATABLE      (0x3E)	// Register for eight user selected
+-									// output power settings.
+-									// 3-bit FREND0.PA_POWER value selects the PATABLE entry to use.
+-#define CC1100_TXFIFO       (0x3F)	// TX FIFO: Write operations write to the TX FIFO (SB: +0x00; BURST: +0x40) 
+-#define CC1100_RXFIFO       (0x3F)	// RX FIFO: Read operations read from the RX FIFO (SB: +0x80; BURST: +0xC0)
++#define CC1100_PATABLE      (0x3E)  // Register for eight user selected
++                                    // output power settings.
++                                    // 3-bit FREND0.PA_POWER value selects the PATABLE entry to use.
++#define CC1100_TXFIFO       (0x3F)  // TX FIFO: Write operations write to the TX FIFO (SB: +0x00; BURST: +0x40) 
++#define CC1100_RXFIFO       (0x3F)  // RX FIFO: Read operations read from the RX FIFO (SB: +0x80; BURST: +0xC0)
+ //=============================================================================
+ 
+ 
+ //=============================================================================
+ // Definitions to support burst/single access
+ //=============================================================================
+-#define CC1100_WRITE_BURST	(0x40)	// Offset for burst write.
+-#define CC1100_READ_SINGLE	(0x80)	// Offset for read single byte.
+-#define CC1100_READ_BURST	(0xC0)	// Offset for read burst.
++#define CC1100_WRITE_BURST  (0x40)  // Offset for burst write.
++#define CC1100_READ_SINGLE  (0x80)  // Offset for read single byte.
++#define CC1100_READ_BURST   (0xC0)  // Offset for read burst.
+ //=============================================================================
+ 
+ 
+@@ -197,33 +197,33 @@
+ // CC1100 Funk Empfangspuffer RxCC1100
+ //=============================================================================
+ typedef struct RCC1100
+-	{
+-	unsigned char length;	// Längenbyte muß <= 62 sein
+-	unsigned char dest;		// Zieladresse des empfangenen Packetes
+-	unsigned char source;	// Quelladresse des empfangenen Packetes
+-	char data[61];			// RxCC1100.data[0] Zieladresse
+-							// RxCC1100.data[1] Quelladresse
+-							// RxCC1100.data[2..59] Daten
+-	unsigned char RSSI;	 	// The RSSI value of last received packet
+-	unsigned char CRC;		// The CRC status of last received packet (1 = OK, 0 = not OK)
+-	} 
+- 	CC1100_Rx;
++    {
++    unsigned char length;   // LÃ¤ngenbyte muÃŸ <= 62 sein
++    unsigned char dest;     // Zieladresse des empfangenen Packetes
++    unsigned char source;   // Quelladresse des empfangenen Packetes
++    char data[61];          // RxCC1100.data[0] Zieladresse
++                            // RxCC1100.data[1] Quelladresse
++                            // RxCC1100.data[2..59] Daten
++    unsigned char RSSI;     // The RSSI value of last received packet
++    unsigned char CRC;      // The CRC status of last received packet (1 = OK, 0 = not OK)
++    } 
++    CC1100_Rx;
+ extern volatile  CC1100_Rx RxCC1100;
+ //=============================================================================
+ 
+ 
+ //=============================================================================
+-// CC1100 Funk Sendepuffer TxCC1100 für variable Datenlängen
++// CC1100 Funk Sendepuffer TxCC1100 fÃ¼r variable DatenlÃ¤ngen
+ //=============================================================================
+ typedef struct TCC1100
+-	{
+-	unsigned char length;	// Länge Daten 	(max 59)
+-	unsigned char dest;		// Zieladresse	(0..255)
+-	unsigned char source;	// Quelladresse (0..255)
+-	char data[59];			// Daten     	(max 60)
+-	}
+-	CC1100_Tx; 	
+-extern volatile  CC1100_Tx TxCC1100;	// 	
++    {
++    unsigned char length;   // LÃ¤nge Daten     (max 59)
++    unsigned char dest;     // Zieladresse  (0..255)
++    unsigned char source;   // Quelladresse (0..255)
++    char data[59];          // Daten        (max 60)
++    }
++    CC1100_Tx;  
++extern volatile  CC1100_Tx TxCC1100;    //  
+ //=============================================================================
+ 
+ 
+@@ -241,23 +241,23 @@
+ // Reset des CC1100 Transceiver
+ //=============================================================================
+ void setUid(unsigned char id);
+-//	Setzt Adresse des CC1100 Transceiver 0...255 möglich
++//  Setzt Adresse des CC1100 Transceiver 0...255 mÃ¶glich
+ //=============================================================================
+ char setOutputPower(unsigned char paIdx);
+-//	Setzt die Sendeleistung des CC1100 Transceiver
+-//	paIdx siehe paTable 
++//  Setzt die Sendeleistung des CC1100 Transceiver
++//  paIdx siehe paTable 
+ //=============================================================================
+ void switchFreq(unsigned char  c); 
+-// Setzt den Sendekanal des CC1100 Transceiver 0...9 möglich
++// Setzt den Sendekanal des CC1100 Transceiver 0...9 mÃ¶glich
+ //=============================================================================
+ void sendPacket(unsigned char ziel,unsigned char quelle,  char *data, unsigned char length);
+ // Sendet ein Funkpaket siehe auch TxCC1100 Puffer
+ //=============================================================================
+ char receivePacket(void);
+-// Empfängt ein Funkpacket siehe auch RxCC1100 Puffer
++// EmpfÃ¤ngt ein Funkpacket siehe auch RxCC1100 Puffer
+ //=============================================================================
+ char receivePacket(void);
+-// Empfängt ein Funkpacket siehe auch RxCC1100 Puffer
++// EmpfÃ¤ngt ein Funkpacket siehe auch RxCC1100 Puffer
+ //=============================================================================
+ void printPacket(void);
+ // Gibt den Packetinhalt auf das Terminal aus
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/SHT11.c ./SHT11.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/SHT11.c	Thu Nov  4 17:07:12 2010
++++ ./SHT11.c	Thu Jan 13 17:53:09 2011
+@@ -22,41 +22,41 @@
+ //========================================================================= 
+ char SHT11_Write_Byte(unsigned char value)
+ //========================================================================= 
+-	{ 
+-  	unsigned char i,ack=0;  
+-  	for(i=0; i<8; i++)
+-  		{
+-    	if(value & BIT7) 	SHT11_DATA_HIGH;	// Datenbit 1 setzen
+-    	else            	SHT11_DATA_LOW;		// Datenbit 0 setzen
+-    	SHT11_SCK_HIGH;	SHT11_SCK_LOW;			// Taktsignal
+-    	value = value << 1;						// Value Wert links schieben
+- 		}
+-  	SHT11_DATA_IN;								// Datenleitung IN
+-  	SHT11_SCK_HIGH;	SHT11_SCK_LOW;				// Taktsignal
+-	ack = SHT11_DATA;                 	// Daten einlesen - ack Bit 
+-	return ack;		                    // Rückgabe ack=1 if no acknowledge
+-	}
++    { 
++    unsigned char i,ack=0;  
++    for(i=0; i<8; i++)
++        {
++        if(value & BIT7)    SHT11_DATA_HIGH;    // Datenbit 1 setzen
++        else                SHT11_DATA_LOW;     // Datenbit 0 setzen
++        SHT11_SCK_HIGH; SHT11_SCK_LOW;          // Taktsignal
++        value = value << 1;                     // Value Wert links schieben
++        }
++    SHT11_DATA_IN;                              // Datenleitung IN
++    SHT11_SCK_HIGH; SHT11_SCK_LOW;              // Taktsignal
++    ack = SHT11_DATA;                   // Daten einlesen - ack Bit 
++    return ack;                         // RÃ¼ckgabe ack=1 if no acknowledge
++    }
+ 
+ 
+ //========================================================================= 
+ char SHT11_Read_Byte(unsigned char ack) 
+ //========================================================================= 
+-	{ 
+-  	unsigned char i,value=0;
+-  	SHT11_DATA_IN;
+-  	for(i=0; i<8; i++)					// 8 Datenbits lesen
+-  		{
+-    	value = value << 1;             // value links schieben 
+-    	SHT11_SCK_HIGH;			
+-    	if (SHT11_DATA) value++;        // wenn DATA=1 value um ein erhöhen
+-    	SHT11_SCK_LOW;
+-    	}
+-    if (ack == 0) SHT11_DATA_LOW;		// ack=0
+-    else SHT11_DATA_HIGH;				// ack=1
+-   	SHT11_DATA_OUT;                     // ack auf DATA
+-  	SHT11_SCK_HIGH; SHT11_SCK_LOW;		// Taktsignal						    
+-  	return value;						// Rückgabe gelesener Wert
+-	}
++    { 
++    unsigned char i,value=0;
++    SHT11_DATA_IN;
++    for(i=0; i<8; i++)                  // 8 Datenbits lesen
++        {
++        value = value << 1;             // value links schieben 
++        SHT11_SCK_HIGH;         
++        if (SHT11_DATA) value++;        // wenn DATA=1 value um ein erhÃ¶hen
++        SHT11_SCK_LOW;
++        }
++    if (ack == 0) SHT11_DATA_LOW;       // ack=0
++    else SHT11_DATA_HIGH;               // ack=1
++    SHT11_DATA_OUT;                     // ack auf DATA
++    SHT11_SCK_HIGH; SHT11_SCK_LOW;      // Taktsignal                           
++    return value;                       // RÃ¼ckgabe gelesener Wert
++    }
+ 
+ 
+ //========================================================================= 
+@@ -66,17 +66,17 @@
+ // DATA:      |_______|
+ //           ___     ___
+ // SCK : ___|   |___|   |______
+-	{
+-	SHT11_DATA_HIGH;
+-	SHT11_DATA_OUT;
+-	SHT11_SCK_LOW;                   
+-   	SHT11_SCK_HIGH;
+-   	SHT11_DATA_LOW;
+-   	SHT11_SCK_LOW; 
+-   	SHT11_SCK_HIGH;
+-  	SHT11_DATA_HIGH;		   
+-   	SHT11_SCK_LOW;		   
+-	}
++    {
++    SHT11_DATA_HIGH;
++    SHT11_DATA_OUT;
++    SHT11_SCK_LOW;                   
++    SHT11_SCK_HIGH;
++    SHT11_DATA_LOW;
++    SHT11_SCK_LOW; 
++    SHT11_SCK_HIGH;
++    SHT11_DATA_HIGH;           
++    SHT11_SCK_LOW;         
++    }
+ 
+ 
+ //========================================================================= 
+@@ -86,137 +86,137 @@
+ // DATA:                                                      |_______|
+ //          _    _    _    _    _    _    _    _    _        ___     ___
+ // SCK : __| |__| |__| |__| |__| |__| |__| |__| |__| |______|   |___|   |__
+-	{  
+-  	unsigned char i; 
+-  	SHT11_DATA_HIGH; SHT11_SCK_LOW;		// Anfangsbelegung   
+-  	  	for(i=0;i<9;i++)                  
+-  		{
+-  		SHT11_SCK_HIGH; SHT11_SCK_LOW;	// 9 Takte ausgeben
+-  		}
+-  	SHT11_TransStart();                 // es folgt Transmission start  
+-	}
++    {  
++    unsigned char i; 
++    SHT11_DATA_HIGH; SHT11_SCK_LOW;     // Anfangsbelegung   
++        for(i=0;i<9;i++)                  
++        {
++        SHT11_SCK_HIGH; SHT11_SCK_LOW;  // 9 Takte ausgeben
++        }
++    SHT11_TransStart();                 // es folgt Transmission start  
++    }
+ 
+ //========================================================================= 
+ char SHT11_SoftReset(void)
+ //========================================================================= 
+-	{ 
+-  	unsigned char error=0;  
+-  	SHT11_ConnectionReset();            //reset communication
+-  	error |= SHT11_Write_Byte(SHT11_RESET);	//sendet RESET zum SHT11
+-  	return error;                     	//error=1 wenn SHT11 nicht reagiert
+-	}
++    { 
++    unsigned char error=0;  
++    SHT11_ConnectionReset();            //reset communication
++    error |= SHT11_Write_Byte(SHT11_RESET); //sendet RESET zum SHT11
++    return error;                       //error=1 wenn SHT11 nicht reagiert
++    }
+ 
+ 
+ //========================================================================= 
+ char SHT11_Read_StatusReg(unsigned char *p_value, unsigned char *p_checksum)
+ //========================================================================= 
+-	{ 
+-  	unsigned char error=0;
+-  	SHT11_TransStart();                     		// Transmission start
+-  	error |= SHT11_Write_Byte(SHT11_STATUS_REG_R); 	// Kommando senden
+-  	*p_value = SHT11_Read_Byte(SHT11_ACK);        	// Status Byte lesen
+-  	*p_checksum = SHT11_Read_Byte(SHT11_NO_ACK);   	// CRC lesen  
+-  	return error;                     				//error=1 bei Fehler
+-	}
++    { 
++    unsigned char error=0;
++    SHT11_TransStart();                             // Transmission start
++    error |= SHT11_Write_Byte(SHT11_STATUS_REG_R);  // Kommando senden
++    *p_value = SHT11_Read_Byte(SHT11_ACK);          // Status Byte lesen
++    *p_checksum = SHT11_Read_Byte(SHT11_NO_ACK);    // CRC lesen  
++    return error;                                   //error=1 bei Fehler
++    }
+ 
+ //========================================================================= 
+ char SHT11_Write_StatusReg(unsigned char *p_value)
+ //========================================================================= 
+-	{ 
+-  	unsigned char error=0;	// schreibt Status Registerund CRC				
+-  	SHT11_TransStart();    		            //transmission start
+-  	error +=SHT11_Write_Byte(SHT11_STATUS_REG_W);	//send command to sensor
+-  	error +=SHT11_Write_Byte(*p_value);    	//send value of status register
+-  	return error;                     		//error>=1 in case of no response form the sensor
+-	}
+-			    							   
++    { 
++    unsigned char error=0;  // schreibt Status Registerund CRC              
++    SHT11_TransStart();                     //transmission start
++    error +=SHT11_Write_Byte(SHT11_STATUS_REG_W);   //send command to sensor
++    error +=SHT11_Write_Byte(*p_value);     //send value of status register
++    return error;                           //error>=1 in case of no response form the sensor
++    }
++                                               
+ //========================================================================= 
+ char SHT11_Measure(unsigned char *p_value, unsigned char *p_checksum, unsigned char mode)
+ //========================================================================= 
+-	{ 
+-  	unsigned char error=0;
+-  	unsigned char ack;
+-  	unsigned int i;
+-	SHT11_TransStart();                   	// Transmission start
+-  	switch(mode)							// TEMP oder HUMI messen
+-  		{									// Kommando an SHT11 senden
+-    	case TEMP	: error+=SHT11_Write_Byte(SHT11_MEASURE_TEMP); break;
+-    	case HUMI	: error+=SHT11_Write_Byte(SHT11_MEASURE_HUMI); break;
+-    	default     : break;	 
+-  		}
+-  	for (i=0;i<65535;i++)
+-  		{
+-  		wait(100);			// 1msek warten - Zeit hängt von der f ab !!!!!
+-  		ack = SHT11_DATA;	// Wandlung kann zwischen 50..200mSek dauern
+-  		if(!ack) break;
+-		} 
+- 	if(ack) error+=1; 
+-	*(p_value+1) = SHT11_Read_Byte(SHT11_NO_ACK); 	// lesen MSB
+-	*(p_value)   = SHT11_Read_Byte(SHT11_ACK);    	// lesen LSB
+-  	return error;
+-	}
++    { 
++    unsigned char error=0;
++    unsigned char ack;
++    unsigned int i;
++    SHT11_TransStart();                     // Transmission start
++    switch(mode)                            // TEMP oder HUMI messen
++        {                                   // Kommando an SHT11 senden
++        case TEMP   : error+=SHT11_Write_Byte(SHT11_MEASURE_TEMP); break;
++        case HUMI   : error+=SHT11_Write_Byte(SHT11_MEASURE_HUMI); break;
++        default     : break;     
++        }
++    for (i=0;i<65535;i++)
++        {
++        wait(100);          // 1msek warten - Zeit hÃ¤ngt von der f ab !!!!!
++        ack = SHT11_DATA;   // Wandlung kann zwischen 50..200mSek dauern
++        if(!ack) break;
++        } 
++    if(ack) error+=1; 
++    *(p_value+1) = SHT11_Read_Byte(SHT11_NO_ACK);   // lesen MSB
++    *(p_value)   = SHT11_Read_Byte(SHT11_ACK);      // lesen LSB
++    return error;
++    }
+ 
+ //========================================================================= 
+ void SHT11_Read_Sensor(void) { 
+ 
+-	// Variablen und Konstanten
+-	unsigned char error,checksum;
+-	
+-	// T = D1 + D2 * SO(T) Berechnungsgleichung für die Temperatur
+-	// SO(T) ist Wert aus temp_float
+-	const float D1=-39.6;			// für 14 Bit Werte
+-	const float	D2= 0.01;			// 
+-	float T;						// Temperatur
+-	
+-	// HL = C1 + C2 * SORH + C3 * SO(RH) * SO(RH)  <= relative Feuchte linear	 
+-	// SO(RH) ist Wert aus humi_float 
+-	const float C1=-4.0;            // für 12 Bit Werte
+-  	const float C2=+0.0405;         // 
+-  	const float C3=-0.0000028;      // 
+-  	float HL;						// relative Feuchtigkeit linear
+-  	
+-  	// HT = (T-25) * ( T1 + T2 * SO(RH) ) + HL	<= relative Feuchte kompensiert
+-  	const float T1=+0.01;           // for 12 Bit @ 3V
+-  	const float T2=+0.00008;     	// for 12 Bit @ 3V	
+-	float HT;						// relative Feuchtigkeit kompensiert
+-	
+-  	SHT11_ConnectionReset();
+-  	
+-  	error=0;
+-	
+-	//===== Feuchtigkeit
+-  	error+=SHT11_Measure((unsigned char*) &humi_int,&checksum,HUMI);  
+-  	
+-  	//==== Temperatur
+-  	error+=SHT11_Measure((unsigned char*) &temp_int,&checksum,TEMP);  
+-
+-  	if(error!=0)
+-  		{
+-  		SHT11_ConnectionReset();
+-  		return;											// Messung fehlerhaft	
+-  		}                 								// Abbruch
+-  	else
+-  		{ 
+-	    humi_float=(float)humi_int;                   	// integer zu float
+-    	temp_float=(float)temp_int;                   	// integer zu float
+-		}
+-	
+-	//=====Berechnung der Temperatur  	
+-  	T = D1 + D2 * temp_float;							// Gleichung
+-  	sprintf(temp_char,"T=%-6.2f °C", T);				// float zu string
++    // Variablen und Konstanten
++    unsigned char error,checksum;
++    
++    // T = D1 + D2 * SO(T) Berechnungsgleichung fÃ¼r die Temperatur
++    // SO(T) ist Wert aus temp_float
++    const float D1=-39.6;           // fÃ¼r 14 Bit Werte
++    const float D2= 0.01;           // 
++    float T;                        // Temperatur
++    
++    // HL = C1 + C2 * SORH + C3 * SO(RH) * SO(RH)  <= relative Feuchte linear    
++    // SO(RH) ist Wert aus humi_float 
++    const float C1=-4.0;            // fÃ¼r 12 Bit Werte
++    const float C2=+0.0405;         // 
++    const float C3=-0.0000028;      // 
++    float HL;                       // relative Feuchtigkeit linear
++    
++    // HT = (T-25) * ( T1 + T2 * SO(RH) ) + HL  <= relative Feuchte kompensiert
++    const float T1=+0.01;           // for 12 Bit @ 3V
++    const float T2=+0.00008;        // for 12 Bit @ 3V  
++    float HT;                       // relative Feuchtigkeit kompensiert
++    
++    SHT11_ConnectionReset();
++    
++    error=0;
++    
++    //===== Feuchtigkeit
++    error+=SHT11_Measure((unsigned char*) &humi_int,&checksum,HUMI);  
++    
++    //==== Temperatur
++    error+=SHT11_Measure((unsigned char*) &temp_int,&checksum,TEMP);  
++
++    if(error!=0)
++        {
++        SHT11_ConnectionReset();
++        return;                                         // Messung fehlerhaft   
++        }                                               // Abbruch
++    else
++        { 
++        humi_float=(float)humi_int;                     // integer zu float
++        temp_float=(float)temp_int;                     // integer zu float
++        }
++    
++    //=====Berechnung der Temperatur    
++    T = D1 + D2 * temp_float;                           // Gleichung
++    sprintf(temp_char,"T=%-6.2f Â°C", T);               // float zu string
+     //writestr(temp_char);
+     
+     //===== Berechnung der relativen Feuchtigkeit 
+-    HL = C1 + C2*humi_float + C3*humi_float*humi_float;	// Gleichung
+-    sprintf(humi_char,"HL=%5.2f %% ", HL);				// float zu string
+-									// % eintragen
++    HL = C1 + C2*humi_float + C3*humi_float*humi_float; // Gleichung
++    sprintf(humi_char,"HL=%5.2f %% ", HL);              // float zu string
++                                    // % eintragen
+     //writestr(humi_char);
+     
+     //===== Berechnung der relativen Feuchtigkeit temperaturkompensiert
+-    HT = (T-25) * (T1+T2*humi_float) + HL;				// Gleichung
+-    sprintf(humi_char,"HT=%5.2f %%", HT);				// float zu string
+-					// % eintragen
++    HT = (T-25) * (T1+T2*humi_float) + HL;              // Gleichung
++    sprintf(humi_char,"HT=%5.2f %%", HT);               // float zu string
++                    // % eintragen
+     //writestr(humi_char);
+-	} 
++    } 
+ 
+ 
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/SHT11.h ./SHT11.h
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/SHT11.h	Fri Oct 15 08:21:56 2010
++++ ./SHT11.h	Thu Jan 13 17:53:09 2011
+@@ -5,27 +5,27 @@
+ //=========================================================================
+ // SHT11 Variablen
+ //=========================================================================
+-#define SHT11_SCK_LOW	(P3OUT &= ~0x20)		// serial clock line low
+-#define SHT11_SCK_HIGH	(P3OUT |= 0x20)			// serial clock line high
++#define SHT11_SCK_LOW   (P3OUT &= ~0x20)        // serial clock line low
++#define SHT11_SCK_HIGH  (P3OUT |= 0x20)         // serial clock line high
+ 
+-#define SHT11_DATA		((P3IN & 0x10)>>4)		// read serial I/O
+-#define SHT11_DATA_LOW	(P3OUT &= ~0x10)		// serial I/O line low
+-#define SHT11_DATA_HIGH	(P3OUT |= 0x10)			// serial I/O line high
+-#define SHT11_DATA_IN	(P3DIR &= ~0x10)		// serial I/O as input
+-#define SHT11_DATA_OUT	(P3DIR |= 0x10)			// serial I/O as output
++#define SHT11_DATA      ((P3IN & 0x10)>>4)      // read serial I/O
++#define SHT11_DATA_LOW  (P3OUT &= ~0x10)        // serial I/O line low
++#define SHT11_DATA_HIGH (P3OUT |= 0x10)         // serial I/O line high
++#define SHT11_DATA_IN   (P3DIR &= ~0x10)        // serial I/O as input
++#define SHT11_DATA_OUT  (P3DIR |= 0x10)         // serial I/O as output
+ 
+-#define SHT11_NO_ACK	(0)
+-#define SHT11_ACK		(1)
+-							 		//adr command  r/w
+-#define SHT11_STATUS_REG_W	(0x06) 	//000  0011    0
+-#define SHT11_STATUS_REG_R	(0x07) 	//000  0011    1
+-#define SHT11_MEASURE_TEMP	(0x03) 	//000  0001	   1
+-#define SHT11_MEASURE_HUMI	(0x05) 	//000  0010	   1
+-#define SHT11_RESET			(0x1E) 	//000  1111	   0
++#define SHT11_NO_ACK    (0)
++#define SHT11_ACK       (1)
++                                    //adr command  r/w
++#define SHT11_STATUS_REG_W  (0x06)  //000  0011    0
++#define SHT11_STATUS_REG_R  (0x07)  //000  0011    1
++#define SHT11_MEASURE_TEMP  (0x03)  //000  0001    1
++#define SHT11_MEASURE_HUMI  (0x05)  //000  0010    1
++#define SHT11_RESET         (0x1E)  //000  1111    0
+ 
+ 
+-extern char humi_char[12];			// relative Feuchtigkeit als Zeichenkette
+-extern char temp_char[15];			// Temperatur als Zeichenkette
++extern char humi_char[12];          // relative Feuchtigkeit als Zeichenkette
++extern char temp_char[15];          // Temperatur als Zeichenkette
+ 
+ 
+ //=========================================================================
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/init.c ./init.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/init.c	Thu Dec  9 16:31:31 2010
++++ ./init.c	Thu Jan 13 17:53:10 2011
+@@ -4,204 +4,201 @@
+ //=========================================================================
+ void initPort () {
+ //====PORT1================================================================
+-WDTCTL = WDTPW | WDTHOLD;	// Watchdog ausschalten
+-P1SEL = 0x00;		// Port1 Zweitfunktion
+-P1OUT = 0x00;		// Port1 Ausgangsregister: 00000000 = 0x00 
+-P1DIR = 0xFC;		// Port1 Direction: 11111100 = 0xFC
+-					//   0 - P1.0 [EINGANG] - JP1_9 Taster gb
+-					//   0 - P1.1 [EINGANG] - JP1_8	Taster sw
+-					//   1 - P1.2 [AUSGANG] - JP1_7
+-					//   1 - P1.3 [AUSGANG] - JP1_6
+-					//   1 - P1.4 [AUSGANG] - JP1_5
+-					//   1 - P1.5 [AUSGANG] - JP1_4
+-					//   1 - P1.6 [AUSGANG] - JP1_3
+-					//   1 - P1.7 [AUSGANG] - JP1_2
++WDTCTL = WDTPW | WDTHOLD;   // Watchdog ausschalten
++P1SEL = 0x00;       // Port1 Zweitfunktion
++P1OUT = 0x00;       // Port1 Ausgangsregister: 00000000 = 0x00
++P1DIR = 0xFC;       // Port1 Direction: 11111100 = 0xFC
++                    //   0 - P1.0 [EINGANG] - JP1_9 Taster gb
++                    //   0 - P1.1 [EINGANG] - JP1_8 Taster sw
++                    //   1 - P1.2 [AUSGANG] - JP1_7
++                    //   1 - P1.3 [AUSGANG] - JP1_6
++                    //   1 - P1.4 [AUSGANG] - JP1_5
++                    //   1 - P1.5 [AUSGANG] - JP1_4
++                    //   1 - P1.6 [AUSGANG] - JP1_3
++                    //   1 - P1.7 [AUSGANG] - JP1_2
+ //====PORT2================================================================
+-P2SEL = 0x00;	 	// Port2 Zweitfunktion
+-P2OUT = 0x00;		// Port2 Ausgangsregister: 00000000 = 0x00
+-P2DIR = 0x1C;		// Port2 Direction: 00011100 = 0x1C
+-					//   0 - P2.0 [EINGANG] - CC1100_GDO2
+-					//   0 - P2.1 [EINGANG] - CC1100_GDO0
+-					//   1 - P2.2 [AUSGANG] - ungenutzt
+-					//   1 - P2.3 [AUSGANG] - ungenutzt
+-					//   1 - P2.4 [AUSGANG] - ungenutzt
+-					//   0 - P2.5 [EINGANG] - ROSC 
+-					//   0 - P2.6 [EINGANG] - SD-KARTE Protect
+-					//   0 - P2.7 [EINGANG] - SD-KARTE Detect
++P2SEL = 0x00;       // Port2 Zweitfunktion
++P2OUT = 0x00;       // Port2 Ausgangsregister: 00000000 = 0x00
++P2DIR = 0x1C;       // Port2 Direction: 00011100 = 0x1C
++                    //   0 - P2.0 [EINGANG] - CC1100_GDO2
++                    //   0 - P2.1 [EINGANG] - CC1100_GDO0
++                    //   1 - P2.2 [AUSGANG] - ungenutzt
++                    //   1 - P2.3 [AUSGANG] - ungenutzt
++                    //   1 - P2.4 [AUSGANG] - ungenutzt
++                    //   0 - P2.5 [EINGANG] - ROSC
++                    //   0 - P2.6 [EINGANG] - SD-KARTE Protect
++                    //   0 - P2.7 [EINGANG] - SD-KARTE Detect
+ //====PORT3================================================================
+-P3SEL = 0xC0;		// Port3 Zweitfunktion
+-P3OUT = 0x09;		// Port3 Ausgangsregister: 00001001 = 0x09
+-P3DIR = 0x6B;		// Port3 Direction: 00101011 = 0x2B
+-					//   1 - P3.0 [AUSGANG] - CC1100_CSN
+-					//   1 - P3.1 [AUSGANG] - CC1100_SI
+-					//   0 - P3.2 [EINGANG] - CC1100_SO
+-					//   1 - P3.3 [AUSGANG] - CC1100_SCLK
+-					//   0 - P3.4 [EINGANG] - SHT 11 DATA (IN/OUT)
+-					//   1 - P3.5 [AUSGANG] - SHT 11 CLK
+-					//   1 - P3.6 [2-Funktion] - RS232_RxD JP2_8
+-					//   0 - P3.7 [2-Funktion] - RS232_TxD JP2_7
++P3SEL = 0xC0;       // Port3 Zweitfunktion
++P3OUT = 0x09;       // Port3 Ausgangsregister: 00001001 = 0x09
++P3DIR = 0x6B;       // Port3 Direction: 00101011 = 0x2B
++                    //   1 - P3.0 [AUSGANG] - CC1100_CSN
++                    //   1 - P3.1 [AUSGANG] - CC1100_SI
++                    //   0 - P3.2 [EINGANG] - CC1100_SO
++                    //   1 - P3.3 [AUSGANG] - CC1100_SCLK
++                    //   0 - P3.4 [EINGANG] - SHT 11 DATA (IN/OUT)
++                    //   1 - P3.5 [AUSGANG] - SHT 11 CLK
++                    //   1 - P3.6 [2-Funktion] - RS232_RxD JP2_8
++                    //   0 - P3.7 [2-Funktion] - RS232_TxD JP2_7
+ //====PORT4================================================================
+-P4SEL = 0x00;		// Port4 Zweitfunktion
+-P4OUT = 0xFF;		// Port4 Ausgangsregister: 00000000 = 0x00
+-P4DIR = 0xFF;		// Port4 Direction: 11111111 = 0xFF
+-					//   1 - P4.0 [AUSGANG] - JP2_15 LED rt
+-					//   1 - P4.1 [AUSGANG] - JP1_16 LED gb
+-					//   1 - P4.2 [AUSGANG] - JP1_15 LED gr
+-					//   1 - P4.3 [AUSGANG] - JP1_14 
+-					//   1 - P4.4 [AUSGANG] - JP1_13 
+-					//   1 - P4.5 [AUSGANG] - JP1_12 
+-					//   1 - P4.6 [AUSGANG] - JP1_11
+-					//   1 - P4.7 [AUSGANG] - JP1_10
++P4SEL = 0x00;       // Port4 Zweitfunktion
++P4OUT = 0xFF;       // Port4 Ausgangsregister: 00000000 = 0x00
++P4DIR = 0xFF;       // Port4 Direction: 11111111 = 0xFF
++                    //   1 - P4.0 [AUSGANG] - JP2_15 LED rt
++                    //   1 - P4.1 [AUSGANG] - JP1_16 LED gb
++                    //   1 - P4.2 [AUSGANG] - JP1_15 LED gr
++                    //   1 - P4.3 [AUSGANG] - JP1_14
++                    //   1 - P4.4 [AUSGANG] - JP1_13
++                    //   1 - P4.5 [AUSGANG] - JP1_12
++                    //   1 - P4.6 [AUSGANG] - JP1_11
++                    //   1 - P4.7 [AUSGANG] - JP1_10
+ //===PORT5=================================================================
+-P5SEL = 0x00;		// Port5 Zweitfunktion: 00000000 = 0x00
+-P5OUT = 0x89;		// Port5 Ausgangsregister: 10001001 = 0x89
+-P5DIR = 0xFB;		// Port5 Direction: 11111011 = 0xFB
+-					//   1 - P5.0 [AUSGANG] - SD-KARTE /CS
+-					//   1 - P5.1 [AUSGANG] - SD-KARTE DI
+-					//   0 - P5.2 [EINGANG] - SD-KARTE DO
+-					//   1 - P5.3 [AUSGANG] - SD-KARTE DCLK
+-					//   1 - P5.4 [AUSGANG] - MMA GS1 JP2_8
+-					//   1 - P5.5 [AUSGANG] - MMA GS2 JP2_9
+-					//   1 - P5.6 [AUSGANG] - MMA /SLEEP
+-					//   1 - P5.7 [AUSGANG] - LED_ROT 0-an, 1-aus
++P5SEL = 0x00;       // Port5 Zweitfunktion: 00000000 = 0x00
++P5OUT = 0x89;       // Port5 Ausgangsregister: 10001001 = 0x89
++P5DIR = 0xFB;       // Port5 Direction: 11111011 = 0xFB
++                    //   1 - P5.0 [AUSGANG] - SD-KARTE /CS
++                    //   1 - P5.1 [AUSGANG] - SD-KARTE DI
++                    //   0 - P5.2 [EINGANG] - SD-KARTE DO
++                    //   1 - P5.3 [AUSGANG] - SD-KARTE DCLK
++                    //   1 - P5.4 [AUSGANG] - MMA GS1 JP2_8
++                    //   1 - P5.5 [AUSGANG] - MMA GS2 JP2_9
++                    //   1 - P5.6 [AUSGANG] - MMA /SLEEP
++                    //   1 - P5.7 [AUSGANG] - LED_ROT 0-an, 1-aus
+ //====PORT6================================================================
+-P6SEL = 0x00;		// Port6 Zweitfunktion = 0x07
+-P6OUT = 0x00;		// Port6 Ausgangsregister: 00000000 = 0x00
+-P6DIR = 0xC8;		// Port6 Direction: 11111111 = 0xFF
+-					//   0 - P6.0 [AD-EINGANG] - MMA X-Achse
+-					//   0 - P6.1 [AD-EINGANG] - MMA Y-Achse
+-					//   0 - P6.2 [AD-EINGANG] - MMA Z-Achse
+-					//   1 - P6.3 [AUSGANG] - ungenutzt
+-					//   1 - P6.4 [EINGANG] - ADC4 JP2_5
+-					//   1 - P6.5 [EINGANG] - ADC5 JP2_4
+-					//   1 - P6.6 [AUSGANG] - DAC6 JP2_3
+-					//   1 - P6.7 [AUSGANG] - DAC7 JP2_2 
++P6SEL = 0x00;       // Port6 Zweitfunktion = 0x07
++P6OUT = 0x00;       // Port6 Ausgangsregister: 00000000 = 0x00
++P6DIR = 0xC8;       // Port6 Direction: 11111111 = 0xFF
++                    //   0 - P6.0 [AD-EINGANG] - MMA X-Achse
++                    //   0 - P6.1 [AD-EINGANG] - MMA Y-Achse
++                    //   0 - P6.2 [AD-EINGANG] - MMA Z-Achse
++                    //   1 - P6.3 [AUSGANG] - ungenutzt
++                    //   1 - P6.4 [EINGANG] - ADC4 JP2_5
++                    //   1 - P6.5 [EINGANG] - ADC5 JP2_4
++                    //   1 - P6.6 [AUSGANG] - DAC6 JP2_3
++                    //   1 - P6.7 [AUSGANG] - DAC7 JP2_2
+ }
+ 
+ 
+ //=========================================================================
+ void initUART0_SPI(void)
+-	{
+-	while(!(UTCTL0 & TXEPT));	// Sendebuffer leer?
+-	// Interrupt Enable Register
+-	IE1 &= ~(URXIE0 + UTXIE0);  // Tx und Rx Interrupt verbieten
+-	// Module Enable Register
+-	ME1 &= ~(UTXE0 + URXE0);	// Tx und Rx freigeben
+-	// Zuordnung der SPI Zweitfunktion auf die Portleitungen
+-	P3SEL |= 0x0E;				// Zweitfunktion SPI freigeben
+-								// P3.1 [AUSGANG] - CC1100_SI
+-								// P3.2 [EINGANG] - CC1100_SO
+-								// P3.3 [AUSGANG] - CC1100_SCLK
+-	// USART Control Register
+-	UCTL0  = 	SWRST;			// Software Reset = 1
+-	UCTL0 |= 	CHAR			// 8 Daten Bit
+-			+	SYNC			// SPI Mode
+-			+	SWRST			// Software Reset = 1
+-			+	MM; 			// USART ist Master
+-	// USART Transmit Control Register
+-	UTCTL0 = 	CKPL			// Datenübernahme mit LH Flanke
+-			+ 	SSEL1			// Taktquelle SMCLK
+-			+	SSEL0			// Taktquelle SMCLK
+-			+	STC;			// 3 Leitungsmode der SPI
+-	// USART Receive Control Register
+-	URCTL0 = 0x00;				// 		
+-	// USART Baudrate Register 0
+-	UBR00 = 0x02;		   		// Taktquelle=SMCLK/2, SMCLK = 7,3728 MHz
+-	// USART Baudrate Register 1
+-	UBR10 = 0x00;				
+-	// USART Modulation Control Register
+-  	UMCTL0 = 0x00;
+-  	// USART Modul Enable Register
+-	ME1 |= USPIE0;         // Enable USART0 TXD/RXD
+-	// USART Control Register
+-	UCTL0  &= ~SWRST;      // Reset Bit löschen 
+-	}
+-	
+-	
++    {
++    while(!(UTCTL0 & TXEPT));   // Sendebuffer leer?
++    // Interrupt Enable Register
++    IE1 &= ~(URXIE0 + UTXIE0);  // Tx und Rx Interrupt verbieten
++    // Module Enable Register
++    ME1 &= ~(UTXE0 + URXE0);    // Tx und Rx freigeben
++    // Zuordnung der SPI Zweitfunktion auf die Portleitungen
++    P3SEL |= 0x0E;              // Zweitfunktion SPI freigeben
++                                // P3.1 [AUSGANG] - CC1100_SI
++                                // P3.2 [EINGANG] - CC1100_SO
++                                // P3.3 [AUSGANG] - CC1100_SCLK
++    // USART Control Register
++    UCTL0  =    SWRST;          // Software Reset = 1
++    UCTL0 |=    CHAR            // 8 Daten Bit
++            +   SYNC            // SPI Mode
++            +   SWRST           // Software Reset = 1
++            +   MM;             // USART ist Master
++    // USART Transmit Control Register
++    UTCTL0 =    CKPL            // DatenÃ¼bernahme mit LH Flanke
++            +   SSEL1           // Taktquelle SMCLK
++            +   SSEL0           // Taktquelle SMCLK
++            +   STC;            // 3 Leitungsmode der SPI
++    // USART Receive Control Register
++    URCTL0 = 0x00;              //
++    // USART Baudrate Register 0
++    UBR00 = 0x02;               // Taktquelle=SMCLK/2, SMCLK = 7,3728 MHz
++    // USART Baudrate Register 1
++    UBR10 = 0x00;
++    // USART Modulation Control Register
++    UMCTL0 = 0x00;
++    // USART Modul Enable Register
++    ME1 |= USPIE0;         // Enable USART0 TXD/RXD
++    // USART Control Register
++    UCTL0  &= ~SWRST;      // Reset Bit lÃ¶schen
++    }
++
++
+ //=========================================================================
+ void initUART1(void)
+-	{
+-	
+-	P3SEL |= 0xC0;			// USART RX und TX dem Modul zuweisen
+-	U1CTL = SWRST; 			// Reset
+-	U1CTL |= CHAR; 			// Format 8N1
+-	U1TCTL |= SSEL1;		// Taktquelle SMCLK
+-	U1BR0 = 0x40;  			// Teiler Low-Teil, da 7372800/64 ca. 115200
+-	U1BR1 = 0x00;			// Teiler High-Teil
+-	U1MCTL = 0x00; 			// Modulationskontrolle
+-	ME2 |= URXE1 + UTXE1;	// Enable USART1 TXD/RXD
+-	U1CTL &= ~SWRST; 		// Reset
+-	IE2 |= URXIE1;			// Enable Interrupt
+-
+-	
+-	}
+-	
+-	
++    {
++    P3SEL |= 0xC0;          // USART RX und TX dem Modul zuweisen
++    U1CTL = SWRST;          // Reset
++    U1CTL |= CHAR;          // Format 8N1
++    U1TCTL |= SSEL1;        // Taktquelle SMCLK
++    U1BR0 = 0x40;           // Teiler Low-Teil, da 7372800/64 ca. 115200
++    U1BR1 = 0x00;           // Teiler High-Teil
++    U1MCTL = 0x00;          // Modulationskontrolle
++    ME2 |= URXE1 + UTXE1;   // Enable USART1 TXD/RXD
++    U1CTL &= ~SWRST;        // Reset
++    IE2 |= URXIE1;          // Enable Interrupt
++    }
++
++
+ //=========================================================================
+-void DCO (void)				// f(DCO) = DELTA*(32768Hz) = 7372800Hz
+-	{						// ROSC P2SEL = 0x20 beachten
+-	#define DELTA (225)		// DELTA * 32768Hz = 7372800Hz
+-	unsigned int Compare, Oldcapture = 0;	
+-	WDTCTL = WDTPW + WDTHOLD;	// Stop WDT
+-	BCSCTL2 |= DCOR;		// ROSC (extern) einschalten
+-	BCSCTL2 &= ~SELM1;		// DCO als Taktquelle für MCLK		
+-	BCSCTL2 &= ~SELS;		// DCO als Taktquelle für SMCLK 	
+-	BCSCTL1	|= XT2OFF;		// XT2 ausschalten 
+-	CCTL2 = CM_1 + CCIS_1 + CAP; 		// CAP, ACLK
+-	TACTL = TASSEL_2 + MC_2 + TACLR;    // SMCLK, cont-mode, clear
+-	while (1)
+-		{
+-    	while (!(CCIFG & CCTL2));       // Wait until capture occured
+-    	CCTL2 &= ~CCIFG;                // Capture occured, clear flag
+-    	Compare = CCR2;                 // Get current captured SMCLK
+-    	Compare = Compare - Oldcapture; // SMCLK difference
+-    	Oldcapture = CCR2;              // Save current captured SMCLK
+-    	if (DELTA == Compare) break;    // If equal, leave "while(1)"
+-    	else if (DELTA < Compare)		// DCO zu schnell 
+-    		{         
+-    		DCOCTL--;					// verlangsamen
+-    		if (DCOCTL == 0xFF)			// 	
+-    			{						// Did DCO roll under?, Sel lower RSEL
+-    			if (!(BCSCTL1 == (XT2OFF))) BCSCTL1--; //schaltet XT2 aus
+-      			}
+-    		}
+-    	else 
+-    		{
+-      		DCOCTL++;
+-      		if (DCOCTL == 0x00)
+-      			{						// Did DCO roll over? Sel higher RSEL
+-          		if (!(BCSCTL1 == (XT2OFF + 0x07))) BCSCTL1++;              
+-        		}
+-    		}
+-  		}
+-   	CCTL2 = 0;                      	// Stop CCR2
+-  	TACTL = 0;                      	// Stop Timer_A
+-	TBCCTL0 &= ~CCIFG;					// Clears compare IFG
+-	TBR=0;
+-	}	
+-	
+-	
++void DCO (void)             // f(DCO) = DELTA*(32768Hz) = 7372800Hz
++    {                       // ROSC P2SEL = 0x20 beachten
++    #define DELTA (225)     // DELTA * 32768Hz = 7372800Hz
++    unsigned int Compare, Oldcapture = 0;
++    WDTCTL = WDTPW + WDTHOLD;   // Stop WDT
++    BCSCTL2 |= DCOR;        // ROSC (extern) einschalten
++    BCSCTL2 &= ~SELM1;      // DCO als Taktquelle fÃ¼r MCLK
++    BCSCTL2 &= ~SELS;       // DCO als Taktquelle fÃ¼r SMCLK
++    BCSCTL1 |= XT2OFF;      // XT2 ausschalten
++    CCTL2 = CM_1 + CCIS_1 + CAP;        // CAP, ACLK
++    TACTL = TASSEL_2 + MC_2 + TACLR;    // SMCLK, cont-mode, clear
++    while (1)
++        {
++        while (!(CCIFG & CCTL2));       // Wait until capture occured
++        CCTL2 &= ~CCIFG;                // Capture occured, clear flag
++        Compare = CCR2;                 // Get current captured SMCLK
++        Compare = Compare - Oldcapture; // SMCLK difference
++        Oldcapture = CCR2;              // Save current captured SMCLK
++        if (DELTA == Compare) break;    // If equal, leave "while(1)"
++        else if (DELTA < Compare)       // DCO zu schnell
++            {
++            DCOCTL--;                   // verlangsamen
++            if (DCOCTL == 0xFF)         //
++                {                       // Did DCO roll under?, Sel lower RSEL
++                if (!(BCSCTL1 == (XT2OFF))) BCSCTL1--; //schaltet XT2 aus
++                }
++            }
++        else
++            {
++            DCOCTL++;
++            if (DCOCTL == 0x00)
++                {                       // Did DCO roll over? Sel higher RSEL
++                if (!(BCSCTL1 == (XT2OFF + 0x07))) BCSCTL1++;
++                }
++            }
++        }
++    CCTL2 = 0;                          // Stop CCR2
++    TACTL = 0;                          // Stop Timer_A
++    TBCCTL0 &= ~CCIFG;                  // Clears compare IFG
++    TBR=0;
++    }
++
++
+ //============================================================================
+-void XT2 (void)						// Funktion schaltet XT2 ein
+-	{								// und setzt XT2 als Taktquelle
+-	volatile unsigned int i;
+-	WDTCTL = WDTPW + WDTHOLD;		// Stop WDT
+-	BCSCTL1 &= ~XT2OFF;				// XT2 = HF XTAL einschalten
+-	do {
+-		IFG1 &= ~OFIFG;				// Clear OSCFault flag
+-		for (i = 0xFF; i > 0; i--); // Time for flag to set
+-	}
+-	while ((IFG1 & OFIFG) != 0);	// OSCFault flag still set?                
+-	BCSCTL2 |= SELM1 + SELS;		// MCLK und SMCLK = XT2 (7372800Hz)
+-	}
++void XT2 (void)                     // Funktion schaltet XT2 ein
++    {                               // und setzt XT2 als Taktquelle
++    volatile unsigned int i;
++    WDTCTL = WDTPW + WDTHOLD;       // Stop WDT
++    BCSCTL1 &= ~XT2OFF;             // XT2 = HF XTAL einschalten
++    do {
++        IFG1 &= ~OFIFG;             // Clear OSCFault flag
++        for (i = 0xFF; i > 0; i--); // Time for flag to set
++    }
++    while ((IFG1 & OFIFG) != 0);    // OSCFault flag still set?
++    BCSCTL2 |= SELM1 + SELS;        // MCLK und SMCLK = XT2 (7372800Hz)
++    }
+ 
+ 
+ //============================================================================
+ void init_timer (void) {
+-//	TACCR0 ...;					// jede Sekunde einen Interrupt	
+-//	TACTL ....;					// Taktquelle Uhrenquarz count up to
+-//	TACCTL0	..;					// Interrupt freigeben
+-	}
++//  TACCR0 ...;                 // jede Sekunde einen Interrupt
++//  TACTL ....;                 // Taktquelle Uhrenquarz count up to
++//  TACCTL0 ..;                 // Interrupt freigeben
++    }
+ 
+ 
+-//============================================================================	
++//============================================================================
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/init.h ./init.h
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/init.h	Fri Oct 15 08:21:56 2010
++++ ./init.h	Thu Jan 13 17:53:10 2011
+@@ -2,17 +2,17 @@
+ #define INIT_H_
+ 
+ //=========================================================================
+-void initPort (void);		// Grundinitialisierung der Portleitungen
++void initPort (void);       // Grundinitialisierung der Portleitungen
+ //=========================================================================
+-void DCO (void);			// Dco Taktquelle aktivieren mit 7.3728MHz
++void DCO (void);            // Dco Taktquelle aktivieren mit 7.3728MHz
+ //=========================================================================
+-void XT2 (void);			// XT2 Taktquelle aktivieren mit 7.3728MHz
++void XT2 (void);            // XT2 Taktquelle aktivieren mit 7.3728MHz
+ //=========================================================================
+-void initUART0_SPI(void);	// Init der UART-SPI für CC1100
++void initUART0_SPI(void);   // Init der UART-SPI fÃ¼r CC1100
+ //=========================================================================
+-void initUART1(void);		// Init der UART-RS232 
++void initUART1(void);       // Init der UART-RS232 
+ //=========================================================================
+-void init_timer(void);		// Init des Timers A
++void init_timer(void);      // Init des Timers A
+ //=========================================================================
+ 
+ #endif /*INIT_H_*/
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/interrupts.c ./interrupts.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/interrupts.c	Thu Jan 13 17:41:02 2011
++++ ./interrupts.c	Thu Jan 13 17:53:10 2011
+@@ -6,104 +6,105 @@
+ #include "string.h"
+ #include "aufgaben/project.h"
+ #include "aufgaben/aufgabe15.h"
+-	
+-//Interrupte folgendermaßen im Code einbinden:
++
++//Interrupte folgendermaÃŸen im Code einbinden:
+ //
+-// 		#pragma vector = TIMERA0_VECTOR
+-//		__interrupt void TimerA0 (void)
+-// 		{
+-//    	...code
+-// 		}
++//      #pragma vector = TIMERA0_VECTOR
++//      __interrupt void TimerA0 (void)
++//      {
++//      ...code
++//      }
+ 
+ //
+-//	Tabelle für die möglichen Interruptquellen zum Einsetzen in 
+-//	#pragma vector = ...
++//  Tabelle fÃ¼r die mÃ¶glichen Interruptquellen zum Einsetzen in
++//  #pragma vector = ...
+ 
+ //=======================================================================
+-//  #pragma vector =...				 INTNR  |  ADR   | Funktion			|
++//  #pragma vector =...              INTNR  |  ADR   | Funktion         |
+ //=======================================================================
+-//RESET_VECTOR						//int31 | 0xFFFE | Reset 			|
+-//NMI_VECTOR						//int30 | 0xFFFC | Non-maskable		|
++//RESET_VECTOR                      //int31 | 0xFFFE | Reset            |
++//NMI_VECTOR                        //int30 | 0xFFFC | Non-maskable     |
+ //=======================================================================
+-//TIMERB0_VECTOR          			//int29 | 0xFFFA | Timer B CC0		|
+-//TIMERB1_VECTOR          			//int28 | 0xFFF8 | Timer B CC1-6, TB|
+-//COMPARATORA_VECTOR				//int27 | 0xFFF6 | Comparator A 	|
+-//WDT_VECTOR              			//int26 | 0xFFF4 | Watchdog Timer 	|
+-//TIMERA0_VECTOR					//int25 | 0xFFF2 | Timer A CC0		|
+-//TIMERA1_VECTOR		            //int24 | 0xFFF0 | Timer A CC1-2	|
+-//USCIAB0RX_VECTOR					//int23 | 0xFFEE | USART0 Receive	|
+-//USCIAB0TX_VECTOR					//int22 | 0xFFEC | USART0 Transmit	|
+-//ADC12_VECTOR			           	//int21 | 0xFFEA | ADC				|
+-//RESERVED20_VECTOR				    //int20 | 0xFFE8 | ???		 		|
+-//PORT2_VECTOR 				        //int19 | 0xFFE6 | Port2			|
+-//PORT1_VECTOR 			            //int18 | 0xFFE4 | Port1 			|
+-//USCIAB1RX_VECTOR					//int17 | 0xFFE2 | USART1 Receive	|
+-//USCIAB1TX_VECTOR					//int16 | 0xFFE0 | USART1 Transmit 	|
+-//DMA_VECTOR		             	//int15 | 0xFFDE | DMA				|
+-//DAC12_VECTOR                    	//int14 | 0xFFDC | DAC12			|
++//TIMERB0_VECTOR                    //int29 | 0xFFFA | Timer B CC0      |
++//TIMERB1_VECTOR                    //int28 | 0xFFF8 | Timer B CC1-6, TB|
++//COMPARATORA_VECTOR                //int27 | 0xFFF6 | Comparator A     |
++//WDT_VECTOR                        //int26 | 0xFFF4 | Watchdog Timer   |
++//TIMERA0_VECTOR                    //int25 | 0xFFF2 | Timer A CC0      |
++//TIMERA1_VECTOR                    //int24 | 0xFFF0 | Timer A CC1-2    |
++//USCIAB0RX_VECTOR                  //int23 | 0xFFEE | USART0 Receive   |
++//USCIAB0TX_VECTOR                  //int22 | 0xFFEC | USART0 Transmit  |
++//ADC12_VECTOR                      //int21 | 0xFFEA | ADC              |
++//RESERVED20_VECTOR                 //int20 | 0xFFE8 | ???              |
++//PORT2_VECTOR                      //int19 | 0xFFE6 | Port2            |
++//PORT1_VECTOR                      //int18 | 0xFFE4 | Port1            |
++//USCIAB1RX_VECTOR                  //int17 | 0xFFE2 | USART1 Receive   |
++//USCIAB1TX_VECTOR                  //int16 | 0xFFE0 | USART1 Transmit  |
++//DMA_VECTOR                        //int15 | 0xFFDE | DMA              |
++//DAC12_VECTOR                      //int14 | 0xFFDC | DAC12            |
+ //=======================================================================
+-//reservierter Bereich			//int13-0	| 0xFFDA...0xFFC0			|
++//reservierter Bereich          //int13-0   | 0xFFDA...0xFFC0           |
+ //=======================================================================
+ 
+ 
+ //==============================================================
+-// Implementierung der ISR Routinen 
++// Implementierung der ISR Routinen
+ // Achtung! Code in der ISR nicht zu lang machen,
+ // da sonst Timing oder Stack Probleme drohen.
+-// Für die benötigten ISR die Auskommentierungen entfernen
+-// und eigenen Code für die jeweilige ISR einfügen
++// FÃ¼r die benÃ¶tigten ISR die Auskommentierungen entfernen
++// und eigenen Code fÃ¼r die jeweilige ISR einfÃ¼gen
+ //==============================================================
+ 
+-#pragma vector = TIMERB0_VECTOR
+-__interrupt void TIMERB0_ISR (void)
+-{
+-	char buffer[32];
+-	float mV;
+-
+-	// Software-controlled sample-and-conversion start.
+-	SET(ADC12CTL0, ADC12SC);
++extern bool readyToSend;
++extern int buffer_counter;
+ 
+-	mV = readADU() / 1000.0;
+-	sprintf(buffer, "ADU: %.2f V\r\n", mV);
+-	uart1_put_str(buffer);
+-	
+-	LED_OFF;
+-	if(mV < 1.0)
+-		LED_SET(LED_GELB);
+-	else if (mV < 2.0)
+-		LED_SET(LED_GRUEN);
+-	else
+-		LED_SET(LED_ROT);
++#include "aufgaben/aufgabe20.h"
++#pragma vector = USART1RX_VECTOR
++__interrupt void USART1RX_ISR (void)
++{
++	char c;
++	//check for errors
++	if(U1RCTL & RXERR != 666) {
++	    c = U1RXBUF;
++		buffer_counter++;
++	    
++		uart1_put_char(c);
++		
++		if(c == '\n') {
++			readyToSend = true;
++//			buffer_counter = 0;
++//		} else {
++		}
++	}
+ 	
+-    // Clears the interrupt flag
+-    CLEAR(TBCCTL0, CCIFG);
+-}	
++    CLEAR(IFG2, URXIFG1); 
++}
++
+ 
+ //==============================================================
+ //===INT:01====ADR:FFE2====PORT2================================
+ //==============================================================
+ #pragma vector = PORT2_VECTOR
+ __interrupt void PORT2 (void) {
+-	char res ;			// CRC Check 
+-	if (P2IFG & 0x01)	// Check P2IFG Bit P2.0 - CC1100 Rx Packet
+-		{ 
+-		CLEAR(P2IFG, 0x01);
+-		LEDTOGGLE;
+-		res = receivePacket(); 	// CRC Rückgabe 
+-		if (res)				// wenn Packet OK ...
+-			{
+-			printPacket();		// Packet auf Terminal ausgeben
+-			}
+-		else
+-			{	
+-			spiStrobe(CC1100_SIDLE); 	// Switch to IDLE
+-			spiStrobe(CC1100_SFRX);	 	// Flush the RX FIFO
+-			}
+-		}	
+-	else
+-		{
+-		CLEAR(P2IFG, 0xFF);			 	// Clear all flags
+-		}
+-	spiStrobe(CC1100_SRX);			 	// Switch to RX Mode
+-	}
++    char res ;          // CRC Check
++    if (P2IFG & 0x01)   // Check P2IFG Bit P2.0 - CC1100 Rx Packet
++        {
++        CLEAR(P2IFG, 0x01);
++        LEDTOGGLE;
++        res = receivePacket();  // CRC RÃ¼ckgabe
++        if (res)                // wenn Packet OK ...
++            {
++            printPacket();      // Packet auf Terminal ausgeben
++            }
++        else
++            {
++            spiStrobe(CC1100_SIDLE);    // Switch to IDLE
++            spiStrobe(CC1100_SFRX);     // Flush the RX FIFO
++            }
++        }
++    else
++        {
++        CLEAR(P2IFG, 0xFF);             // Clear all flags
++        }
++    spiStrobe(CC1100_SRX);              // Switch to RX Mode
++    }
+ //==============================================================
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/main.c ./main.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/main.c	Thu Jan 13 14:52:55 2011
++++ ./main.c	Thu Jan 13 17:53:10 2011
+@@ -1,69 +1,69 @@
+ //=========================================================================
+ //=== Startprojekt zum Mikroprozessorpraktikum ============================
+ //=========================================================================
+-#include "msp430x16x.h"		// Systemdefinitionen von TI für den MSP430F1612
+-#include "init.h"			// Initialisierung des Mikrocontrollers
+-#include "CC1100.h"			// CC1100 Funktransceiver
+-#include "system.h"			// Systemfunktionen MSB430H
+-#include "interrupts.h"		// ISR - Interrupt Service Routinen
+-#include "stdio.h"			// includes TI MSP430F1612 
+-#include "SHT11.h"			// SHT11 Temperatur- und Feuchtesensor
+-//#include "aufgabenX.h"		// Header Datei für aufgabeX.c 
+-							// möglichst eigene xxx.h und xxx.c Dateien
+-							// erstellen und verwenden.
++#include "msp430x16x.h"     // Systemdefinitionen von TI fÃ¼r den MSP430F1612
++#include "init.h"           // Initialisierung des Mikrocontrollers
++#include "CC1100.h"         // CC1100 Funktransceiver
++#include "system.h"         // Systemfunktionen MSB430H
++#include "interrupts.h"     // ISR - Interrupt Service Routinen
++#include "stdio.h"          // includes TI MSP430F1612
++#include "SHT11.h"          // SHT11 Temperatur- und Feuchtesensor
++//#include "aufgabenX.h"        // Header Datei fÃ¼r aufgabeX.c
++                            // mÃ¶glichst eigene xxx.h und xxx.c Dateien
++                            // erstellen und verwenden.
+ 
+-main(void);					//Haupprogramm
++main(void);                 //Haupprogramm
+ 
+ //====Hauptprogramm=======================================================
+ 
+ main(void)
+-	{
++    {
+ 
+ //===Hier sollten Variablen deklariert werden ============================
+-	// unsigned char i = 0;
++    // unsigned char i = 0;
+ 
+ //===Hier die notwendigen Initialisierungs Funktionen=====================
+-	//====================================================================
+-	initPort();				// Initialisierung der Port Register
+-	//====================================================================
+-	//== XT2() oder Dco() als Taktquelle einstellen
+-	//== durch Ein- oder Auskommentieren
+-	//== DCO ist bei LPM Einsatz bevorzugt muß zyklisch kalibriert werden
+-	//== XT2 ist quarzstabil muß nicht zyklisch kalibriert werden
+-	//  			
+-	//XT2 ();				// XT2 Taktquelle aktivieren mit 7.3728MHz
+-	DCO ();					// Dco Taktquelle aktivieren mit 7.3728MHz
+-	//						   beachte DELTA
+-	//					
+-	//====================================================================
+-	//flash_read(MEM_ID, &ID, 1);	// MSB430H ID aus dem INFOMEM lesen
+-	//====================================================================
+-	//init_timer();			// Init Timer für Sekundeninterrupt
+-	initUART1();			// UART-RS232 mit 115.2kBit/s initialisieren
+-	//====================================================================
+-	//== Initialisierung des CC1100 Transceivers - bitte nicht verändern!
+-	initUART0_SPI();		// CC1100 SPI UART initalisieren
+-	//initCC1100();			// CC1100 init und in RX Mode setzen
+-	initCC1100_IDLE();	// CC1100 init und in den IDLE Mode setzen
+-	initCC1100_POWERDOWN();	// CC1100 in den PowerDown Mode setzen
+-	//	setUid(ID);			// CC1100 Adresse setzen, ID aus CC1100.c 
+-	//====================================================================
++    //====================================================================
++    initPort();             // Initialisierung der Port Register
++    //====================================================================
++    //== XT2() oder Dco() als Taktquelle einstellen
++    //== durch Ein- oder Auskommentieren
++    //== DCO ist bei LPM Einsatz bevorzugt muÃŸ zyklisch kalibriert werden
++    //== XT2 ist quarzstabil muÃŸ nicht zyklisch kalibriert werden
++    //
++    //XT2 ();               // XT2 Taktquelle aktivieren mit 7.3728MHz
++    DCO ();                 // Dco Taktquelle aktivieren mit 7.3728MHz
++    //                         beachte DELTA
++    //
++    //====================================================================
++    //flash_read(MEM_ID, &ID, 1);   // MSB430H ID aus dem INFOMEM lesen
++    //====================================================================
++    //init_timer();         // Init Timer fÃ¼r Sekundeninterrupt
++    initUART1();            // UART-RS232 mit 115.2kBit/s initialisieren
++    //====================================================================
++    //== Initialisierung des CC1100 Transceivers - bitte nicht verÃ¤ndern!
++    initUART0_SPI();        // CC1100 SPI UART initalisieren
++    //initCC1100();         // CC1100 init und in RX Mode setzen
++    initCC1100_IDLE();  // CC1100 init und in den IDLE Mode setzen
++    initCC1100_POWERDOWN(); // CC1100 in den PowerDown Mode setzen
++    //  setUid(ID);         // CC1100 Adresse setzen, ID aus CC1100.c
++    //====================================================================
+ 
+ //===Hier die Endlosschleife quasi das Betriebssystem=====================
+-	while(1)
+-		{
++    while(1)
++        {
+ 
+-		// Hier den Code für die Lösung der Aufgabenstellung einfügen 
+-		// am besten in der Form:
+-		//
+-		Aufgabe23(); // Aufgabe1.h nicht vergessen!
+-		//
+-		// Aufgabex() sollte eigene Initialisierungsroutine enthalten und 
+-		// eine eigene Endlosschleife 
+-		
+-		}	// Ende der Endlosschleife
++        // Hier den Code fÃ¼r die LÃ¶sung der Aufgabenstellung einfÃ¼gen
++        // am besten in der Form:
++        //
++        Aufgabe22(); // Aufgabe1.h nicht vergessen!
++        //
++        // Aufgabex() sollte eigene Initialisierungsroutine enthalten und
++        // eine eigene Endlosschleife
+ 
+-	}		// Ende Main
++        }   // Ende der Endlosschleife
++
++    }       // Ende Main
+ //====Ende des Hauptprogramms ============================================
+ 
+ 
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/system.c ./system.c
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/system.c	Thu Nov 18 14:32:36 2010
++++ ./system.c	Thu Jan 13 17:53:10 2011
+@@ -7,89 +7,89 @@
+ 
+ //=============================================================================
+ void flash_read(unsigned int add, unsigned char* ptr, unsigned int len)
+-	{ 
+-	unsigned int l = 0;
+-  	while(l<len)					// Blocklänge für..
+-  		{							// ...lesen eines Flashwertes
+-    	ptr[l] = *(unsigned int*)(add + l);	
+-    	l++;
+-		}    
+-	}
++    { 
++    unsigned int l = 0;
++    while(l<len)                    // BlocklÃ¤nge fÃ¼r..
++        {                           // ...lesen eines Flashwertes
++        ptr[l] = *(unsigned int*)(add + l); 
++        l++;
++        }    
++    }
+ 
+ //=============================================================================
+ void flash_write(unsigned int add, unsigned char* ptr, unsigned int len)
+-	{	
+-  	unsigned int i = 0; 
+-  	for(i=0;i<len;i+=2)				// Blocklänge für..
+-  		{							// ...schreiben eines Flashwertes	
+-    	flash_prog((char*)(add + i), (ptr[i]));
+-		}
+-	}
+-
+-//=============================================================================
+-void flash_erase( int *Data_ptr )	// Adresse im gewünschten Segment
+-	{ 
+-	// DCO(SMCLK) mit 7.372800MHz / 17 ~ 434000 Hz
+-	// WDTCTL = WDTPW | WDTHOLD;	// Stop Watchdog
+-	_bic_SR_register(GIE);			// alle Interrupte sperren
+-	FCTL2 = FWKEY | FSSEL_3 | FN4;	// SMCLK Taktquelle, Teiler 16+1
+-	FCTL3 = FWKEY;               	// Lock = 0   
+-	//while(FCTL3 & 0x0001) nop();  // Warten auf BUSY = 0
+-	FCTL1 = FWKEY+ERASE;            // ERASE = 1 
+-	*Data_ptr=0;                  	// löschen Flash Segment
+-	FCTL1 = FWKEY;               	// ERASE = 0 
+-	FCTL3 = FWKEY+LOCK;            	// Lock = 1 
+-	_bis_SR_register(GIE);			// alle Interrupte erlauben
+-	// WDT_ARST_1000;				// Start Watchdog
+-	}
++    {   
++    unsigned int i = 0; 
++    for(i=0;i<len;i+=2)             // BlocklÃ¤nge fÃ¼r..
++        {                           // ...schreiben eines Flashwertes   
++        flash_prog((char*)(add + i), (ptr[i]));
++        }
++    }
++
++//=============================================================================
++void flash_erase( int *Data_ptr )   // Adresse im gewÃ¼nschten Segment
++    { 
++    // DCO(SMCLK) mit 7.372800MHz / 17 ~ 434000 Hz
++    // WDTCTL = WDTPW | WDTHOLD;    // Stop Watchdog
++    _bic_SR_register(GIE);          // alle Interrupte sperren
++    FCTL2 = FWKEY | FSSEL_3 | FN4;  // SMCLK Taktquelle, Teiler 16+1
++    FCTL3 = FWKEY;                  // Lock = 0   
++    //while(FCTL3 & 0x0001) nop();  // Warten auf BUSY = 0
++    FCTL1 = FWKEY+ERASE;            // ERASE = 1 
++    *Data_ptr=0;                    // lÃ¶schen Flash Segment
++    FCTL1 = FWKEY;                  // ERASE = 0 
++    FCTL3 = FWKEY+LOCK;             // Lock = 1 
++    _bis_SR_register(GIE);          // alle Interrupte erlauben
++    // WDT_ARST_1000;               // Start Watchdog
++    }
+ 
+ //=============================================================================
+ void flash_prog( char *Data_ptr, char word )
+-	{ 
+-	// DCO(SMCLK) is 7.372800MHz / 17 ~ 434000 Hz
+-	// WDTCTL = WDTPW | WDTHOLD;	// Stop Watchdog
+-	_bic_SR_register(GIE);			// alle Interrupte sperren
+-	FCTL2 = FWKEY | FSSEL_3 | FN4;	// SMCLK Taktquelle, Teiler 16+1
+-    FCTL3 = FWKEY;          	    // Lock = 0 
+-	//while(FCTL3 & 0x0001) nop(); 	// Warten auf BUSY = 0
++    { 
++    // DCO(SMCLK) is 7.372800MHz / 17 ~ 434000 Hz
++    // WDTCTL = WDTPW | WDTHOLD;    // Stop Watchdog
++    _bic_SR_register(GIE);          // alle Interrupte sperren
++    FCTL2 = FWKEY | FSSEL_3 | FN4;  // SMCLK Taktquelle, Teiler 16+1
++    FCTL3 = FWKEY;                  // Lock = 0 
++    //while(FCTL3 & 0x0001) nop();  // Warten auf BUSY = 0
+     FCTL1 = FWKEY+WRT;              // WRT = 1 Schreibmode ein
+-    *Data_ptr=word;              	// Flash schreiben 
+-    FCTL1 = FWKEY;              	// WRT = 0 Schreibmode aus
++    *Data_ptr=word;                 // Flash schreiben 
++    FCTL1 = FWKEY;                  // WRT = 0 Schreibmode aus
+     FCTL3 = FWKEY+LOCK;             // Lock = 1 
+-	_bis_SR_register(GIE);			// alle Interrupte erlauben
+-	// WDT_ARST_1000;				// Start Watchdog
+-	}
+-
+-//=============================================================================
+-void writestr(char* str)				// Zeichenkettenausgabe RS232
+-	{				
+-	unsigned int j =0;					
+-	for (j=0;j < strlen(str);j++)		// Zeichenkettenlänge
+-		{		
+-		while((U1TCTL & TXEPT)== 0x00);	// warten bis Sendepuffer leer
+-		U1TXBUF = str[j];				// schreiben Sendepuffer
+-		}
+-	}
+-
+-//=============================================================================
+-void writechar(char c)					// Zeichenausgabe RS232 
+-	{				
+-	while((U1TCTL & TXEPT)== 0x00); 	// warten bis Sendepuffer leer
+-	U1TXBUF = c;						// schreiben Sendepuffer
+-	}
+-
+-//=============================================================================
+-void wait(unsigned int c)				// Wartet c * 10 mikrosekunde
+-	{				
+-	while (c > 0)
+-		{
+-		NOPS; NOPS; NOPS; NOPS; NOPS; NOPS; NOPS; _NOP(); c--;
+-		}
+-	}
+-
+-//=============================================================================
+-unsigned int irand(unsigned int max)	// Random number between 0 and max-1
+-	{	
+-	return (int) abs(rand() % max);
+-	}
++    _bis_SR_register(GIE);          // alle Interrupte erlauben
++    // WDT_ARST_1000;               // Start Watchdog
++    }
++
++//=============================================================================
++void writestr(char* str)                // Zeichenkettenausgabe RS232
++    {               
++    unsigned int j =0;                  
++    for (j=0;j < strlen(str);j++)       // ZeichenkettenlÃ¤nge
++        {       
++        while((U1TCTL & TXEPT)== 0x00); // warten bis Sendepuffer leer
++        U1TXBUF = str[j];               // schreiben Sendepuffer
++        }
++    }
++
++//=============================================================================
++void writechar(char c)                  // Zeichenausgabe RS232 
++    {               
++    while((U1TCTL & TXEPT)== 0x00);     // warten bis Sendepuffer leer
++    U1TXBUF = c;                        // schreiben Sendepuffer
++    }
++
++//=============================================================================
++void wait(unsigned int c)               // Wartet c * 10 mikrosekunde
++    {               
++    while (c > 0)
++        {
++        NOPS; NOPS; NOPS; NOPS; NOPS; NOPS; NOPS; _NOP(); c--;
++        }
++    }
++
++//=============================================================================
++unsigned int irand(unsigned int max)    // Random number between 0 and max-1
++    {   
++    return (int) abs(rand() % max);
++    }
+ //=============================================================================
+diff -u -x .* -r C:/Praktika/MPP/Donnerstag/MPP_WS1011/system.h ./system.h
+--- C:/Praktika/MPP/Donnerstag/MPP_WS1011/system.h	Thu Nov 11 16:41:06 2010
++++ ./system.h	Thu Jan 13 17:53:10 2011
+@@ -4,22 +4,22 @@
+ //=========================================================================
+ // Systemdefinitionen
+ //=========================================================================
+-#define LED			(0x80)                
+-#define LEDOFF	    (P5OUT |= LED)    
+-#define LEDON   	(P5OUT &= ~LED)   
+-#define LEDTOGGLE	    (P5OUT ^=  LED)    
+-
+-#define MCU_RESET 		(WDTCTL = 0x0000)
+-#define SET(x, y)     	((x) |= (y))
+-#define CLEAR(x, y)   	((x) &= (~(y)))
++#define LED         (0x80)                
++#define LEDOFF      (P5OUT |= LED)    
++#define LEDON       (P5OUT &= ~LED)   
++#define LEDTOGGLE       (P5OUT ^=  LED)    
++
++#define MCU_RESET       (WDTCTL = 0x0000)
++#define SET(x, y)       ((x) |= (y))
++#define CLEAR(x, y)     ((x) &= (~(y)))
+ #define NOPS do{_NOP();_NOP();_NOP();_NOP();_NOP();_NOP();_NOP();_NOP();_NOP();_NOP();}while(0)
+-#define TIMERB_CCR0		(65535)
+-#define INFOMEM_A		(0x1080)
+-#define INFOMEM_B 		(0x1000)
+-#define MEM_ID			(0x1000)			// Adresse ID im INFOMEM 
+-	
++#define TIMERB_CCR0     (65535)
++#define INFOMEM_A       (0x1080)
++#define INFOMEM_B       (0x1000)
++#define MEM_ID          (0x1000)            // Adresse ID im INFOMEM 
++    
+ 
+-//extern int flashMEM ;	 // Variable RAM
++//extern int flashMEM ;  // Variable RAM
+ //extern int *MEMptr ; // MEMptr ist Zeiger 
+ //=========================================================================
+ // Typdeklarationen
+@@ -48,8 +48,8 @@
+ void flash_write(unsigned int add, unsigned char* ptr, unsigned int len);
+ // schreibt Flash
+ //=========================================================================
+-void flash_erase( int *Data_ptr );		
+-// löscht adressiertes Segment 
++void flash_erase( int *Data_ptr );      
++// lÃ¶scht adressiertes Segment 
+ //=========================================================================
+ void flash_prog( char *Data_ptr, char word );
+ // schreibt ein Byte
+@@ -60,22 +60,22 @@
+ //=========================================================================
+ // Funktionen zum Zugriff auf die Serielle RS232 Schittstelle
+ //=========================================================================
+-extern void writestr(char*);			// Zeichenkettenausgabe RS232
++extern void writestr(char*);            // Zeichenkettenausgabe RS232
+ //=========================================================================
+-extern void writechar(char c);			// Zeichenausgabe RS232
++extern void writechar(char c);          // Zeichenausgabe RS232
+ 
+ 
+ //=========================================================================
+-// Funktionen für Verzögerungen
++// Funktionen fÃ¼r VerzÃ¶gerungen
+ //=========================================================================
+ // Funktion die c * 10 us wartet (bei 7.
+-void wait(unsigned int c);				
++void wait(unsigned int c);              
+ //=========================================================================
+ // Funktion die c * 120 us wartet, c maximal 5461
+-#define wait_120us(c)	(wait((unsigned int)c*12))
++#define wait_120us(c)   (wait((unsigned int)c*12))
+ //=========================================================================
+ // Funktion liefert Zufallszahl
+-unsigned int irand(unsigned int max);	// Funktion für Rand 0 <= x <= max
++unsigned int irand(unsigned int max);   // Funktion fÃ¼r Rand 0 <= x <= max
+ //=========================================================================
+ 
+ 
+Only in .: tmppatch
