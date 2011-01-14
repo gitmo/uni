@@ -21,21 +21,23 @@ public class WebServer {
 		int serverPort = Integer.valueOf(args[0]);
 		int statisticPort = Integer.valueOf(args[1]);
 
+		Thread serverThread = null, statisticThread = null;
+
 		while (true) {
 			try {
-				Thread serverThread = new Thread(new ServerWorker(serverPort));
-				Thread statisticThread = new Thread(new StatisticWorker(statisticPort));
+				if(serverThread == null || !serverThread.isAlive()) {
+					serverThread = new Thread(new ServerWorker(serverPort));
+					serverThread.start();
+					System.out.println("Started server thread on " + serverPort
+							+ " Port.");
+				}
 
-				serverThread.start();
-				System.out.println("Started server thread on " + serverPort
-						+ " Port.");
-
-				statisticThread.start();
-				System.out.println("Started statistic thread on " + statisticPort
-						+ " Port.");
-				
-				serverThread.join();
-				statisticThread.join();
+				if(statisticThread == null || !statisticThread.isAlive()) {
+					statisticThread = new Thread(new StatisticWorker(statisticPort));
+					statisticThread.start();
+					System.out.println("Started statistic thread on " + statisticPort
+							+ " Port.");
+				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
