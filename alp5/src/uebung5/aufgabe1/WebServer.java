@@ -3,7 +3,7 @@ package uebung5.aufgabe1;
 public class WebServer {
 
 	/**
-	 * Startet eines einfachen Webserver
+	 * Startet einen einfachen Webserver
 	 * 
 	 * Hierzu wird mit Hilfe von zwei Threads auf verschiedenen Ports eine
 	 * statische HTML-, sowie ein Histogram-Seite verfügbar gemacht.
