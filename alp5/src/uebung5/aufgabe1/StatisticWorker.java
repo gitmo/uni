@@ -37,7 +37,7 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 
 				// File-Content
 				responseStream.append(getStatisticString());
-				responseStream.flush();
+				responseStream.close();
 				connection.close();
 			}
 		} catch (IOException e) {

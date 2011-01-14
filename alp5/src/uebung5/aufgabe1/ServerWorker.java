@@ -139,7 +139,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 				responseStream.append("\r\n");
 				// HTML-Content
 				responseStream.append(responseMessage);
-				responseStream.flush();
+				responseStream.close();
 				connection.close();
 
 				// Ermittelt den User-Agent
