@@ -172,10 +172,12 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		String[] commonUserAgents = { "Firefox", "MSIE", "Chrome", "Safari", 
 				"Opera", "curl" };
 
-		for (int i = 0; i < commonUserAgents.length; ++i)
-			if (userAgent.contains(commonUserAgents[i]))
-				return commonUserAgents[i];
-
+		if(userAgent != null) {
+			for (int i = 0; i < commonUserAgents.length; ++i)
+				if (userAgent.contains(commonUserAgents[i]))
+					return commonUserAgents[i];
+		}
+		
 		return "Unknown";
 	}
 
