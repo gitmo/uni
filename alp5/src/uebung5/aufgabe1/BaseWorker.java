@@ -26,7 +26,7 @@ public abstract class BaseWorker {
 	 * @return Map<String, Integer
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, Integer> loadStatistic() {
+	protected synchronized Map<String, Integer> loadStatistic() {
 		Map<String, Integer> statistic = null;
 
 		ObjectInputStream ois;
