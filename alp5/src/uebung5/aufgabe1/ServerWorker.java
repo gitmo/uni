@@ -1,7 +1,6 @@
 package uebung5.aufgabe1;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,20 +31,26 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		
 		if(requestStream != null) {
 			
-			String line = null;
-			
 			/*TODO* error checking */
 			try {
-				map.put(null, requestStream.readLine());
-			while((line = requestStream.readLine()) != null && !line.equals("")) {
-					int colonIndex = line.indexOf(':');
+				char[] buffer = new char[256];
+				requestStream.read(buffer, 0, buffer.length);
+				
+				String[] lines = new String(buffer).split("\r\n");
+				
+				if(lines[0] != null)
+					map.put(null, lines[0].trim());
+				
+				for(int i=1; i < lines.length; ++i) {
+					int colonIndex = lines[i].indexOf(':');
 					
 					if(colonIndex != -1) {
-						String fieldName = line.substring(0,colonIndex).trim();
-						String fieldValue = line.substring(colonIndex+1).trim();
+						String fieldName = lines[i].substring(0,colonIndex).trim();
+						String fieldValue = lines[i].substring(colonIndex+1).trim();
 						
 						map.put(fieldName, fieldValue);
 					}
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -99,14 +104,15 @@ public class ServerWorker extends BaseWorker implements Runnable {
 				
 				OutputStreamWriter responseStream = new OutputStreamWriter(connection.getOutputStream());
 				responseStream.append("HTTP/1.1 200 OK\r\n");
-				responseStream.append("Content-Type: text/html\r\n");
+				responseStream.append("Content-Type: text/html;charset=utf-8\r\n");
 				responseStream.append("\r\n");
+				responseStream.flush();
 				responseStream.append(responseMessage);
 				responseStream.flush();
 				connection.close();
 				
 				Map<String, Integer> histogram = this.loadHistogram();
-				String userAgent = fieldMap.get("User-Agent");
+				String userAgent = stripUserAgent(fieldMap.get("User-Agent"));
 				
 				if(userAgent != null) {
 					if (histogram .containsKey(userAgent))
@@ -121,6 +127,17 @@ public class ServerWorker extends BaseWorker implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public String stripUserAgent(String userAgent) {
+		
+		String[] commonUserAgents = { "Firefox", "MSIE", "Safari", "Chrome", "Opera"};
+		
+		for(int i=0; i < commonUserAgents.length; ++i)
+			if(userAgent.contains(commonUserAgents[i]))
+				return commonUserAgents[i];
+		
+		return "Unknown";
 	}
 
 }

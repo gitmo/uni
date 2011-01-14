@@ -25,8 +25,9 @@ public class HistogramWorker extends BaseWorker implements Runnable {
 				
 				OutputStreamWriter responseStream = new OutputStreamWriter(connection.getOutputStream());
 				responseStream.append("HTTP/1.1 200 OK\r\n");
-				responseStream.append("Content-Type: text/html\r\n");
+				responseStream.append("Content-Type: text/html;charset=utf-8\r\n");
 				responseStream.append("\r\n");
+				responseStream.flush();
 				responseStream.append(getHistogramString());
 				responseStream.flush();
 				connection.close();
