@@ -125,7 +125,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 				// Anfrage entgegennehmen
 				Socket connection = socket.accept();
 
-				String responseMessage = loadCounter(getFileContent("404.html"));
+				final String responseMessage = loadCounter(getFileContent("404.html"));
 
 				Map<String, String> fieldMap = this.getHeaderFields(connection
 						.getInputStream());
@@ -147,14 +147,14 @@ public class ServerWorker extends BaseWorker implements Runnable {
 
 				// Speichert den User-Agent zu Statistikzwecken ab
 				if (userAgent != null) {
-					Map<String, Integer> histogram = this.loadHistogram();
+					Map<String, Integer> statistic = this.loadStatistic();
 
-					if (histogram.containsKey(userAgent))
-						histogram.put(userAgent, histogram.get(userAgent) + 1);
+					if (statistic.containsKey(userAgent))
+						statistic.put(userAgent, statistic.get(userAgent) + 1);
 					else
-						histogram.put(userAgent, 1);
+						statistic.put(userAgent, 1);
 
-					this.saveHistogram(histogram);
+					this.saveStatistic(statistic);
 				}
 			}
 		} catch (IOException e) {
@@ -169,8 +169,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * @return
 	 */
 	public String stripUserAgent(String userAgent) {
-
-		String[] commonUserAgents = { "Firefox", "MSIE", "Safari", "Chrome",
+		String[] commonUserAgents = { "Firefox", "MSIE", "Chrome", "Safari", 
 				"Opera", "curl" };
 
 		for (int i = 0; i < commonUserAgents.length; ++i)

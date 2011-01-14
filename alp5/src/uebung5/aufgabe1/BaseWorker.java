@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public abstract class BaseWorker {
 
-	final String persistenceHistogramFileName = "histogram.persistence";
+	final String persistenceStatisticFileName = "statistic.persistence";
 
 	/**
 	 * Läd eine serialisierte Map-Datenstruktur und gibt diese zurück
@@ -26,45 +26,43 @@ public abstract class BaseWorker {
 	 * @return Map<String, Integer
 	 */
 	@SuppressWarnings("unchecked")
-	protected Map<String, Integer> loadHistogram() {
-		Map<String, Integer> histogram = null;
+	protected Map<String, Integer> loadStatistic() {
+		Map<String, Integer> statistic = null;
 
 		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(
-					persistenceHistogramFileName));
-			histogram = (Map<String, Integer>) ois.readObject();
+					persistenceStatisticFileName));
+			statistic = (Map<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
-			histogram = new HashMap<String, Integer>();
-			this.saveHistogram(histogram);
+			statistic = new HashMap<String, Integer>();
+			this.saveStatistic(statistic);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		return histogram;
+		return statistic;
 	}
 
 	/**
 	 * Serialisiert eine Map-Datenstruktur und speichert diese als Datei ab
 	 * 
-	 * @param histogram
+	 * @param statistic
 	 */
-	protected void saveHistogram(Map<String, Integer> histogram) {
+	protected void saveStatistic(Map<String, Integer> statistic) {
 
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(
-					persistenceHistogramFileName));
-			oos.writeObject(histogram);
+					persistenceStatisticFileName));
+			oos.writeObject(statistic);
 			oos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -81,14 +79,19 @@ public abstract class BaseWorker {
 		// Reads file content
 		BufferedReader reader = new BufferedReader(new FileReader(
 				WebServer.class.getResource(fileName).getPath()));
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		String line = null;
+		
 		try {
 			while ((line = reader.readLine()) != null)
 				stringBuilder.append(line + "\n");
+
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return stringBuilder.toString();
 	}
 }

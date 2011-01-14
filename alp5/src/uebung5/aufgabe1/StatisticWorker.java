@@ -7,11 +7,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 
-public class HistogramWorker extends BaseWorker implements Runnable {
+public class StatisticWorker extends BaseWorker implements Runnable {
 
 	int port;
 
-	public HistogramWorker(int port) {
+	public StatisticWorker(int port) {
 		this.port = port;
 	}
 
@@ -36,7 +36,7 @@ public class HistogramWorker extends BaseWorker implements Runnable {
 				responseStream.append("\r\n");
 
 				// File-Content
-				responseStream.append(getHistogramString());
+				responseStream.append(getStatisticString());
 				responseStream.flush();
 				connection.close();
 			}
@@ -51,28 +51,28 @@ public class HistogramWorker extends BaseWorker implements Runnable {
 	 * 
 	 * @return string with html content
 	 */
-	String getHistogramString() {
+	String getStatisticString() {
 		String htmlTemplate = "";
 		try {
-			htmlTemplate = this.getFileContent("histogram.html");
+			htmlTemplate = this.getFileContent("statistic.html");
 		} catch (FileNotFoundException e) {
 		}
 
-		Map<String, Integer> histogram = this.loadHistogram();
+		Map<String, Integer> statistic = this.loadStatistic();
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<table>\n");
 
-		for (String browser : histogram.keySet()) {
+		for (String browser : statistic.keySet()) {
 			sb.append("<tr>\n");
-			sb.append("<td>" + browser + "</td><td>" + histogram.get(browser)
+			sb.append("<td>" + browser + "</td><td>" + statistic.get(browser)
 					+ "</td>\n");
 			sb.append("</tr>\n");
 		}
 
 		sb.append("</table>\n");
 
-		return htmlTemplate.replace("<!-- Histogram -->", sb.toString());
+		return htmlTemplate.replace("<!-- Statistic -->", sb.toString());
 	}
 
 }
