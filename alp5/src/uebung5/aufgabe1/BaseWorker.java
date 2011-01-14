@@ -52,7 +52,7 @@ public abstract class BaseWorker {
 	 * 
 	 * @param statistic
 	 */
-	protected void saveStatistic(Map<String, Integer> statistic) {
+	protected synchronized void saveStatistic(Map<String, Integer> statistic) {
 
 		ObjectOutputStream oos;
 		try {
