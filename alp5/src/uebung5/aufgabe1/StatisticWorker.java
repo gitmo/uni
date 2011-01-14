@@ -62,7 +62,8 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<table>\n");
-
+		sb.append("<tr><th>User-Agent</th><th>Anzahl</th></tr>\n");
+		
 		for (String browser : statistic.keySet()) {
 			sb.append("<tr>\n");
 			sb.append("<td>" + browser + "</td><td>" + statistic.get(browser)
