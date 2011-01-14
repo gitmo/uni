@@ -37,7 +37,7 @@ public class WebServer {
 				serverThread.join();
 				statisticThread.join();
 			} catch (Exception e) {
-
+				System.out.println(e.getMessage());
 			}
 		}
 
