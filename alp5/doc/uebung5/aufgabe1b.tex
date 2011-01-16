@@ -1,0 +1,17 @@
+\subsection*{rudimentärer Webserver}
+
+Mit Hilfer der Java-Klasse \texttt{ServerSocket} wird ein Socket auf einem gegebenen Port eingerichtet.
+Der Webserver lauscht nun in einer Endlosschleife auf eingehende Verbindungen und verarbeitet diese.
+\lstinputlisting[caption=ServerWorker.java,firstnumber=118,linerange=118-131]
+{../../src/uebung5/aufgabe1/ServerWorker.java}
+
+Da es um HTTP-Anfragen handelt, wird der sogenannte HTTP-Header mit der Methode \textit{getHeaderFields()} ausgelesen und in einer \texttt{Map}-Datenstruktur gespeichert.
+\lstinputlisting[caption=ServerWorker.java,firstnumber=34,linerange=34-73]
+{../../src/uebung5/aufgabe1/ServerWorker.java}
+
+Nun wird nun noch das HTML-Template mit dem Zähler über die Verbindung verschickt und der User-Agent gespeichert.
+\lstinputlisting[caption=ServerWorker.java,firstnumber=136,linerange=136-163]
+{../../src/uebung5/aufgabe1/ServerWorker.java}
+Der User-Agent wird in einer Map-Datenstruktur gespeichert und letztendlich noch serialisiert und somit persistent gemacht.
+
+

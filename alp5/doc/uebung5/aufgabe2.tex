@@ -1,0 +1,16 @@
+Unser Webbrowser soll unterschiedliche Datenformate anzeigen können.
+Hier bietet es sich an eine Architektur zu wählen, die auf einfache Art und Weise Algorithmen austauschen kann.
+Das \textit{Strategy Behaviour Pattern} erfüllt genau solche Anforderungen.
+Jeglicher Algorithmus zur Anzeige von Daten in unserem Browser muss also folgende Schnittstelle implementieren:
+
+\lstinputlisting[caption=JPanelStrategy.java,firstnumber=7,linerange=7-18]
+{../../src/uebung5/aufgabe2/JPanelStrategy.java}
+
+Anhand des \textit{MIME}-Types kann nun bei einer HTTP-Antwort ermittelt werden, welcher Algorithmus gewählt werden soll.
+Hierzu gibt es eine Map-Datenstruktur die alle unterstützten \textit{MIME}-Types gespeichert hat.
+\lstinputlisting[caption=JPanelStrategy.java,firstnumber=27,linerange=27-48]
+{../../src/uebung5/aufgabe2/SimpleBrowser.java}
+
+Handelt es sich um einen unterstützten \textit{MIME}-Type, so wird der dazugehörige Algorithmus ausgewählt und ausgeführt.
+\lstinputlisting[caption=JPanelStrategy.java,firstnumber=110,linerange=110-127]
+{../../src/uebung5/aufgabe2/SimpleBrowser.java}

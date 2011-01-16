@@ -130,10 +130,10 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
 					connection.setSoTimeout(500);
 	
-					final String responseMessage = loadCounter(getFileContent("404.html"));
-	
 					Map<String, String> fieldMap = this.getHeaderFields(connection
 							.getInputStream());
+
+					final String responseMessage = loadCounter(getFileContent("404.html"));
 	
 					OutputStreamWriter responseStream = new OutputStreamWriter(
 							connection.getOutputStream());

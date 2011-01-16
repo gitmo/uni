@@ -1,0 +1,8 @@
+\subsection*{Histogramm}
+Die Klasse \textit{StatisticWorker} arbeitet ähnlich wie die Klasse \textit{ServerWorker}.
+Auch hier werden mittels eines \textit{ServerSockets} eingehende Verbindungen abgearbeitet.
+Im Unterschied wird hier aber nicht der \textit{User-Agent} zu Statistikzwecken gespeichert,
+sondern die gesammelten Daten ausgegeben.
+Hierzu wird die serialisierte Map-Datenstruktur geladen und formatiert ausgegeben.
+\lstinputlisting[caption=StatisticWorker.java,firstnumber=75,linerange=75-98]
+{../../src/uebung5/aufgabe1/StatisticWorker.java}
