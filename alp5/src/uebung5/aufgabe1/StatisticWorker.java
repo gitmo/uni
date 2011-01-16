@@ -29,6 +29,12 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 				try {
 					connection = socket.accept();
 	
+					// Timeout setzen, damit read() nicht für immer blocken kann.
+					// Dieser muss groß genug für Clients mit honen Latenzen sein.
+					// Z.Zt. wird nur eine Verbindung zu einem Zeitpunkt behandelt.
+					// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
+					connection.setSoTimeout(500);
+					
 					OutputStreamWriter responseStream = new OutputStreamWriter(
 							connection.getOutputStream());
 					// HTTP-Header
