@@ -25,29 +25,37 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 			socket = new ServerSocket(port);
 			while (true) {
 				// Anfrage entgegennehmen
-				Socket connection = socket.accept();
-
-				OutputStreamWriter responseStream = new OutputStreamWriter(
-						connection.getOutputStream());
-				// HTTP-Header
-				responseStream.append("HTTP/1.1 200 OK\r\n");
-				responseStream
-						.append("Content-Type: text/html;charset=utf-8\r\n");
-				responseStream.append("\r\n");
-
-				// File-Content
-				responseStream.append(getStatisticString());
-				responseStream.close();
-				connection.close();
+				Socket connection = null;
+				try {
+					connection = socket.accept();
+	
+					OutputStreamWriter responseStream = new OutputStreamWriter(
+							connection.getOutputStream());
+					// HTTP-Header
+					responseStream.append("HTTP/1.1 200 OK\r\n");
+					responseStream
+							.append("Content-Type: text/html;charset=utf-8\r\n");
+					responseStream.append("\r\n");
+	
+					// File-Content
+					responseStream.append(getStatisticString());
+					responseStream.close();
+					connection.close();
+				//u.a. SocketException, SocketTimeoutException
+				} catch (IOException e) {
+					if(connection != null)
+						connection.close();
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Unknown error: " + e.getMessage());
+			System.err.println("Trace:\n\n" + e.getStackTrace());
 		} finally {
 			try {
 				if(socket != null)
 					socket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("Could not close socket");
 			}
 		}
 	}

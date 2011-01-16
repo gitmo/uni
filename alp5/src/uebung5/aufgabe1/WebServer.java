@@ -1,5 +1,7 @@
 package uebung5.aufgabe1;
 
+import java.util.Date;
+
 public class WebServer {
 
 	/**
@@ -28,14 +30,14 @@ public class WebServer {
 				if(serverThread == null || !serverThread.isAlive()) {
 					serverThread = new Thread(new ServerWorker(serverPort));
 					serverThread.start();
-					System.out.println("Started server thread on " + serverPort
+					System.out.println(new Date() + "\tStarted server thread on " + serverPort
 							+ " Port.");
 				}
 
 				if(statisticThread == null || !statisticThread.isAlive()) {
 					statisticThread = new Thread(new StatisticWorker(statisticPort));
 					statisticThread.start();
-					System.out.println("Started statistic thread on " + statisticPort
+					System.out.println(new Date() + "\tStarted statistic thread on " + statisticPort
 							+ " Port.");
 				}
 				

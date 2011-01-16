@@ -29,8 +29,9 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * 
 	 * @param stream
 	 * @return
+	 * @throws IOException 
 	 */
-	public Map<String, String> getHeaderFields(InputStream stream) {
+	public Map<String, String> getHeaderFields(InputStream stream) throws IOException {
 		BufferedReader requestStream = new BufferedReader(
 				new InputStreamReader(stream));
 
@@ -39,37 +40,33 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		// Gültiger Stream?
 		if (requestStream != null) {
 
-			try {
-				char[] buffer = new char[256];
-				// Liest 256-Bytes in den Buffer
-				// Verhindert, dass Angreifer mit Byte-Blob-Daten im Http-Header
-				// den Server in die Knie zwingen
-				requestStream.read(buffer, 0, buffer.length);
+			char[] buffer = new char[256];
+			// Liest 256-Bytes in den Buffer
+			// Verhindert, dass Angreifer mit Byte-Blob-Daten im Http-Header
+			// den Server in die Knie zwingen
+			requestStream.read(buffer, 0, buffer.length);
 
-				// Http-Header-Zeilen werden immer mit "\r\n"-abgeschloßen
-				String[] lines = new String(buffer).split("\r\n");
+			// Http-Header-Zeilen werden immer mit "\r\n"-abgeschloßen
+			String[] lines = new String(buffer).split("\r\n");
 
-				// Erste Zeile ist die HTTP-Anfrage
-				if (lines.length > 0 && lines[0] != null)
-					map.put(null, lines[0].trim());
+			// Erste Zeile ist die HTTP-Anfrage
+			if (lines.length > 0 && lines[0] != null)
+				map.put(null, lines[0].trim());
 
-				// Http-Header Daten
-				// Fieldname : Fieldvalue
-				for (int i = 1; i < lines.length; ++i) {
-					int colonIndex = lines[i].indexOf(':');
+			// Http-Header Daten
+			// Fieldname : Fieldvalue
+			for (int i = 1; i < lines.length; ++i) {
+				int colonIndex = lines[i].indexOf(':');
 
-					if (colonIndex != -1) {
-						String fieldName = lines[i].substring(0, colonIndex)
-								.trim();
-						String fieldValue = lines[i].substring(colonIndex + 1)
-								.trim();
+				if (colonIndex != -1) {
+					String fieldName = lines[i].substring(0, colonIndex)
+							.trim();
+					String fieldValue = lines[i].substring(colonIndex + 1)
+							.trim();
 
-						map.put(fieldName, fieldValue);
-					}
-
+					map.put(fieldName, fieldValue);
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+
 			}
 		}
 		return map;
@@ -123,48 +120,56 @@ public class ServerWorker extends BaseWorker implements Runnable {
 			socket = new ServerSocket(port);
 			while (true) {
 				// Anfrage entgegennehmen
-				Socket connection = socket.accept();
-
-				final String responseMessage = loadCounter(getFileContent("404.html"));
-
-				Map<String, String> fieldMap = this.getHeaderFields(connection
-						.getInputStream());
-
-				OutputStreamWriter responseStream = new OutputStreamWriter(
-						connection.getOutputStream());
-				// HTTP-Header
-				responseStream.append("HTTP/1.1 200 OK\r\n");
-				responseStream
-						.append("Content-Type: text/html;charset=utf-8\r\n");
-				responseStream.append("\r\n");
-				// HTML-Content
-				responseStream.append(responseMessage);
-				responseStream.close();
-				connection.close();
-
-				// Ermittelt den User-Agent
-				String userAgent = stripUserAgent(fieldMap.get("User-Agent"));
-
-				// Speichert den User-Agent zu Statistikzwecken ab
-				if (userAgent != null) {
-					Map<String, Integer> statistic = this.loadStatistic();
-
-					if (statistic.containsKey(userAgent))
-						statistic.put(userAgent, statistic.get(userAgent) + 1);
-					else
-						statistic.put(userAgent, 1);
-
-					this.saveStatistic(statistic);
+				Socket connection = null;
+				try {
+					connection = socket.accept();
+	
+					final String responseMessage = loadCounter(getFileContent("404.html"));
+	
+					Map<String, String> fieldMap = this.getHeaderFields(connection
+							.getInputStream());
+	
+					OutputStreamWriter responseStream = new OutputStreamWriter(
+							connection.getOutputStream());
+					// HTTP-Header
+					responseStream.append("HTTP/1.1 200 OK\r\n");
+					responseStream
+							.append("Content-Type: text/html;charset=utf-8\r\n");
+					responseStream.append("\r\n");
+					// HTML-Content
+					responseStream.append(responseMessage);
+					responseStream.close();
+					connection.close();
+	
+					// Ermittelt den User-Agent
+					String userAgent = stripUserAgent(fieldMap.get("User-Agent"));
+	
+					// Speichert den User-Agent zu Statistikzwecken ab
+					if (userAgent != null) {
+						Map<String, Integer> statistic = this.loadStatistic();
+	
+						if (statistic.containsKey(userAgent))
+							statistic.put(userAgent, statistic.get(userAgent) + 1);
+						else
+							statistic.put(userAgent, 1);
+	
+						this.saveStatistic(statistic);
+					}
+				//u.a. SocketException, SocketTimeoutExcept
+				} catch (IOException e) {
+					if(connection != null)
+						connection.close();
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Unknown error: " + e.getMessage());
+			System.err.println("Trace:\n\n" + e.getStackTrace());
 		} finally {
 			try {
 				if(socket != null)
 					socket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("Could not close socket");
 			}
 		}
 	}
