@@ -125,6 +125,12 @@ public class ServerWorker extends BaseWorker implements Runnable {
 				// Anfrage entgegennehmen
 				Socket connection = socket.accept();
 
+				// Timeout setzen, damit read() nicht für immer blocken kann.
+				// Dieser muss groß genug für Clients mit honen Latenzen sein.
+				// Z.Zt. wird nur eine Verbindung zu einem Zeitpunkt behandelt.
+				// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
+				connection.setSoTimeout(500);
+
 				final String responseMessage = loadCounter(getFileContent("404.html"));
 
 				Map<String, String> fieldMap = this.getHeaderFields(connection
@@ -161,7 +167,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(socket != null)
+				if (socket != null)
 					socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -176,15 +182,15 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * @return
 	 */
 	public String stripUserAgent(String userAgent) {
-		String[] commonUserAgents = { "Firefox", "MSIE", "Chrome", "Safari", 
+		String[] commonUserAgents = { "Firefox", "MSIE", "Chrome", "Safari",
 				"Opera", "curl" };
 
-		if(userAgent != null) {
+		if (userAgent != null) {
 			for (int i = 0; i < commonUserAgents.length; ++i)
 				if (userAgent.contains(commonUserAgents[i]))
 					return commonUserAgents[i];
 		}
-		
+
 		return "Unknown";
 	}
 
