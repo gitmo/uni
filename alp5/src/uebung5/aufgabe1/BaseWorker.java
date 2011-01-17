@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public abstract class BaseWorker {
 
-	final String persistenceStatisticFileName = "statistic.persistence";
+	final static String persistenceStatisticFileName = "statistic.persistence";
 
 	/**
 	 * Läd eine serialisierte Map-Datenstruktur und gibt diese zurück
@@ -26,7 +26,7 @@ public abstract class BaseWorker {
 	 * @return Map<String, Integer
 	 */
 	@SuppressWarnings("unchecked")
-	protected synchronized Map<String, Integer> loadStatistic() {
+	protected static synchronized Map<String, Integer> loadStatistic() {
 		Map<String, Integer> statistic = new HashMap<String, Integer>();
 
 		ObjectInputStream ois;
@@ -36,7 +36,7 @@ public abstract class BaseWorker {
 			statistic = (Map<String, Integer>) ois.readObject();
 			ois.close();
 		} catch (FileNotFoundException e) {
-			this.saveStatistic(statistic);
+			saveStatistic(statistic);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -51,7 +51,7 @@ public abstract class BaseWorker {
 	 * 
 	 * @param statistic
 	 */
-	protected synchronized void saveStatistic(Map<String, Integer> statistic) {
+	protected static synchronized void saveStatistic(Map<String, Integer> statistic) {
 
 		ObjectOutputStream oos;
 		try {

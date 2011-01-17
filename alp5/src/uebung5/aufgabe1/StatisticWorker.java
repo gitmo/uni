@@ -79,7 +79,7 @@ public class StatisticWorker extends BaseWorker implements Runnable {
 		} catch (FileNotFoundException e) {
 		}
 
-		Map<String, Integer> statistic = this.loadStatistic();
+		Map<String, Integer> statistic = BaseWorker.loadStatistic();
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<table>\n");

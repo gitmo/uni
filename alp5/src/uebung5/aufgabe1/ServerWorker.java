@@ -152,14 +152,14 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	
 					// Speichert den User-Agent zu Statistikzwecken ab
 					if (userAgent != null) {
-						Map<String, Integer> statistic = this.loadStatistic();
+						Map<String, Integer> statistic = BaseWorker.loadStatistic();
 	
 						if (statistic.containsKey(userAgent))
 							statistic.put(userAgent, statistic.get(userAgent) + 1);
 						else
 							statistic.put(userAgent, 1);
 	
-						this.saveStatistic(statistic);
+						BaseWorker.saveStatistic(statistic);
 					}
 				//u.a. SocketException, SocketTimeoutExcept
 				} catch (IOException e) {
