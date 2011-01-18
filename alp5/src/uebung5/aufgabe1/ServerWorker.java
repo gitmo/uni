@@ -29,9 +29,10 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * 
 	 * @param stream
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public Map<String, String> getHeaderFields(InputStream stream) throws IOException {
+	public Map<String, String> getHeaderFields(InputStream stream)
+			throws IOException {
 		BufferedReader requestStream = new BufferedReader(
 				new InputStreamReader(stream));
 
@@ -59,8 +60,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 				int colonIndex = lines[i].indexOf(':');
 
 				if (colonIndex != -1) {
-					String fieldName = lines[i].substring(0, colonIndex)
-							.trim();
+					String fieldName = lines[i].substring(0, colonIndex).trim();
 					String fieldValue = lines[i].substring(colonIndex + 1)
 							.trim();
 
@@ -78,8 +78,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	 * @param responseMsg
 	 * @return
 	 */
-	public String loadCounter(String responseMsg) {
-		final String placeholder = "<!-- COUNTER -->";
+	public Integer loadCounter() {
 
 		Integer counter = 0;
 		ObjectInputStream ois;
@@ -93,12 +92,15 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return counter;
+	}
 
+	private void saveCounter(Integer counter) {
 		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(
 					persistenceFileName));
-			oos.writeInt(counter + 1);
+			oos.writeInt(counter);
 			oos.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -107,8 +109,6 @@ public class ServerWorker extends BaseWorker implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return responseMsg.replace(placeholder, counter.toString());
 	}
 
 	/**
@@ -118,6 +118,9 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(port);
+			Map<String, Integer> statistic = BaseWorker.loadStatistic();
+			Integer counter = loadCounter(); 
+
 			while (true) {
 				// Anfrage entgegennehmen
 				Socket connection = null;
@@ -133,8 +136,10 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					Map<String, String> fieldMap = this.getHeaderFields(connection
 							.getInputStream());
 
-					final String responseMessage = loadCounter(getFileContent("404.html"));
-	
+					final String responseMessage = (getFileContent("404.html"))
+						.replace("<!-- COUNTER -->", counter.toString());
+					saveCounter(++counter);
+
 					OutputStreamWriter responseStream = new OutputStreamWriter(
 							connection.getOutputStream());
 					// HTTP-Header
@@ -152,8 +157,6 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	
 					// Speichert den User-Agent zu Statistikzwecken ab
 					if (userAgent != null) {
-						Map<String, Integer> statistic = BaseWorker.loadStatistic();
-	
 						if (statistic.containsKey(userAgent))
 							statistic.put(userAgent, statistic.get(userAgent) + 1);
 						else
