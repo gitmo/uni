@@ -94,7 +94,6 @@ public class Harvest {
 			System.err.println("Mal formed url: " + urlString);
 		} catch (IOException e) {
 			System.err.println("io error: " + e.getMessage());
-			e.printStackTrace();
 		}
 
 		return new LinkedList<String>(urlSet);
