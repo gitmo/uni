@@ -60,7 +60,7 @@ public class Harvest {
 			if(contentType == null)
 				throw new IOException("no content type given!");
 			
-			if(this.supportContentType(contentType))
+			if(!this.supportContentType(contentType))
 				throw new IOException("unsupported content type: "
 						+ contentType);
 
@@ -116,7 +116,7 @@ public class Harvest {
 
 	private boolean supportContentType(String contentType) {
 		for(String type : this.supportedContentTypes)
-			if(contentType.contains(type.trim()))
+			if(contentType.startsWith(type.trim()))
 				return true;
 		
 		return false;
