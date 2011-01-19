@@ -39,7 +39,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		Map<String, String> map = new HashMap<String, String>();
 
 		// Gültiger Stream?
-		if (requestStream != null && requestStream.ready()) {
+		if (requestStream != null) {
 
 			char[] buffer = new char[256];
 			// Liest 256-Bytes in den Buffer
@@ -135,13 +135,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 	
 					InputStream requestStream = connection.getInputStream();
 					
-					// Drop connection immediately if there was no payload sent. 
-					if (requestStream.available() == 0) {
-						connection.close();
-						continue;
-					}
-					
-					// Now that we know, there's at least some payload...
+					// Now that we know, there's at least some payload
 					Map<String, String> fieldMap = this.getHeaderFields(requestStream);
 
 					final String responseMessage = (getFileContent("404.html"))
