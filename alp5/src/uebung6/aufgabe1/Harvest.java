@@ -28,6 +28,7 @@ public class Harvest {
 		validLinkPrefixes.add("#");
 		validLinkPrefixes.add("mailto:");
 		validLinkPrefixes.add("javascript:");
+		validLinkPrefixes.add("http");
 	}
 
 	private String getInputStreamAsString(InputStream stream) {
@@ -84,15 +85,15 @@ public class Harvest {
 
 				if (matcher.matches())
 					urlSet.add(this.addBaseUrl(urlString, matcher.group(1)));
-
+				
 				tagStartIndex = tagEndIndex;
 
 			}
 
 		} catch (MalformedURLException e) {
-			//System.err.println("Mal formed url: " + urlString);
+			System.err.println("Mal formed url: " + urlString);
 		} catch (IOException e) {
-			//System.err.println("io error: " + e.getMessage());
+			System.err.println("io error: " + e.getMessage());
 		}
 
 		return new LinkedList<String>(urlSet);
@@ -104,7 +105,7 @@ public class Harvest {
 			if(url.startsWith(prefix))
 				return url;
 		
-		return baseUrl.concat(url);
+		return baseUrl.concat("/" + url);
 	}
 
 	private boolean supportContentType(String contentType) {
