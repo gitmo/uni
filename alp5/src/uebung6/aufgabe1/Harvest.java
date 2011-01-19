@@ -105,7 +105,13 @@ public class Harvest {
 			if(url.startsWith(prefix))
 				return url;
 		
-		return baseUrl.concat("/" + url);
+		
+		String newUrl = url;
+		try {
+			newUrl= new URL(new URL(baseUrl), url).toString();
+		} catch (MalformedURLException e) {}
+		
+		return newUrl;
 	}
 
 	private boolean supportContentType(String contentType) {
