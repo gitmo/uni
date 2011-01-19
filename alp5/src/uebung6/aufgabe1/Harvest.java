@@ -116,7 +116,7 @@ public class Harvest {
 
 	private boolean supportContentType(String contentType) {
 		for(String type : this.supportedContentTypes)
-			if(type.contains(contentType))
+			if(contentType.contains(type.trim()))
 				return true;
 		
 		return false;
