@@ -54,27 +54,29 @@
 // und eigenen Code für die jeweilige ISR einfügen
 //==============================================================
 
-#pragma vector = TIMERB0_VECTOR
-__interrupt void TIMERB0_ISR (void)
+extern bool readyToSend;
+extern int buffer_counter;
+
+#include "aufgaben/aufgabe20.h"
+#pragma vector = USART1RX_VECTOR
+__interrupt void USART1RX_ISR (void)
 {
-    char buffer[32];
-    float mV;
+	char c;
+	//check for errors
+	if(U1RCTL & RXERR != 666) {
+	    c = U1RXBUF;
+		buffer_counter++;
 
-    // Software-controlled sample-and-conversion start.
-    SET(ADC12CTL0, ADC12SC);
-    mV = readADU() / 1000.0;
-    sprintf(buffer, "ADU: %.2f V\r\n", mV);
-    uart1_put_str(buffer);
+		uart1_put_char(c);
 
-    LED_OFF;
-    if(mV < 1.0)
-        LED_SET(LED_GELB);
-    else if (mV < 2.0)
-        LED_SET(LED_GRUEN);
-    else
-        LED_SET(LED_ROT);
-    // Clears the interrupt flag
-    CLEAR(TBCCTL0, CCIFG);
+		if(c == '\n') {
+			readyToSend = true;
+//			buffer_counter = 0;
+//		} else {
+		}
+	}
+
+    CLEAR(IFG2, URXIFG1);
 }
 
 
