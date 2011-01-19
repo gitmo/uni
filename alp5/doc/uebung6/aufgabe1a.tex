@@ -1,0 +1,12 @@
+\subsubsection*{Aufgabe 1a}
+Um alle Links aus einem HTML-Dokument zu extrahieren, muss zuerst einmal eine Verbindung zu diesem hergestellt werden.
+Dies passiert mittels den Java-Klassen URL, sowie URLConnection. 
+Hierbei wird gleichzeitig geprüft ob es sich bei dem Dokument auch wirklich um eine HTML-Datei handelt.
+Ist dies der Fall so wird der komplette Inhalt ausgelesen und in einem String gespeichert.
+\lstinputlisting[caption=Harvest.java,firstnumber=53,linerange=53-68]
+{../../src/uebung6/aufgabe1/Harvest.java}
+
+Nun wird der String Zeichen für Zeichen nach einem \textit{Anchor}-Element durchsucht.
+Wurde eins gefunden so wird der Link mittels eines einfachen Regex-Ausdrucks ermittelt und zur Liste hinzugefügt.
+\lstinputlisting[caption=JPanelStrategy.java,firstnumber=69,linerange=69-91]
+{../../src/uebung6/aufgabe1/Harvest.java}

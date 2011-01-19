@@ -15,14 +15,19 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebCrawler {
+public class Harvest {
 	private final String HREF_START = "<a href=";
 	private final String HREF_END = "</a>";
 
 	private List<String> supportedContentTypes = new ArrayList<String>();
-
-	public WebCrawler() {
-		supportedContentTypes.add("text/html; charset=utf-8");
+	private List<String> validLinkPrefixes = new ArrayList<String>();
+	
+	public Harvest() {
+		supportedContentTypes.add("text/html");
+		
+		validLinkPrefixes.add("#");
+		validLinkPrefixes.add("mailto:");
+		validLinkPrefixes.add("javascript:");
 	}
 
 	private String getInputStreamAsString(InputStream stream) {
@@ -41,7 +46,7 @@ public class WebCrawler {
 		return builder.toString();
 	}
 
-	public List<String> getLinks(String urlString) {
+	private List<String> getLinks(String urlString) {
 		Set<String> urlSet = new TreeSet<String>();
 
 		try {
@@ -50,7 +55,11 @@ public class WebCrawler {
 			URLConnection connection = url.openConnection();
 
 			String contentType = connection.getHeaderField("Content-Type");
-			if (!this.supportedContentTypes.contains(contentType))
+			
+			if(contentType == null)
+				throw new IOException("no content type given!");
+			
+			if(this.supportContentType(contentType))
 				throw new IOException("unsupported content type: "
 						+ contentType);
 
@@ -74,24 +83,73 @@ public class WebCrawler {
 				Matcher matcher = pattern.matcher(tagString);
 
 				if (matcher.matches())
-					urlSet.add(matcher.group(1));
+					urlSet.add(this.addBaseUrl(urlString, matcher.group(1)));
 
 				tagStartIndex = tagEndIndex;
 
 			}
 
 		} catch (MalformedURLException e) {
-			System.err.println("Mal formed url");
+			//System.err.println("Mal formed url: " + urlString);
 		} catch (IOException e) {
-			System.err.println("io error: " + e.getMessage());
+			//System.err.println("io error: " + e.getMessage());
 		}
 
 		return new LinkedList<String>(urlSet);
 	}
+	
+	private String addBaseUrl(String baseUrl, String url) {
+		
+		for(String prefix : this.validLinkPrefixes)
+			if(url.startsWith(prefix))
+				return url;
+		
+		return baseUrl.concat(url);
+	}
+
+	private boolean supportContentType(String contentType) {
+		for(String type : this.supportedContentTypes)
+			if(type.contains(contentType))
+				return true;
+		
+		return false;
+	}
+
+	public List<String> harvestEmails(String url, int depth)
+	{
+		final String mailTo = "mailto:";
+		final List<String> emails = new LinkedList<String>();
+		
+		int i;
+		for (String link : this.getLinks(url)) {
+			
+			if(depth > 0) {
+				
+				this.harvestEmails(link, depth - 1);
+				
+			}
+			
+			i = link.indexOf(mailTo);
+			
+			if(i != -1)
+				emails.add(link.substring(i + mailTo.length()));
+		}
+		
+		return emails;
+	}
 
 	public static void main(String[] args) {
-		for (String link : new WebCrawler()
-				.getLinks("http://www.fu-berlin.de/einrichtungen"))
-			System.out.println(link);
+		if (args.length < 1) {
+			System.out.println("Usage: java Harvest url depth");
+			System.exit(2);
+		}
+		
+		int depth = Integer.parseInt(args[1]);
+		
+		System.out.println("Harvest email for given url: " + args[0]);
+		
+		for (String email : new Harvest().harvestEmails(args[0], depth)) {
+			System.out.println(email);
+		}
 	}
 }
