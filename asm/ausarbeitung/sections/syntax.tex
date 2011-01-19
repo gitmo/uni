@@ -1,1 +1,18 @@
 \section{Syntax}
+In der x86 Assembler-Sprache gibt es zwei populäre Syntaxarten.
+Zum einen die von Intel selbst und zum anderen die AT\&T-Syntax.
+Erstere wird vor allem in Windows-Umgebungen benutzt, während letztere in der Unix-Welt populär ist.
+Die grundlegende Syntax lässt sich auf die sogenannten \textit{instruction operands} reduzieren.
+
+\subsection{Intel Syntax}
+\texttt{label: mnemonic [argument1 [, argument2 [, argument3]]]}
+
+Ein mneomic ist lauf Intel's developer Manual folgendermaßen definiert:
+,,A mnemonic is a reserved name for a class of instruction opcodes which have
+the same function.''
+Es kann also als eine generische Funktion auf null bis drei Argumenten verstanden werden.
+
+\subsection{AT\&T Syntax}
+
+\subsection{Segmente}
+Jeder x86 Quellcode ist in verschiedene Segmente unterteilt. Da wären zum einen die Datensegmente die mittels den Schüsselwörtern \texttt{.data} und \texttt{.stack} definiert werden, sowie letztendlich das Codesegment. Im letzteren steht das eigentliche Programm, während im ersterem unter anderem Speicher alloziert und initialsiert wird.
