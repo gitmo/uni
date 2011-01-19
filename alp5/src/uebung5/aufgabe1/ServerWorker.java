@@ -39,7 +39,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		Map<String, String> map = new HashMap<String, String>();
 
 		// Gültiger Stream?
-		if (requestStream != null) {
+		if (requestStream != null && requestStream.ready()) {
 
 			char[] buffer = new char[256];
 			// Liest 256-Bytes in den Buffer
@@ -128,13 +128,21 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					connection = socket.accept();
 					
 					// Timeout setzen, damit read() nicht für immer blocken kann.
-					// Dieser muss groß genug für Clients mit honen Latenzen sein.
+					// Dieser muss groß genug für Clients mit hohen Latenzen sein.
 					// Z.Zt. wird nur eine Verbindung zu einem Zeitpunkt behandelt.
 					// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
 					connection.setSoTimeout(500);
 	
-					Map<String, String> fieldMap = this.getHeaderFields(connection
-							.getInputStream());
+					InputStream requestStream = connection.getInputStream();
+					
+					// Drop connection immediately if there was no payload sent. 
+					if (requestStream.available() == 0) {
+						connection.close();
+						continue;
+					}
+					
+					// Now that we know, there's at least some payload...
+					Map<String, String> fieldMap = this.getHeaderFields(requestStream);
 
 					final String responseMessage = (getFileContent("404.html"))
 						.replace("<!-- COUNTER -->", counter.toString());
