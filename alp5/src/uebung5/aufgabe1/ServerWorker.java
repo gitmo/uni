@@ -38,12 +38,11 @@ public class ServerWorker extends BaseWorker implements Runnable {
 
 		Map<String, String> map = new HashMap<String, String>();
 
-		if(!requestStream.ready()){
-			System.err.println("requestStream not ready!");
-			//	return map;
-		}
-
 		// Gültiger Stream?
+		// If the stream is not immediately ready, we cheat a little and drop
+		// the connection. That's the only way we can prevent a Slowloris DoS,
+		// but this also means we sometimes won't get the headers of a
+		// legitimate request.
 		if (requestStream != null && requestStream.ready()) {
 
 			char[] buffer = new char[256];
