@@ -56,7 +56,7 @@ main(void)
         // Hier den Code für die Lösung der Aufgabenstellung einfügen
         // am besten in der Form:
         //
-        Aufgabe22(); // Aufgabe1.h nicht vergessen!
+        Aufgabe25(); // Aufgabe1.h nicht vergessen!
         //
         // Aufgabex() sollte eigene Initialisierungsroutine enthalten und
         // eine eigene Endlosschleife
