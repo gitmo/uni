@@ -38,8 +38,13 @@ public class ServerWorker extends BaseWorker implements Runnable {
 
 		Map<String, String> map = new HashMap<String, String>();
 
+		if(!requestStream.ready()){
+			System.err.println("requestStream not ready!");
+			//	return map;
+		}
+
 		// Gültiger Stream?
-		if (requestStream != null) {
+		if (requestStream != null && requestStream.ready()) {
 
 			char[] buffer = new char[256];
 			// Liest 256-Bytes in den Buffer
@@ -131,12 +136,10 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					// Dieser muss groß genug für Clients mit hohen Latenzen sein.
 					// Z.Zt. wird nur eine Verbindung zu einem Zeitpunkt behandelt.
 					// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
-					connection.setSoTimeout(500);
+					connection.setSoTimeout(200);
 	
-					InputStream requestStream = connection.getInputStream();
-					
-					// Now that we know, there's at least some payload
-					Map<String, String> fieldMap = this.getHeaderFields(requestStream);
+					Map<String, String> fieldMap = this
+							.getHeaderFields(connection.getInputStream());
 
 					final String responseMessage = (getFileContent("404.html"))
 						.replace("<!-- COUNTER -->", counter.toString());
@@ -168,6 +171,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					}
 				//u.a. SocketException, SocketTimeoutExcept
 				} catch (IOException e) {
+					e.printStackTrace();
 					if(connection != null)
 						connection.close();
 				}
