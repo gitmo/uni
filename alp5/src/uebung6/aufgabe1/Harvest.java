@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Harvest {
 
 	private List<String> supportedContentTypes = new ArrayList<String>();
 	private List<String> validLinkPrefixes = new ArrayList<String>();
+	HashSet<String> visitedLinks = new HashSet<String>(); //Effiziente Möglichkeit bereits besuchte Links zu speichern
 	
 	public Harvest() {
 		supportedContentTypes.add("text/html");
@@ -31,6 +33,12 @@ public class Harvest {
 		validLinkPrefixes.add("http");
 	}
 
+	/**
+	 * Liest den Inhalt eines Streams aus und gibt diesen als String zurück
+	 * Zeilenumbrüche und Tabulator-Zeichen werden aus Kombatibilitätsgründen nicht weitergegeben.
+	 * @param stream
+	 * @return
+	 */
 	private String getInputStreamAsString(InputStream stream) {
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(stream));
@@ -47,10 +55,16 @@ public class Harvest {
 		return builder.toString();
 	}
 
+	/**
+	 * Extrahiert alle Links einer Website und gibt diese als Liste zurück
+	 * @param urlString
+	 * @return
+	 */
 	private List<String> getLinks(String urlString) {
 		Set<String> urlSet = new TreeSet<String>();
 
 		try {
+			//Stellt eine Verbinung her liest die Website in einen String ein
 			URL url = new URL(urlString);
 
 			URLConnection connection = url.openConnection();
@@ -67,6 +81,7 @@ public class Harvest {
 			String contentAsString = this.getInputStreamAsString(connection
 					.getInputStream());
 
+			//Ermittelt wo Links im String stehen und extrahiert die Url mittels einer Regex 
 			int tagStartIndex = 0, tagEndIndex;
 			while ((tagStartIndex = contentAsString.indexOf(HREF_START,
 					tagStartIndex)) != -1) {
@@ -99,6 +114,12 @@ public class Harvest {
 		return new LinkedList<String>(urlSet);
 	}
 	
+	/**
+	 * 
+	 * @param baseUrl
+	 * @param url
+	 * @return
+	 */
 	private String addBaseUrl(String baseUrl, String url) {
 		
 		for(String prefix : this.validLinkPrefixes)
@@ -114,6 +135,11 @@ public class Harvest {
 		return newUrl;
 	}
 
+	/**
+	 * Ueberprueft ob es sich um einen unterstützten Content-Type handelt
+	 * @param contentType
+	 * @return
+	 */
 	private boolean supportContentType(String contentType) {
 		for(String type : this.supportedContentTypes)
 			if(contentType.startsWith(type.trim()))
@@ -122,13 +148,25 @@ public class Harvest {
 		return false;
 	}
 
+	/**
+	 * Durchsucht eine Website und deren Verweise nach Emails
+	 * @param url
+	 * @param depth
+	 * @return
+	 */
 	public List<String> harvestEmails(String url, int depth)
 	{
 		final String mailTo = "mailto:";
 		final List<String> emails = new LinkedList<String>();
 		
+		//Breitensuche über die Verweise
 		int i;
 		for (String link : this.getLinks(url)) {
+
+			if(visitedLinks.contains(link))
+				continue;
+			else
+				visitedLinks.add(link);
 			
 			if(depth > 0) {
 				
