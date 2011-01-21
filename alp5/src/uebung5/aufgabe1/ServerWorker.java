@@ -39,7 +39,11 @@ public class ServerWorker extends BaseWorker implements Runnable {
 		Map<String, String> map = new HashMap<String, String>();
 
 		// Gültiger Stream?
-		if (requestStream != null) {
+		// If the stream is not immediately ready, we cheat a little and drop
+		// the connection. That's the only way we can prevent a Slowloris DoS,
+		// but this also means we sometimes won't get the headers of a
+		// legitimate request.
+		if (requestStream != null && requestStream.ready()) {
 
 			char[] buffer = new char[256];
 			// Liest 256-Bytes in den Buffer
@@ -128,13 +132,13 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					connection = socket.accept();
 					
 					// Timeout setzen, damit read() nicht für immer blocken kann.
-					// Dieser muss groß genug für Clients mit honen Latenzen sein.
+					// Dieser muss groß genug für Clients mit hohen Latenzen sein.
 					// Z.Zt. wird nur eine Verbindung zu einem Zeitpunkt behandelt.
 					// TODO: Klären ob ein Thread pro Verbindung sinnvoller ist.
-					connection.setSoTimeout(500);
+					connection.setSoTimeout(200);
 	
-					Map<String, String> fieldMap = this.getHeaderFields(connection
-							.getInputStream());
+					Map<String, String> fieldMap = this
+							.getHeaderFields(connection.getInputStream());
 
 					final String responseMessage = (getFileContent("404.html"))
 						.replace("<!-- COUNTER -->", counter.toString());
@@ -166,6 +170,7 @@ public class ServerWorker extends BaseWorker implements Runnable {
 					}
 				//u.a. SocketException, SocketTimeoutExcept
 				} catch (IOException e) {
+					e.printStackTrace();
 					if(connection != null)
 						connection.close();
 				}

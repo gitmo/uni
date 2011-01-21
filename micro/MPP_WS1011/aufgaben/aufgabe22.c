@@ -3,14 +3,12 @@
 #include "../CC1100.h"      // CC1100 Funktransceiver
 #include "../system.h"      // Systemfunktionen MSB430H
 #include "../interrupts.h"  // ISR - Interrupt Service Routinen
-#include "stdio.h"          // includes TI MSP430F1612 
+#include "stdio.h"          // includes TI MSP430F1612
 #include "../SHT11.h"
 #include "project.h"
 #include "aufgabe20.h"
 #include "aufgabe21.h"
 #include "aufgabe22.h"
-
-
 
 void Aufgabe22()
 {
@@ -18,9 +16,9 @@ void Aufgabe22()
 
 	// Interrupts global einschalten
     _bis_SR_register(GIE);
-    
+
     uart1_put_str("Initialized!");
-    
+
     while(!readyToSend);
 
     sprintf(tmpBuffer,"String Länge: %d", buffer_counter);
