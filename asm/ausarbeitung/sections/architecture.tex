@@ -2,3 +2,63 @@
 %Adressierung
 \section{Architektur}
 x86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Registern (ax,bx,cx und dx), vier Segmentierungsregistern zur Speicheradressierung (cs, ds, es und ss), sowie FLAG-Registern und dem Instruktionszeiger-Register.
+
+\subsection{Prozessor-Register}
+\subsubsection{Allzweckregister}
+\begin{tabular}{|c|c|}\hline AX & Akkumulator \\\hline BX & Basisregister \\\hline CX & Count Register \\\hline DX & Datenregister \\\hline \end{tabular}
+
+\subsubsection{Segmentregister und Adressierung}
+
+Die Segmentregister enthalten Anfangsadressen des jeweiligen Segments im Speicher.
+
+\begin{tabular}{|c|c|}
+\hline CS & Codesegment \\
+\hline DS & Datensegment \\
+\hline ES & Extrasegment\\
+\hline SS & Stacksegment \\
+%\hline FS & _ \\
+%\hline GS & _ \\
+\hline
+\end{tabular}
+
+{\bf TODO: Segmentierte Adressierung}
+
+\subsubsection{Zeige- und Indexregister}
+\begin{tabular}{|c|c|}
+\hline IP & Instruction-Pointer \\
+\hline BP & Base-Pointer \\
+\hline SP & Stack-Pointer\\
+\hline SI & Source-Index \\
+\hline DI & Destination-Index \\
+\hline
+\end{tabular}
+
+{\bf TODO: Stack}
+
+\subsubsection{Statusregister}
+
+Flags
+
+\begin{tabular}{|c|c|}
+\hline OF & Overflow Flag \\
+\hline DF & Direction Flag \\
+\hline IF & Interrupt Flag \\
+\hline TF & Trap Flag \\
+\hline SF & Sign Flag \\
+\hline ZF & Zero Flag \\
+\hline AF & Auxiliary Flag \\
+\hline PF & Parity Flag \\
+\hline CF & Carry Flag \\
+\hline
+\end{tabular}
+
+\subsubsection{Arten der Adressierung}
+\begin{enumerate}
+\item Direktwertadressierung (Immediates)
+\item Direkte Adressierung
+\item Indirekte Registeradressierung
+\item Indizierte Resiteradressierung
+\end{enumerate}
+
+
+\subsection{Unterprogramme}
