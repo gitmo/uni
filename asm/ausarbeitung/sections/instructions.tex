@@ -1,17 +1,50 @@
 \section{Instruktionen}
 
-\begin{itemize}
-\item MOV
-\item INC, DEC
-\item PUSH, POP
-\item LEA
-\item INT
-\item JMP
-\item JE, JNE
-\item CMP
-\item TEST
-\item ADD,SUB
-\item XOR
-\item CALL
-\item LEAVE, RET
-\end{itemize}
+\subsection{Daten kopieren}
+%Introduction to 80x86 Assembly Language and Computer Architecture - Seite 86
+Einer der am häufigsten verwendeten Operationen ist das Kopieren von Daten von einer Stelle zu einer anderen.
+Hierzu wird im x86-Assembler das \texttt{mov}-Mnemonic verwendet. Es hat die folgende Syntax:
+
+\begin{verbatim}mov    Zieladresse, Quelle\end{verbatim}
+
+Es können immer nur Daten der gleichen Größe kopiert werden.
+Das heißt es muss sichergestellt sein, dass die Register beziehungsweise Adressen dementsprechend gleich große Werte speichern können.
+Im folgendem Beispiel wird in das Register eax der Wert aus dem Register ebx kopiert:
+
+\begin{verbatim}mov    eax, ebx\end{verbatim}
+
+Um einer Zieladresse einen festen Wert zu zuweisen kann statt einer Adresse im zweiten Parameter auch eine Konstante stehen:
+
+\begin{verbatim}mov    eax, 5\end{verbatim}
+
+Hier wird dem Register \textit{eax} der Wert 5 zugewiesen.
+
+Wichtig ist, dass es sich bei einer der beiden Adressen um ein Register handeln muss.
+
+
+\subsection{einfache mathematische Operationen}
+%inc,dec,add,sub,xor
+%Introduction to 80x86 Assembly Language and Computer Architecture - Seite 96
+Der x86-Assembler verfügt unter anderem über folgende mathematische Operationen
+
+\begin{description}
+	\item [INC] Inkrementiert das Ziel
+		\begin{verbatim}INC Ziel\end{verbatim}
+
+	\item [ADD] Addiert Ziel und Quelle und speichert das Ergebnis in Ziel
+		\begin{verbatim}INC Ziel, Quelle\end{verbatim}
+
+	\item [DEC] Dekrementierung  das Ziel
+		\begin{verbatim}INC Ziel\end{verbatim}
+
+	\item [SUB] Subtrahiert Quelle von Ziel und speichert das Ergebnis in Ziel
+		\begin{verbatim}INC Ziel, Quelle\end{verbatim}
+\end{description}
+
+In den sogenannten \textit{Flag}-Registern kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
+
+\subsection{jmp, je ,jne}
+
+\subsection{cmp}
+
+\subsection{push/pop und call/leave}
