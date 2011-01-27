@@ -43,10 +43,10 @@ main(void)
     //====================================================================
     //== Initialisierung des CC1100 Transceivers - bitte nicht verändern!
     initUART0_SPI();        // CC1100 SPI UART initalisieren
-    //initCC1100();         // CC1100 init und in RX Mode setzen
-    initCC1100_IDLE();  // CC1100 init und in den IDLE Mode setzen
-    initCC1100_POWERDOWN(); // CC1100 in den PowerDown Mode setzen
-    //  setUid(ID);         // CC1100 Adresse setzen, ID aus CC1100.c
+    initCC1100();         // CC1100 init und in RX Mode setzen
+    //initCC1100_IDLE();  // CC1100 init und in den IDLE Mode setzen
+    //initCC1100_POWERDOWN(); // CC1100 in den PowerDown Mode setzen
+    setUid(7);         // CC1100 Adresse setzen, ID aus CC1100.c
     //====================================================================
 
 //===Hier die Endlosschleife quasi das Betriebssystem=====================
@@ -56,7 +56,7 @@ main(void)
         // Hier den Code für die Lösung der Aufgabenstellung einfügen
         // am besten in der Form:
         //
-        Aufgabe25(); // Aufgabe1.h nicht vergessen!
+        Aufgabe27(); // Aufgabe1.h nicht vergessen!
         //
         // Aufgabex() sollte eigene Initialisierungsroutine enthalten und
         // eine eigene Endlosschleife
@@ -65,5 +65,3 @@ main(void)
 
     }       // Ende Main
 //====Ende des Hauptprogramms ============================================
-
-
