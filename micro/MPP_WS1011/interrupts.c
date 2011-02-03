@@ -59,28 +59,28 @@
 //==============================================================
 //===INT:01====ADR:FFE2====PORT2================================
 //==============================================================
-#pragma vector = PORT2_VECTOR
-__interrupt void PORT2 (void) {
-    char res ;          // CRC Check
-    if (P2IFG & 0x01)   // Check P2IFG Bit P2.0 - CC1100 Rx Packet
-        {
-        CLEAR(P2IFG, 0x01);
-        LEDTOGGLE;
-        res = receivePacket();  // CRC Rückgabe
-        if (res)                // wenn Packet OK ...
-            {
-            printPacket();      // Packet auf Terminal ausgeben
-            }
-        else
-            {
-            spiStrobe(CC1100_SIDLE);    // Switch to IDLE
-            spiStrobe(CC1100_SFRX);     // Flush the RX FIFO
-            }
-        }
-    else
-        {
-        CLEAR(P2IFG, 0xFF);             // Clear all flags
-        }
-    spiStrobe(CC1100_SRX);              // Switch to RX Mode
-    }
+//#pragma vector = PORT2_VECTOR
+//__interrupt void PORT2 (void) {
+//    char res ;          // CRC Check
+//    if (P2IFG & 0x01)   // Check P2IFG Bit P2.0 - CC1100 Rx Packet
+//        {
+//        CLEAR(P2IFG, 0x01);
+//        LEDTOGGLE;
+//        res = receivePacket();  // CRC Rückgabe
+//        if (res)                // wenn Packet OK ...
+//            {
+//            printPacket();      // Packet auf Terminal ausgeben
+//            }
+//        else
+//            {
+//            spiStrobe(CC1100_SIDLE);    // Switch to IDLE
+//            spiStrobe(CC1100_SFRX);     // Flush the RX FIFO
+//            }
+//        }
+//    else
+//        {
+//        CLEAR(P2IFG, 0xFF);             // Clear all flags
+//        }
+//    spiStrobe(CC1100_SRX);              // Switch to RX Mode
+//    }
 //==============================================================

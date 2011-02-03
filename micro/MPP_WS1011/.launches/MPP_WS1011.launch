@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launchConfiguration type="com.ti.ccstudio.debug.core.CCELaunchType">
-<stringAttribute key="CCEDebugOptions.DEVICE_CONFIGURATION_FILE" value="DebugServer/drivers/TargetDB/devices/MSP430F1612.xml"/>
 <stringAttribute key="org.eclipse.debug.core.source_locator_memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;sourceLookupDirector&gt;&#13;&#10;&lt;sourceContainers duplicates=&quot;false&quot;&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;default/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.debug.core.containerType.default&quot;/&gt;&#13;&#10;&lt;/sourceContainers&gt;&#13;&#10;&lt;/sourceLookupDirector&gt;&#13;&#10;"/>
+<stringAttribute key="CCEDebugOptions.DEVICE_CONFIGURATION_FILE" value="DebugServer/drivers/TargetDB/devices/MSP430F1612.xml"/>
 <booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="com.ti.ccstudio.debug.core.CCEDebugger"/>
 <stringAttribute key="CCEDebugOptions.CPU_RESOLVE_OPTION" value="exact"/>
@@ -17,7 +17,7 @@
 <stringAttribute key="org.eclipse.cdt.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList/&gt;&#13;&#10;"/>
 <stringAttribute key="CCEDebugOptions.CONNECTION_CONFIGURATION_FILE" value="DebugServer/drivers/TargetDB/connections/TIMSP430-LPT1.xml"/>
 <stringAttribute key="CCEDebugOptions.CPU_NAME" value="TI MSP430 LPT1/MSP430"/>
-<stringAttribute key="com.ti.ccstudio.debug.core.MRU_MODULES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;modules&gt;&#13;&#10;&lt;module name=&quot;C:\Praktika\MPP\Git\uni\mikro\MPP_WS1011\Debug\MPP_WS1011.out&quot; time=&quot;Thu Dec 02 17:57:45 CET 2010&quot; time_long=&quot;1291309065895&quot;/&gt;&#13;&#10;&lt;module name=&quot;C:\Praktika\MPP\Git\uni\micro\MPP_WS1011\Debug\MPP_WS1011.out&quot; time=&quot;Thu Jan 27 17:33:10 CET 2011&quot; time_long=&quot;1296145990783&quot;/&gt;&#13;&#10;&lt;/modules&gt;&#13;&#10;"/>
+<stringAttribute key="com.ti.ccstudio.debug.core.MRU_MODULES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;modules&gt;&#13;&#10;&lt;module name=&quot;C:\Praktika\MPP\Git\uni\mikro\MPP_WS1011\Debug\MPP_WS1011.out&quot; time=&quot;Thu Dec 02 17:57:45 CET 2010&quot; time_long=&quot;1291309065895&quot;/&gt;&#13;&#10;&lt;module name=&quot;C:\Praktika\MPP\Git\uni\micro\MPP_WS1011\Debug\MPP_WS1011.out&quot; time=&quot;Thu Feb 03 17:46:55 CET 2011&quot; time_long=&quot;1296751615593&quot;/&gt;&#13;&#10;&lt;/modules&gt;&#13;&#10;"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="MPP_WS1011"/>
 <stringAttribute key="org.eclipse.cdt.launch.GLOBAL_VARIABLES" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;globalVariableList&gt;&#13;&#10;&lt;globalVariable name=&quot;temp_char&quot; path=&quot;&quot;/&gt;&#13;&#10;&lt;/globalVariableList&gt;&#13;&#10;"/>
 <booleanAttribute key="CCEDebugOptions.FORBID_DEVICE_MODIFICATION" value="true"/>
