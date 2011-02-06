@@ -1,31 +1,36 @@
 \section{Instruktionen}
 
+Die Programmierung von x86-Assembler-Programmen erfolgt mittels Instructkionen. Diese sind in ihrer Anzahl limitiert. Im folgendem werden die wichtigsten Instruktionen näher beleuchtet.
+
 \subsection{Daten kopieren}
 %Introduction to 80x86 Assembly Language and Computer Architecture - Seite 86
 Einer der am häufigsten verwendeten Operationen ist das Kopieren von Daten von einer Stelle zu einer anderen.
+Darunter fällt auch das Zuweisen eines konstanten Wertes eines Registers.
 Hierzu wird im x86-Assembler das \texttt{mov}-Mnemonic verwendet. Es hat die folgende Syntax:
 
 \begin{verbatim}mov    Zieladresse, Quelle\end{verbatim}
 
 Es können immer nur Daten der gleichen Größe kopiert werden.
 Das heißt es muss sichergestellt sein, dass die Register beziehungsweise Adressen dementsprechend gleich große Werte speichern können.
-Im folgendem Beispiel wird in das Register eax der Wert aus dem Register ebx kopiert:
+Im folgendem Beispiel wird in das Register \texttt{eax} der Wert aus dem Register \texttt{ebx} kopiert:
 
 \begin{verbatim}mov    eax, ebx\end{verbatim}
 
-Um einer Zieladresse einen festen Wert zu zuweisen kann statt einer Adresse im zweiten Parameter auch eine Konstante stehen:
+Um einer Zieladresse einen festen Wert zu zuweisen, kann statt einer Adresse im zweiten Parameter auch eine Konstante stehen:
 
 \begin{verbatim}mov    eax, 5\end{verbatim}
 
-Hier wird dem Register \textit{eax} der Wert 5 zugewiesen.
+Hier wird dem Register \texttt{eax} der Wert 5 zugewiesen.
 
 Wichtig ist, dass es sich bei einer der beiden Adressen um ein Register handeln muss.
 
 
-\subsection{einfache mathematische Operationen}
+\subsection{arithmetische und logische Funktionen}
 %inc,dec,add,sub,xor
 %Introduction to 80x86 Assembly Language and Computer Architecture - Seite 96
-Der x86-Assembler verfügt unter anderem über folgende mathematische Operationen
+Meist werden die mathematische Basisoperationen mit Hilfe der ALU (Arithmetisch-logische-Einheit) berechnet.
+Hierzu zählen arithemtische Funktionen, wie die Addition und Subtraktion, sowie logische Funktionen.
+Im folgendem einige oft verwendete Funktionen:
 
 \begin{description}
 	\item [INC] Inkrementiert das Ziel
@@ -41,10 +46,40 @@ Der x86-Assembler verfügt unter anderem über folgende mathematische Operatione
 		\begin{verbatim}INC Ziel, Quelle\end{verbatim}
 \end{description}
 
-In den sogenannten \textit{Flag}-Registern kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
+Da bei einigen Operationen Sonderfälle auftreten können, werden Informationen diesbezüglich in den sogenannten \textit{Flag}-Registern gespeichert.
+Hier kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
 
-\subsection{jmp, je ,jne}
+\subsection{Vergleiche}
+Es gibt zwei oft benutze Mnemonics um zwei Operanten zu vergleichen. Zum einen das \texttt{test}- und das \texttt{cmp}-Mnemonic.
+Der Unterschied zwischen beiden ist die mathematische Umsetzung der Operation. Während beim ersteren beide Operanten logsch miteinander verundet werden, werden beim letzteren diese einfach voneinander abgezogen. 
 
-\subsection{cmp}
+\begin{verbatim}cmp arg1, arg2\end{verbatim}
 
-\subsection{push/pop und call/leave}
+Das Ergebnis der Operation kann in den Flag-Registern ausgelesen werden.
+
+
+\subsection{bedingte Anweisungen, Verzweigungen}
+Da es sich bei dem x86-Assembler nicht um eine Hochsprache handelt, verfügt die Sprache nicht über Konstruke wie bedingte Anweisungen oder Verzweigungen.
+Diese können mittels einem logischen Vergleich und den sogenannten Sprungbefehlen aber nachgebildet werden.  
+Hierzu wird erst die Bedingung überprüft und in der darauffolgenden Instruktion je nach Resultat an eine bestimmte Instruktion im Quelltext angesprungen. 
+
+\begin{verbatim}Pseudo-Code
+if(ecx != edx)
+{
+	...
+}
+//equal
+\end{verbatim}
+
+\begin{verbatim}x86-Assembler
+        cmp ecx, edx
+        je equal
+				...
+equal:  ; Sprungadresse wenn ecx und edx gleich sind 
+\end{verbatim}
+
+
+
+\subsection{Stackoperationen}
+%push/pop und call/leave
+Funktionen werden mittels den Stack-Operatoren umgesetzt. 
