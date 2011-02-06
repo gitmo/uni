@@ -1,0 +1,92 @@
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 86
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 83
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 85
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 85
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 86
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 86
+
+
+
+Daten = test0
+
+
+
+PaketlÃ¤nge = 7
+
+Zieladresse = 0
+
+Quelladresse= 100
+
+RSSI = 86
+
