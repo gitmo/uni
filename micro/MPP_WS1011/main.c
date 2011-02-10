@@ -8,7 +8,7 @@
 #include "interrupts.h"     // ISR - Interrupt Service Routinen
 #include "stdio.h"          // includes TI MSP430F1612
 #include "SHT11.h"          // SHT11 Temperatur- und Feuchtesensor
-//#include "aufgabenX.h"        // Header Datei für aufgabeX.c
+#include "project/project.h"        // Header Datei für aufgabeX.c
                             // möglichst eigene xxx.h und xxx.c Dateien
                             // erstellen und verwenden.
 
@@ -56,7 +56,7 @@ main(void)
         // Hier den Code für die Lösung der Aufgabenstellung einfügen
         // am besten in der Form:
         //
-        Aufgabe28(); // Aufgabe1.h nicht vergessen!
+        projectMain(); // Aufgabe1.h nicht vergessen!
         //
         // Aufgabex() sollte eigene Initialisierungsroutine enthalten und
         // eine eigene Endlosschleife

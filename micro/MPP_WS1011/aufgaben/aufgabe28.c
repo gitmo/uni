@@ -51,7 +51,7 @@ void parsePacket() {
                 tabcount++;
             if (tabcount == 5) {
                 // Taster-Status
-                switch (RxCC1100.data[i+1]) {
+                switch (RxCC1100.data[i+1] - '0') {
                     case 0:
                         SET(LED_BITS, LED_GRUEN);
                         break;
