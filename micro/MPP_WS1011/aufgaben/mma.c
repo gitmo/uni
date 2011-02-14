@@ -5,7 +5,6 @@
 #include "../interrupts.h"  // ISR - Interrupt Service Routinen
 #include "stdio.h"          // includes TI MSP430F1612
 #include "../SHT11.h"
-#include "project.h"
 
 void initADU() {
 

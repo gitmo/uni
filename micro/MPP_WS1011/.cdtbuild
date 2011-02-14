@@ -104,12 +104,12 @@
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1741047664" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe18.c" name="aufgabe18.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe18.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe18.c">
+<resourceConfiguration exclude="true" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe18.c" name="aufgabe18.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe18.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe18.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe18.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1227605383" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/common.c" name="common.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/common.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/common.c">
+<resourceConfiguration exclude="true" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/common.c" name="common.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/common.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/common.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/common.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.915612472" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
@@ -214,19 +214,54 @@
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.2084712192" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe27.c" name="aufgabe27.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe27.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe27.c">
+<resourceConfiguration exclude="true" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe27.c" name="aufgabe27.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe27.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe27.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe27.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.882926171" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe28.c" name="aufgabe28.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe28.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe28.c">
+<resourceConfiguration exclude="true" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/aufgabe28.c" name="aufgabe28.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/aufgabe28.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe28.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/aufgabe28.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.583216374" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
-<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/mma.c" name="mma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/mma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/mma.c">
+<resourceConfiguration exclude="true" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/aufgaben/mma.c" name="mma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/mma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/mma.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/aufgaben/mma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.509729107" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/project.c" name="project.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/project.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/project.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/project.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.502693262" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/uart.c" name="uart.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/uart.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/uart.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/uart.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.970156942" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/mma.c" name="mma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/mma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/mma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/mma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.763232013" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/timer.c" name="timer.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/timer.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/timer.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/timer.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1615928756" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/dma.c" name="dma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/dac.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/dma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/dma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1621784333" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/adu.c" name="adu.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/adu.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/adu.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/adu.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.309676311" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.debug.1556651578./MPP_WS1011/project/lib/dma.c" name="dma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/dma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/dma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472./MPP_WS1011/project/lib/dma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerDebug.1561491472">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1046524413" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
 </configuration>
@@ -450,6 +485,41 @@
 <resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/aufgaben/mma.c" name="mma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/aufgaben/mma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/aufgaben/mma.c">
 <tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/aufgaben/mma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
 <option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1849486158" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;aufgaben&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/project.c" name="project.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/project.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/project.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/project.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.566021894" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/uart.c" name="uart.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/uart.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/uart.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/uart.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1899378719" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/mma.c" name="mma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/mma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/mma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/mma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.494283841" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/timer.c" name="timer.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/timer.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/timer.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/timer.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.8261175" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/dma.c" name="dma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/dac.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/dma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/dma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.1252925134" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/adu.c" name="adu.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/adu.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/adu.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/adu.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.551721454" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
+</tool>
+</resourceConfiguration>
+<resourceConfiguration exclude="false" id="com.ti.ccstudio.buildDefinitions.MSP430.exe.Release.2098863543./MPP_WS1011/project/lib/dma.c" name="dma.c" rcbsApplicability="disable" resourcePath="/MPP_WS1011/project/lib/dma.c" toolsToInvoke="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/dma.c">
+<tool id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404./MPP_WS1011/project/lib/dma.c" name="MSP430 Compiler v3.1" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.exe.compilerRelease.587161404">
+<option id="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY.2076686622" superClass="com.ti.ccstudio.buildDefinitions.MSP430_3.1.compilerID.OBJ_DIRECTORY" value="&quot;project/lib&quot;" valueType="string"/>
 </tool>
 </resourceConfiguration>
 </configuration>
