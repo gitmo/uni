@@ -1,58 +1,138 @@
 %Register
 %Adressierung
 \section{Architektur}
-x86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Registern (ax,bx,cx und dx), vier Segmentierungsregistern zur Speicheradressierung (cs, ds, es und ss), sowie FLAG-Registern und dem Instruktionszeiger-Register.
+X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentierungsregister zur Speicheradressierung (CS, DS, ES und SS), sowie FLAG-Registern und dem Instruktionszeiger-Register.
 
 \subsection{Prozessor-Register}
+
+Register der Intelprozessoren im \emph{Real Mode} (16 Bit)
+
+
+
 \subsubsection{Allzweckregister}
-\begin{tabular}{|c|c|}\hline AX & Akkumulator \\\hline BX & Basisregister \\\hline CX & Count Register \\\hline DX & Datenregister \\\hline \end{tabular}
+
+\begin{tabular}{|c|l|l|}
+\hline AX & \emph{accumulator} & AH, AL
+\\
+\hline BX & \emph{base register} & BH, BL
+\\
+\hline CX & \emph{counter register} & CH, CL
+\\
+\hline DX & \emph{data register} & DH, DL
+\\
+\hline \end{tabular}
+
+Auch Rechenregister
+
+16 Bit Breite – ein Prozessor \emph{word}
+
+können jeweils als zwei 8-Bit-breite Register angesprochen werden (z.b.                                                                                                                  AH, AL).
+
+Manipulation der Daten mit denen der Prozessor rechnet
+
+erfüllen spezielle Aufgaben
+
+Rechenoperationen können aber auf alle vier Register angewendet werden
+
+AX erhält meist den Rückgabewert bei Funktionsaufrufen
+
+
 
 \subsubsection{Segmentregister und Adressierung}
-
-Die Segmentregister enthalten Anfangsadressen des jeweiligen Segments im Speicher.
 
 \begin{tabular}{|c|c|}
 \hline CS & Codesegment \\
 \hline DS & Datensegment \\
 \hline ES & Extrasegment\\
 \hline SS & Stacksegment \\
-%\hline FS & _ \\
-%\hline GS & _ \\
 \hline
 \end{tabular}
 
-{\bf TODO: Segmentierte Adressierung}
+Die Segmentregister nehmen Anfangsadressen von Segmenten im Speicher auf.
+
+16 Bit breit, lassen sich nicht in aufteilen
+
+lassen sich lediglich auslesen und beschreiben
+
+relevant für segmentierte adressierung im \emph{Real Mode} um über statt 16 Bit
+zur Adressierung, 20 Bit zu verfügen
+
+$Adresse = 16 * Segement + Offset$
+
+Dies erhöht den Adressraum von 64 KByte auf 1 MByte.
+
+
 
 \subsubsection{Zeige- und Indexregister}
-\begin{tabular}{|c|c|}
-\hline IP & Instruction-Pointer \\
-\hline BP & Base-Pointer \\
-\hline SP & Stack-Pointer\\
-\hline SI & Source-Index \\
-\hline DI & Destination-Index \\
+
+\begin{tabular}{|c|l|}
+\hline SI & \emph{source index} \\
+\hline DI & \emph{destination index} \\
 \hline
 \end{tabular}
 
-{\bf TODO: Stack}
+Nützlich als Zeiger auf Datenstrukturen
+
+z.B. String-Manipulation
+
+
+\begin{tabular}{|c|l|}
+\hline SP & \emph{stack pointer}\\
+\hline BP & \emph{base pointer} \\
+\hline
+\end{tabular}
+
+Zeiger für den Stack
+
+SP und BP dienen zum Aufspannen eines Stackframes bei Funktionsaufrufen
+
+SP zeigt auf den aktuellen \emph{top}
+
+BP zeigt auf den \emph{bottom}
+
+\begin{tabular}{|c|l|}
+\hline IP & \emph{instruction pointer} \\
+\hline
+\end{tabular}
+
+Zeiger auf den nächsten Befehl in der Ausführung
+
+wird ausschließlich intern durch den Prozessor verändert.
 
 \subsubsection{Statusregister}
 
-Flags
+Ein 16 Bit Flag-Register F
 
-\begin{tabular}{|c|c|}
-\hline OF & Overflow Flag \\
-\hline DF & Direction Flag \\
-\hline IF & Interrupt Flag \\
-\hline TF & Trap Flag \\
-\hline SF & Sign Flag \\
-\hline ZF & Zero Flag \\
-\hline AF & Auxiliary Flag \\
-\hline PF & Parity Flag \\
-\hline CF & Carry Flag \\
+{\small 15}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline & & & & O & D & I & T & S & Z & & A & & P & & C \\
 \hline
 \end{tabular}
+{\small 0}
 
-\subsubsection{Arten der Adressierung}
+\emph{overflow, direction, interrupt, trap, sign, zero, auxiliary, parity}
+und \emph{carry flag} 
+
+nehmen bestimmte Belegung nach verschiedenen Operationen ein
+
+beinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag})
+
+
+
+\subsection{Protected Mode}
+Im \emph{protected mode} mit 32-Bit Addressierung werden alle 16-Bit auf 32-Bit erweitert
+
+Diese werden mit dem Prefix E versehen: EAX, EBX, ..., ESP, EBP, ... EIP, etc.
+
+\texttt{SEGMENT:OFFSET} Adressierung entfällt, da nun volle $2^{32}$-Bit (4 GByte) addressiert
+werden können
+
+
+
+\subsection{Adressraum}
+
+Arten der Adressierung:
+
 \begin{enumerate}
 \item Direktwertadressierung (Immediates)
 \item Direkte Adressierung
@@ -61,4 +141,4 @@ Flags
 \end{enumerate}
 
 
-\subsection{Unterprogramme}
+% \section{Unterprogramme}
