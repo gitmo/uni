@@ -26,6 +26,7 @@ local.properties
 *.nav
 *.snm
 *.toc
+*.idx
 
 # Mac OS X goodness
 .DS_Store
