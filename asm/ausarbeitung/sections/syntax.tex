@@ -1,18 +1,106 @@
 \section{Syntax}
-In der x86 Assembler-Sprache gibt es zwei populäre Syntaxarten.
-Zum einen die von Intel selbst und zum anderen die AT\&T-Syntax.
-Erstere wird vor allem in Windows-Umgebungen benutzt, während letztere in der Unix-Welt populär ist.
-Die grundlegende Syntax lässt sich auf die sogenannten \textit{instruction operands} reduzieren.
 
-\subsection{Intel Syntax}
-\texttt{label: mnemonic [argument1 [, argument2 [, argument3]]]}
+In der Welt des x86-Assmblers gibt es zwei große Syntaxfamilien: die Intel und
+die AT\&T-Syntax. Während Erstere in einer Vielzahl von Assemblern (NASM, TASM,
+MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zur Standardsyntax
+zählt und Intel die x86-Platform damit dokumentiert, ist Letztere dennoch nicht
+gänzlich irrelevant. In der UNIX und Linux-Welt wurde lange Zeit nur AT\&T's
+Syntaxstil von den ausgelieferten Assemblern \texttt{as} bzw. \texttt{gas}
+unterstütlich. Insbesondere durch die Verbreitung der GNU Compiler Collection
+hat sich dieser Stil bis heute gehalten, obwohl der GNU Assembler mittlerweile
+auch die Intel-Syntax beherscht.
 
-Ein mneomic ist lauf Intel's developer Manual folgendermaßen definiert:
-,,A mnemonic is a reserved name for a class of instruction opcodes which have
-the same function.''
-Es kann also als eine generische Funktion auf null bis drei Argumenten verstanden werden.
+Überhaupt sind die Unterschiede breider Stile gleichmächtig und lassen sich
+trotz erheblicher optischer Unterschiede problemlos ineinander konvertieren
+(z.B. mit Intel2GAS [i2g]). Für die Folgenden Beispiele wird die Intel-Syntax
+als die kanonische Referenz betrachtet und jeweils der äquivilenten
+AT\&T-Syntax gegenübergestellt.
 
-\subsection{AT\&T Syntax}
+% [i2g] http://www.niksula.hut.fi/~mtiihone/intel2gas/
 
-\subsection{Segmente}
-Jeder x86 Quellcode ist in verschiedene Segmente unterteilt. Da wären zum einen die Datensegmente die mittels den Schüsselwörtern \texttt{.data} und \texttt{.stack} definiert werden, sowie letztendlich das Codesegment. Im letzteren steht das eigentliche Programm, während im ersterem unter anderem Speicher alloziert und initialsiert wird.
+\subsection{Arebitsweise des Assemblers}
+
+Programmiert man mit einem Assembler, wie z.B. NASM, so beschreibt man Zeile
+für Zeile je eine Prozessorinstruktionen über ihr Symbol, einem sogenannten
+Mnemonic's gefolgt von den dazugehörigen optionalen Argumenten. Die Funktionen
+des Assemblers ist es nun dieses Symbolische Programm direkt in die
+entsprechende Folge binären x86-Maschinencode – man spricht von Opcodes, die
+üblicherweise byteweise, hexadezimal dargestellt werden.
+
+Vereinfach gesagt bedient sich der Assembler einer großen Symboltabelle in der
+für jedes Tupel von Mnemnonic und Argumenten der entsprechende Opcode vermerkt
+ist. Der Programmierer könnte zwar selbst direkt in Opcodes programmieren und
+bekommt aber dadurch die Erleichterung sich statt Hexadezimal-Codes nur Symbole
+merken zu müssen.
+
+\subsection{Instruktionen}
+
+Eine Zeile in einem Assemblerprogramm hat folgende Form und ist in beiden
+Syntaxstilen gleich:
+
+\texttt{[label:] mnemonic [argument1][, argument2][, argument3]}
+
+Label ist eine Sprungmarke und optional, ebenso wie die Argumente. Deren
+erforderliche Anzahl hängt von der Instruktion ab. Maximal drei, häufiger zwei
+Argumente sind üblich. Das Mnemnonic bzw. Instruktionssymbol ist eine kurze
+Zeichenkette, wie zum Beispiel MOV, ADD oder PUSH, und abstrahiert gleich über
+eine Klasse von Opcodes mit derselben Funktion. So ist zum Beispiel die
+Kopieroperation für Argumente verschiedene Art (Register, Konstanten) immer das
+Mnemnonic MOV obwohl sich die Opcodes unterscheiden.
+
+Groß- und Kleinschreibung wird nicht unterschieden.
+
+\subsection{Parameter}
+
+Bei vielen Befehlen sind zwei Argumente üblich. Es wird dann meist von Quell-
+und Zieloperanden gesprochen (source and destination parameter). Die Semantik der
+Parameterreihenfolge bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
+
+Ein Parameter kann von dreierlei Art sein: ein Register, eine Konstante oder
+Speicheradresse. Die Registerbezeichnungen (z.B. EAX, EBP) sind bei Intel und
+AT\&T identisch, allerdings erfodert Letztere noch ein Prozentzeichen im
+Prefix. Konstanten erhalten bei AT\&T ein Dollarzeichen-Prefix. Intel-Assembler
+benötigt diese Kennzeichnung nicht.
+
+Eine weitere Eigenart der AT\&T-Syntax ein Befehls-Suffix b, w, l, oder q, der die
+Parametergröße beschreibt: Byte, Word (16 Bit), Long oder Double-Word  (32 Bit) bzw.
+Quad-Word (64-Bit). Für Intels Syntax leitet der Assembler den Typ automatisch
+vom Parameter ab:
+
+\begin{tabular}{ll}
+Intel: & \texttt{mov eax, 5} \\
+AT\&T: & \texttt{mov \$5,\%eax}.
+\end{tabular}
+
+Ein Parameter kann eine absolute Adresse enthalten oder indirekt auf den Inhalt einer Speicherstelle zeigen. Die Speicheradresse für die Derefeerenzierung kann aus einem Ausdruck berechnet werden.
+Diese effektive Adresse wird bei Intel aus Variblen in eckigen Klammern gebildet und kann eine
+Typangabe wie \texttt{BYTE},  \texttt{WORD} und \texttt{DWORD} gefolgt von  \texttt{PTR} (Pointer) vorangestellt bekommen:
+
+\texttt{mov eax, dword ptr [ebp+4]}
+
+In AT\&T Syntax berechnet sich eine Adresse nach dem sogenannten \emph{base indexed addressing}-Schema aus den Einzelkomponenten
+Adresse (auch \emph{disposition}), Basis, Index, Skalierung, wie folgt: \texttt{Adresse + Basis + Index*Skalierung}. Die Entsprechung für obiges Beipiel wäre:
+
+\texttt{MOVL 4(\%EBP), \%EAX}
+
+\begin{tabular}{lll}
+\\	   & INTEL SYNTAX                &        AT\&T SYNTAX
+\\\hline
+\\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
+\\Adressierung  				   	&	\tt [base+index*scale+disp]  & \tt disp(base, index, scale)
+\\	Register      						& \tt eax              					& \tt \%eax
+\\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
+\\	Dereferenzieung   				& \tt [addr]           					& \tt addr(,1)
+\\	Absolute Adresse 				& \tt addr             					& \tt *addr
+\\	{\tt byte} Instruktion   & \tt mov byte ptr     					& \tt movb
+\\	{\tt word} Instruktion   & \tt mov word ptr     					& \tt movw
+\\{\tt dword} Instruktion  & \tt mov dword ptr    					& \tt movl
+\end{tabular}
+
+
+
+\subsection{Segmente} Jeder x86 Quellcode ist in verschiedene Segmente
+unterteilt. Da wären zum einen die Datensegmente die mittels den
+Schüsselwörtern \texttt{.data} und \texttt{.stack} definiert werden, sowie
+letztendlich das Codesegment. Im letzteren steht das eigentliche Programm,
+während im ersterem unter anderem Speicher alloziert und initialsiert wird.
