@@ -209,17 +209,34 @@ in several programs.
 \end{quote}
 
 Funktionen und Prozeduren sind nicht in der aus heutiger Sicht bekannten Art und Weise im x86 Asembler implementiert, sondern deutlich rudimentärer.
-Mnemonics wie \texttt{call} und \texttt{leave} ermöglichen einem das Aufrufen und Verlassen von Subroutinen.
+Mnemonics wie \texttt{call} und \texttt{ret} ermöglichen einem das Aufrufen und Verlassen von Subroutinen.
 
 Das \texttt{call}-Mnemonic fungiert als Aufruf und sichert den aktuellen Zustand der Register.
-Es speichert die Adressen des bisherigen Codesegments (CS) und des \textit{Instruction Pointer} (IP) auf dem Stack ab und lädt diese für die anzuspringende Subroutine in die jeweiligen Register.
+Es gibt zum einen den sogenannten \textit{near call} und den \textit{far call}.
+Der Unterschied liegt darin, ob das bisherige Codesegment neu geladen werden muss oder nicht.
+Das \texttt{call}-Mnemonic sichert den \textit{Instruction Pointer} (IP) und wenn nötig auch das Codesegment auf dem Stack ab und lädt diese für die anzuspringende Subroutine in die jeweiligen Register.
 
-...bild vom stack und register werte...
-\begin{verbatim}call initialize\end{verbatim}
-...bild vom stack und register werte...
+Die Ausführung eines \texttt{near calls} lässt sich in folgende Unterschritte unterteilen:
 
-Hergestellt werden können die ursprünglichen Adresse des Codesegements, sowie des \textit{Instruction Pointers} mit Hilfe des \texttt{leave}-Mnemonic.
+\begin{enumerate}
+	\item Abspeichern des aktuellen \textit{Instruction Pointers} auf dem Stack
+	\item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
+	\item Begin der Abarbeitung der Subroutine	
+\end{enumerate}
 
-...bild vom stack und register werte...
-\begin{verbatim}leave \end{verbatim}
-...bild vom stack und register werte...
+Um wieder in das aktuelle Programm zurück zu springen ist es nötig, dass die vorher gesicherten Werte wiederhergestellt werden.
+Mithilfe des \texttt{ret}-Mnemonic wird der \textit{Instruction Pointer} wieder geladen und gegebenenfalls das ursprüngliche Codesegment geladen.
+
+Auch das \texttt{ret}-Mnemonic lässt sich in fogende Teilschritte unterteilen:
+\begin{enumerate}
+	\item Lädt den \textit{Instruction Pointer} in das \texttt{EIP} Register
+	\item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parametern. 
+	\item Fortführung des Hauptprogramms 	
+\end{enumerate}
+
+\paragraph{Beispiel}
+\begin{verbatim}myFunc: mov    eax, 10
+        ret
+
+main:   call myFunc
+\end{verbatim}
