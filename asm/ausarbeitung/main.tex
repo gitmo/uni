@@ -1,5 +1,9 @@
 \documentclass[11pt,german]{scrartcl}
 
+% See geometry.pdf to learn the layout options.
+\usepackage{geometry}
+\geometry{a4paper}
+
 % To begin paragraphs with an empty line
 \usepackage[parfill]{parskip}
 
@@ -15,11 +19,26 @@
 % use multirow package
 \usepackage{multirow}
 
+% Running Headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancyplain}
+
 \usepackage{url}
 \usepackage{makeidx}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+
+% Surround parts of graphics with box
+\usepackage{boxedminipage}
+
+% Package for including code in the document
+\usepackage{listings}
+\usepackage{color}
+\usepackage{moreverb}
+
+% Alternative monospaced font
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+
 
 \title{Intel x86 Assembler\\\small{Proseminar Programmiersprachen}}
 \author{Sebastian Raitza, Nico von Geyso}
