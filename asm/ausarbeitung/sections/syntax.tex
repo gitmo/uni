@@ -2,8 +2,8 @@
 
 In der Welt des x86-Assmblers gibt es zwei große Syntaxfamilien: die Intel und
 die AT\&T-Syntax. Während Erstere in einer Vielzahl von Assemblern (NASM, TASM,
-MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zur Standardsyntax
-zählt und Intel die x86-Platform damit dokumentiert, ist Letztere dennoch nicht
+MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zur Standardsyntax zählt
+und Intel die x86-Platform damit dokumentiert, ist Letztere dennoch nicht
 gänzlich irrelevant. In der UNIX und Linux-Welt wurde lange Zeit nur AT\&T's
 Syntaxstil von den ausgelieferten Assemblern \texttt{as} bzw. \texttt{gas}
 unterstütlich. Insbesondere durch die Verbreitung der GNU Compiler Collection
@@ -12,9 +12,9 @@ auch die Intel-Syntax beherscht.
 
 Überhaupt sind die Unterschiede breider Stile gleichmächtig und lassen sich
 trotz erheblicher optischer Unterschiede problemlos ineinander konvertieren
-(z.B. mit Intel2GAS [i2g]). Für die Folgenden Beispiele wird die Intel-Syntax
-als die kanonische Referenz betrachtet und jeweils der äquivilenten
-AT\&T-Syntax gegenübergestellt.
+(z.B. mit Intel2GAS \cite{i2g}). Für die Folgenden Beispiele wird die
+Intel-Syntax als die kanonische Referenz betrachtet und jeweils der
+äquivilenten AT\&T-Syntax gegenübergestellt.
 
 % [i2g] http://www.niksula.hut.fi/~mtiihone/intel2gas/
 
@@ -44,17 +44,17 @@ Label ist eine Sprungmarke und optional, ebenso wie die Argumente. Deren
 erforderliche Anzahl hängt von der Instruktion ab. Maximal drei, häufiger zwei
 Argumente sind üblich. Das Mnemnonic bzw. Instruktionssymbol ist eine kurze
 Zeichenkette, wie zum Beispiel MOV, ADD oder PUSH, und abstrahiert gleich über
-eine Klasse von Opcodes mit derselben Funktion. So ist zum Beispiel die
-Kopieroperation für Argumente verschiedene Art (Register, Konstanten) immer das
-Mnemnonic MOV obwohl sich die Opcodes unterscheiden.
+eine Klasse von Opcodes mit derselben Funktion.\cite{intelmanual} So ist zum
+Beispiel die Kopieroperation für Argumente verschiedene Art (Register,
+Konstanten) immer das Mnemnonic MOV obwohl sich die Opcodes unterscheiden.
 
 Groß- und Kleinschreibung wird nicht unterschieden.
 
 \subsection{Parameter}
 
 Bei vielen Befehlen sind zwei Argumente üblich. Es wird dann meist von Quell-
-und Zieloperanden gesprochen (source and destination parameter). Die Semantik der
-Parameterreihenfolge bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
+und Zieloperanden gesprochen (source and destination parameter). Die Semantik
+der Parameterreihenfolge bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
 
 Ein Parameter kann von dreierlei Art sein: ein Register, eine Konstante oder
 Speicheradresse. Die Registerbezeichnungen (z.B. EAX, EBP) sind bei Intel und
@@ -62,40 +62,56 @@ AT\&T identisch, allerdings erfodert Letztere noch ein Prozentzeichen im
 Prefix. Konstanten erhalten bei AT\&T ein Dollarzeichen-Prefix. Intel-Assembler
 benötigt diese Kennzeichnung nicht.
 
-Eine weitere Eigenart der AT\&T-Syntax ein Befehls-Suffix b, w, l, oder q, der die
-Parametergröße beschreibt: Byte, Word (16 Bit), Long oder Double-Word  (32 Bit) bzw.
-Quad-Word (64-Bit). Für Intels Syntax leitet der Assembler den Typ automatisch
-vom Parameter ab:
+\hspace{5mm} \makebox[1.5cm]{Intel: \hfill}
+\texttt{mov eax, 5}
 
-\begin{tabular}{ll}
-Intel: & \texttt{mov eax, 5} \\
-AT\&T: & \texttt{mov \$5,\%eax}.
-\end{tabular}
+Eine weitere Eigenart der AT\&T-Syntax ein Befehls-Suffix b, w, l, oder q, der
+die Parametergröße beschreibt: Byte, Word (16 Bit), Long oder Double-Word  (32
+Bit) bzw.  Quad-Word (64-Bit). Für Intels Syntax leitet der Assembler den Typ
+automatisch vom Parameter ab.
 
-Ein Parameter kann eine absolute Adresse enthalten oder indirekt auf den Inhalt einer Speicherstelle zeigen. Die Speicheradresse für die Derefeerenzierung kann aus einem Ausdruck berechnet werden.
-Diese effektive Adresse wird bei Intel aus Variblen in eckigen Klammern gebildet und kann eine
-Typangabe wie \texttt{BYTE},  \texttt{WORD} und \texttt{DWORD} gefolgt von  \texttt{PTR} (Pointer) vorangestellt bekommen:
+\hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
+\texttt{mov \$5,\%eax}
 
+Ein Parameter kann eine absolute Adresse enthalten oder indirekt auf den Inhalt
+einer Speicherstelle zeigen. Die Speicheradresse für die Derefeerenzierung kann
+aus einem Ausdruck berechnet werden.  Diese effektive Adresse wird bei Intel
+aus Variblen in eckigen Klammern gebildet und kann eine Typangabe wie
+\texttt{BYTE},  \texttt{WORD} und \texttt{DWORD} gefolgt von  \texttt{PTR}
+(Pointer) vorangestellt bekommen.
+
+\hspace{5mm} \makebox[1.5cm]{Intel: \hfill}
 \texttt{mov eax, dword ptr [ebp+4]}
 
-In AT\&T Syntax berechnet sich eine Adresse nach dem sogenannten \emph{base indexed addressing}-Schema aus den Einzelkomponenten
-Adresse (auch \emph{disposition}), Basis, Index, Skalierung, wie folgt: \texttt{Adresse + Basis + Index*Skalierung}. Die Entsprechung für obiges Beipiel wäre:
+In AT\&T Syntax berechnet sich eine Adresse nach dem sogenannten \emph{base
+indexed addressing}-Schema aus den Einzelkomponenten Adresse (auch
+\emph{disposition}), Basis, Index, Skalierung, wie folgt: $Adresse + Basis +
+Index*Skalierung$ . Ein Beispiel:
 
-\texttt{MOVL 4(\%EBP), \%EAX}
+\hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
+\texttt{movl 4(\%ebp), \%eax}
 
+Die wesentliche Syntax-Unterschiede sind in der Tabelle~\ref{tab:syntaxdiffs}
+zusammengefasst.
+
+%\clearpage
+
+\begin{table}[h]	% place here
 \begin{tabular}{lll}
-\\	   & INTEL SYNTAX                &        AT\&T SYNTAX
+\\	                          & INTEL SYNTAX                  &        AT\&T SYNTAX
 \\\hline
 \\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
-\\Adressierung  				   	&	\tt [base+index*scale+disp]  & \tt disp(base, index, scale)
+\\Adressierung  				    	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
 \\	Register      						& \tt eax              					& \tt \%eax
 \\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
 \\	Dereferenzieung   				& \tt [addr]           					& \tt addr(,1)
-\\	Absolute Adresse 				& \tt addr             					& \tt *addr
-\\	{\tt byte} Instruktion   & \tt mov byte ptr     					& \tt movb
-\\	{\tt word} Instruktion   & \tt mov word ptr     					& \tt movw
-\\{\tt dword} Instruktion  & \tt mov dword ptr    					& \tt movl
+\\	Absolute Adresse 			 	  & \tt addr             					& \tt *addr
+\\	{\tt byte} Instruktion    & \tt mov byte ptr     					& \tt movb
+\\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
+\\{\tt dword} Instruktion     & \tt mov dword ptr    					& \tt movl
 \end{tabular}
+\caption{Syntax Unterschiede} \label{tab:syntaxdiffs}
+\end{table}
 
 
 
