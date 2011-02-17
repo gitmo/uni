@@ -65,13 +65,13 @@ benötigt diese Kennzeichnung nicht.
 \hspace{5mm} \makebox[1.5cm]{Intel: \hfill}
 \texttt{mov eax, 5}
 
-Eine weitere Eigenart der AT\&T-Syntax ein Befehls-Suffix b, w, l, oder q, der
-die Parametergröße beschreibt: Byte, Word (16 Bit), Long oder Double-Word  (32
-Bit) bzw.  Quad-Word (64-Bit). Für Intels Syntax leitet der Assembler den Typ
-automatisch vom Parameter ab.
+Eine weitere Eigenart der AT\&T-Syntax ist ein Suffix für Befehle (siehe
+Tabelle~\ref{tab:syntaxdiffs}), der die Parametergröße beschreibt: Byte, Word
+(16 Bit), Long oder Double-Word  (32 Bit) bzw.  Quad-Word (64-Bit). Für Intels
+Syntax leitet der Assembler den Typ automatisch vom Parameter ab.
 
 \hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
-\texttt{mov \$5,\%eax}
+\texttt{movl \$5, \%eax}
 
 Ein Parameter kann eine absolute Adresse enthalten oder indirekt auf den Inhalt
 einer Speicherstelle zeigen. Die Speicheradresse für die Derefeerenzierung kann
@@ -101,22 +101,40 @@ zusammengefasst.
 \\	                          & INTEL SYNTAX                  & AT\&T SYNTAX
 \\\hline
 \\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
-\\Adressierung  				    	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
+\\  Adressierung  				  	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
 \\	Register      						& \tt eax              					& \tt \%eax
 \\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
 \\	Dereferenzieung   				& \tt [addr]           					& \tt addr(,1)
 \\	Absolute Adresse 			 	  & \tt addr             					& \tt *addr
 \\	{\tt byte} Instruktion    & \tt mov byte ptr     					& \tt movb
 \\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
-\\{\tt dword} Instruktion     & \tt mov dword ptr    					& \tt movl
+\\  {\tt dword} Instruktion   & \tt mov dword ptr    					& \tt movl
 \end{tabular}
 \caption{Syntax Unterschiede} \label{tab:syntaxdiffs}
 \end{table}
 
+\subsection{Assembler-Directiven}
+Jeder Assembler besitzt einen eigenen Satz an spezifischen Direktiven. Streng
+genommen gehören diese nicht zur Syntax, allerdings sind sie nötig um einige
+Metainformationen zur Code-Struktur zu definieren. Die Direktiven sind stark
+abhängig von der eingesetzten Software (NASM, YASM, GNU as, etc.) und selten
+kompatibel zwischen diesen Assembler-Dialekten. Fast immer gibt es aber eine
+ähnlich lautende Entsprechung. 
 
+Eine Typische Anweisung ist die Zuordung eines Bezeichners zu einem Code- oder
+Datensegment. Die Addressen der Instruktionen werden beim Assemblieren ihrem
+Segment zugeordnet. Bei NASM heißt die Direktive \texttt{section}
+bei GAS \texttt{.section}. Die Sektionen \texttt{.text} und
+\texttt{.data} für das Code- bzw. statische Datensegment sind dabei traditionell
+unter Unix-artigen Systemem gebräuchlich. Die Bezeichner können aber 
+beliebig gewählt werden.
 
-\subsection{Segmente} Jeder x86 Quellcode ist in verschiedene Segmente
-unterteilt. Da wären zum einen die Datensegmente die mittels den
-Schüsselwörtern \texttt{.data} und \texttt{.stack} definiert werden, sowie
-letztendlich das Codesegment. Im letzteren steht das eigentliche Programm,
-während im ersterem unter anderem Speicher alloziert und initialsiert wird.
+Oft ist es auch nötig Datenbereiche zu reservieren oder statisch zu
+initialisieren, zum Beispiel um feste Strings zu definieren. Dazu dienen
+Pseudo-Instructionen wie \texttt{DB, DW, DD}, etc. (\emph{define byte, define
+word, define dword}) und \texttt{RESB, RESW, RESQ} (\emph{reserve byte}, usw.)
+bei NASM und auch MASM. Die Definition von Konstanten erfolgt mittels
+\texttt{EQU}. Diesen Definitionen kann ein Label vorangestellt werden über
+welches man die Adresse der jeweiligen Daten im Code referenzieren kann. Beim
+assemblieren werden dieses Label in konkrete Adressen übersetzt.
+
