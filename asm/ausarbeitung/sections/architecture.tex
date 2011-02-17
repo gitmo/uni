@@ -1,7 +1,9 @@
 %Register
 %Adressierung
 \section{Architektur}
-X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentierungsregister zur Speicheradressierung (CS, DS, ES und SS), sowie FLAG-Registern und dem Instruktionszeiger-Register.
+X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentierungsregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie dem FLAG-Register und dem Instruktionszeiger-Register.
+
+Der Registersatz wurde im Laufe der Zeiter mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden auf 32-Bit erweitert und mit dem Prefix E versehen.
 
 \subsection{Prozessor-Register}
 
@@ -12,21 +14,23 @@ Register der Intelprozessoren im \emph{Real Mode} (16 Bit)
 \subsubsection{Allzweckregister}
 
 \begin{tabular}{|c|l|l|}
-\hline AX & \emph{accumulator} & AH, AL
+\hline EAX & \emph{accumulator} & AX, AH, AL
 \\
-\hline BX & \emph{base register} & BH, BL
+\hline EBX & \emph{base register} & BX, BH, BL
 \\
-\hline CX & \emph{counter register} & CH, CL
+\hline ECX & \emph{counter register} & BX, CH, CL
 \\
-\hline DX & \emph{data register} & DH, DL
+\hline EDX & \emph{data register} & DX, DH, DL
 \\
 \hline \end{tabular}
 
 Auch Rechenregister
 
-16 Bit Breite – ein Prozessor \emph{word}
+32 Bit Breite – ein Prozessor \emph{word}
 
-können jeweils als zwei 8-Bit-breite Register angesprochen werden (z.b.                                                                                                                  AH, AL).
+unteren Word kann unter alten 16-bit Namen ohne E-Prefix angesprochen werden
+
+unteres Wort kann jeweils als zwei 8-Bit-breite Register angesprochen werden (z.b.AH, AL).
 
 Manipulation der Daten mit denen der Prozessor rechnet
 
@@ -34,7 +38,7 @@ erfüllen spezielle Aufgaben
 
 Rechenoperationen können aber auf alle vier Register angewendet werden
 
-AX erhält meist den Rückgabewert bei Funktionsaufrufen
+EAX erhält meist den Rückgabewert bei Funktionsaufrufen
 
 
 
@@ -43,8 +47,8 @@ AX erhält meist den Rückgabewert bei Funktionsaufrufen
 \begin{tabular}{|c|c|}
 \hline CS & Codesegment \\
 \hline DS & Datensegment \\
-\hline ES & Extrasegment\\
 \hline SS & Stacksegment \\
+\hline ES & Extrasegment\\
 \hline
 \end{tabular}
 
@@ -57,17 +61,11 @@ lassen sich lediglich auslesen und beschreiben
 relevant für segmentierte adressierung im \emph{Real Mode} um über statt 16 Bit
 zur Adressierung, 20 Bit zu verfügen
 
-$Adresse = 16 * Segement + Offset$
-
-Dies erhöht den Adressraum von 64 KByte auf 1 MByte.
-
-
-
 \subsubsection{Zeige- und Indexregister}
 
 \begin{tabular}{|c|l|}
-\hline SI & \emph{source index} \\
-\hline DI & \emph{destination index} \\
+\hline ESI & \emph{source index} \\
+\hline EDI & \emph{destination index} \\
 \hline
 \end{tabular}
 
@@ -77,21 +75,21 @@ z.B. String-Manipulation
 
 
 \begin{tabular}{|c|l|}
-\hline SP & \emph{stack pointer}\\
-\hline BP & \emph{base pointer} \\
+\hline ESP & \emph{stack pointer}\\
+\hline EBP & \emph{base pointer} \\
 \hline
 \end{tabular}
 
 Zeiger für den Stack
 
-SP und BP dienen zum Aufspannen eines Stackframes bei Funktionsaufrufen
+ESP und EBP dienen zum Aufspannen eines Stackframes bei Funktionsaufrufen
 
-SP zeigt auf den aktuellen \emph{top}
+ESP zeigt auf den aktuellen \emph{top}
 
-BP zeigt auf den \emph{bottom}
+EBP zeigt auf den \emph{bottom}
 
 \begin{tabular}{|c|l|}
-\hline IP & \emph{instruction pointer} \\
+\hline EIP & \emph{instruction pointer} \\
 \hline
 \end{tabular}
 
@@ -101,7 +99,9 @@ wird ausschließlich intern durch den Prozessor verändert.
 
 \subsubsection{Statusregister}
 
-Ein 16 Bit Flag-Register F
+Ein 16 Bit Flag-Register FLAGS
+
+32 Bit EFLAGS erhält einige weitere Flags
 
 {\small 15}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -118,18 +118,28 @@ nehmen bestimmte Belegung nach verschiedenen Operationen ein
 beinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag})
 
 
+\subsection{Adressraum}
 
-\subsection{Protected Mode}
+\subsubsection{Real Mode}
+
+16 bit Mode, seit 8086
+
+Segmentregister (CS, DS, SS, ES) sind relevant für segmentierte Adressierung im
+\emph{Real Mode} um über statt 16 Bit zur Adressierung, 20 Bit zu verfügen
+
+$Adresse = 16 * Segement + Offset$
+
+Dies erhöht den Adressraum von 64 KByte auf 1 MByte.
+
+
+\subsubsection{Protected Mode}
 Im \emph{protected mode} mit 32-Bit Addressierung werden alle 16-Bit auf 32-Bit erweitert
 
-Diese werden mit dem Prefix E versehen: EAX, EBX, ..., ESP, EBP, ... EIP, etc.
-
-\texttt{SEGMENT:OFFSET} Adressierung entfällt, da nun volle $2^{32}$-Bit (4 GByte) addressiert
-werden können
+\texttt{SEGMENT:OFFSET} Adressierung ist ebenfalls möglich, aber weniger relevant als im
+\emph{Real Mode}, da nun volle $2^{32}$-Bit (4 GByte) addressiert werden können
 
 
 
-\subsection{Adressraum}
 
 Arten der Adressierung:
 
