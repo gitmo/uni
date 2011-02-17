@@ -1,6 +1,6 @@
 \section{Syntax}
 
-In der Welt des x86-Assmblers gibt es zwei große Syntaxfamilien: die Intel und
+In der Welt des x86-Assemblers gibt es zwei große Syntaxfamilien: die Intel und
 die AT\&T-Syntax. Während Erstere in einer Vielzahl von Assemblern (NASM, TASM,
 MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zur Standardsyntax zählt
 und Intel die x86-Platform damit dokumentiert, ist Letztere dennoch nicht
@@ -18,20 +18,20 @@ Intel-Syntax als die kanonische Referenz betrachtet und jeweils der
 
 % [i2g] http://www.niksula.hut.fi/~mtiihone/intel2gas/
 
-\subsection{Arebitsweise des Assemblers}
+\subsection{Arbeitsweise des Assemblers}
 
-Programmiert man mit einem Assembler, wie z.B. NASM, so beschreibt man Zeile
-für Zeile je eine Prozessorinstruktionen über ihr Symbol, einem sogenannten
-Mnemonic's gefolgt von den dazugehörigen optionalen Argumenten. Die Funktionen
-des Assemblers ist es nun dieses Symbolische Programm direkt in die
-entsprechende Folge binären x86-Maschinencode – man spricht von Opcodes, die
-üblicherweise byteweise, hexadezimal dargestellt werden.
+Beim Programmieren mit einem Assembler beschreibt jede Zeile genau eine
+Prozessorinstruktion über ihr Symbol, dem sogenannten Mnemonic, gefolgt von
+den dazugehörigen optionalen Argumenten. Die Aufgabe des Assemblers ist es nun,
+dieses Symbolische Programm direkt in die entsprechende Folge binären
+x86-Maschinencode – sogenannte Opcodes, die üblicherweise byteweise,
+hexadezimal dargestellt werden – zu übersetzen.
 
-Vereinfach gesagt bedient sich der Assembler einer großen Symboltabelle in der
+Vereinfacht gesagt bedient sich der Assembler einer großen Symboltabelle in der
 für jedes Tupel von Mnemnonic und Argumenten der entsprechende Opcode vermerkt
-ist. Der Programmierer könnte zwar selbst direkt in Opcodes programmieren und
-bekommt aber dadurch die Erleichterung sich statt Hexadezimal-Codes nur Symbole
-merken zu müssen.
+ist. Der Programmierer könnte zwar auch direkt in Opcodes programmieren bekommt
+aber durch den Assembler die Hilfestellung sich Symbole statt hexadezimalen Code
+merken zu dürfen.
 
 \subsection{Instruktionen}
 
@@ -98,7 +98,7 @@ zusammengefasst.
 
 \begin{table}[h]	% place here
 \begin{tabular}{lll}
-\\	                          & INTEL SYNTAX                  &        AT\&T SYNTAX
+\\	                          & INTEL SYNTAX                  & AT\&T SYNTAX
 \\\hline
 \\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
 \\Adressierung  				    	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
