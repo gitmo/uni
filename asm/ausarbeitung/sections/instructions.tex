@@ -1,6 +1,6 @@
 \section{Instruktionen}
 
-Die Programmierung von x86-Assembler-Programmen erfolgt mittels Instructkionen. Diese sind in ihrer Anzahl limitiert. Im folgendem werden die wichtigsten Instruktionen näher beleuchtet.
+Die Programmierung von x86-Assembler-Programmen erfolgt mittels Instruktionen. Diese sind in ihrer Anzahl limitiert. Im folgendem werden die wichtigsten Instruktionen näher beleuchtet.
 
 \subsection{Daten kopieren}
 %Introduction to 80x86 Assembly Language and Computer Architecture - Seite 86
@@ -20,7 +20,7 @@ Um einer Zieladresse einen festen Wert zu zuweisen, kann statt einer Adresse im 
 
 \begin{verbatim}mov    eax, 5\end{verbatim}
 
-Hier wird dem Register \texttt{eax} der Wert 5 zugewiesen.
+Im Register \textit{eax} sollte nun nach erfolgreicher Abarbeitung der Instruktion der Wert 5 stehen..
 
 Wichtig ist, dass es sich bei einer der beiden Adressen um ein Register handeln muss.
 
@@ -30,56 +30,196 @@ Wichtig ist, dass es sich bei einer der beiden Adressen um ein Register handeln 
 %Introduction to 80x86 Assembly Language and Computer Architecture - Seite 96
 Meist werden die mathematische Basisoperationen mit Hilfe der ALU (Arithmetisch-logische-Einheit) berechnet.
 Hierzu zählen arithemtische Funktionen, wie die Addition und Subtraktion, sowie logische Funktionen.
-Im folgendem einige oft verwendete Funktionen:
 
-\begin{description}
-	\item [INC] Inkrementiert das Ziel
-		\begin{verbatim}INC Ziel\end{verbatim}
-
-	\item [ADD] Addiert Ziel und Quelle und speichert das Ergebnis in Ziel
-		\begin{verbatim}INC Ziel, Quelle\end{verbatim}
-
-	\item [DEC] Dekrementierung  das Ziel
-		\begin{verbatim}INC Ziel\end{verbatim}
-
-	\item [SUB] Subtrahiert Quelle von Ziel und speichert das Ergebnis in Ziel
-		\begin{verbatim}INC Ziel, Quelle\end{verbatim}
-\end{description}
+Mittels \texttt{INC} und \texttt{DEC} können Register in- beziehungsweise dekrementiert werden. Um zwei Register zu addieren oder subtrahieren, wird das \texttt{ADD}- beziehungsweise das \texttt{SUB}-Mnemonic verwendet.
 
 Da bei einigen Operationen Sonderfälle auftreten können, werden Informationen diesbezüglich in den sogenannten \textit{Flag}-Registern gespeichert.
 Hier kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
 
+\paragraph{Beispiele}
+
+\begin{itemize}
+	\item Inkrementierung
+		\begin{verbatim}inc    eax\end{verbatim}
+		Hier wird die im Register \texttt{eax} gespeicherte Zahl um eins erhöht und wieder in genau dieses gespeichert.
+
+	\item Subtraktion
+		\begin{verbatim}sub    eax, ebx\end{verbatim}
+		Der Wert vom Register \texttt{ebx} wird von dem Wert von Register \texttt{eax} abgezogen und im Ersterem abgespeichert.
+\end{itemize}
+
 \subsection{Vergleiche}
 Es gibt zwei oft benutze Mnemonics um zwei Operanten zu vergleichen. Zum einen das \texttt{test}- und das \texttt{cmp}-Mnemonic.
-Der Unterschied zwischen beiden ist die mathematische Umsetzung der Operation. Während beim ersteren beide Operanten logsch miteinander verundet werden, werden beim letzteren diese einfach voneinander abgezogen. 
+Der Unterschied zwischen beiden ist die mathematische Umsetzung der Operation. Während beim ersteren beide Operanten logisch miteinander verundet werden, werden beim letzteren diese einfach voneinander abgezogen. 
 
-\begin{verbatim}cmp arg1, arg2\end{verbatim}
+\paragraph{Überblick}
+\begin{itemize}
+	\item $arg1 - arg2$
+	\begin{verbatim}cmp arg1, arg2\end{verbatim}
 
-Das Ergebnis der Operation kann in den Flag-Registern ausgelesen werden.
+	\item $arg1 \wedge arg2$
+	\begin{verbatim}test arg1, arg2\end{verbatim}
+\end{itemize}
+
+Das Ergebnis des Vergleichs kann anhand der gesetzten \texttt{Flag}-Registern ermittelt werden.
 
 
-\subsection{bedingte Anweisungen, Verzweigungen}
-Da es sich bei dem x86-Assembler nicht um eine Hochsprache handelt, verfügt die Sprache nicht über Konstruke wie bedingte Anweisungen oder Verzweigungen.
-Diese können mittels einem logischen Vergleich und den sogenannten Sprungbefehlen aber nachgebildet werden.  
-Hierzu wird erst die Bedingung überprüft und in der darauffolgenden Instruktion je nach Resultat an eine bestimmte Instruktion im Quelltext angesprungen. 
+\subsection{Verzweigungen und bedingte Anweisungen}
 
-\begin{verbatim}Pseudo-Code
+\subsubsection{unbedingter Sprung}
+Ein unbedingter Sprung kann hilfreich sein um zum einem einen besseren Überblick zu gewährleisten und zum anderen Wiederverwendbarkeit von Quelltext zu ermöglichen.
+
+Ein unbedingter Sprung wird mittels Manipulation des \textit{Instruction Pointer} realisiert.
+Statt die Adresse der sequentiell darauffolgende Instruktion zu laden wird die Adresse der anzuspringenden Instruktion gesetzt.
+
+Um die Adresse zu ermitteln wird hier meist mit sogenannten \textit{Labels} gearbeitet. Diese werden vor der eigentlichen anzuspringenden Instruktion geschrieben. Der Compiler ersetzt dann dieses Label mit der richtigen Adresse. Es können desweiteren auch Register angegeben. In diesem Falle wird der Inhalt des Registers als Adresse interpretiert und angesprungen.
+
+\paragraph{Beispiel}
+\begin{verbatim}jmp    exit; Springe zum Label exit
+.
+.
+.
+exit: ...; Label exit\end{verbatim}
+
+\subsubsection{bedingter Sprung}
+Bei einem bedingten Sprung wird je nach erfolgreicher Bedingung der Sprung ausgeführt oder ignoriert. Die Bedingung wird mittels Mnemonic beschrieben. Die für den Vergleich benötigten Werte, werden aus den \textit{Flag}-Registern ausgelesen.
+
+Hierzu wird meist eine Vergleichs-Operation vor dem eigentlichen Sprung benutzt. Diese setzt die \textit{Flag}-Register neu. Je nachdem ob nun die Bedingung anhand dieser Register-Werte wahr oder falsch ist, wird die Sprunganweisung ausgeführt oder eben nicht. 
+
+Beachtet werden sollte, dass eine bedingte Sprunganweisung die \textit{Flag}-Werte nicht verändert . Das heißt, dass der Programmier dafür zuständig ist, dass die richtigen Werte vor dem Vergleich in diesen Registern stehen. Das \texttt{CMP}-Mnemonic zum Beispiel setzt diese anhand des Ergebnises, das \texttt{MOV}-Mnemonic dagegen nicht.
+
+Die Dauer eines bedingten Sprungs beträgt seit Mitte der 90er Jahre (Einführung des Pentium) einen Taktzyklus.
+
+\paragraph{oft benutzte bedingte Sprünganweisungen}
+\begin{description}
+	\item [JZ] jump if zero
+	\item [JG] jump if greater 
+	\item [JE] jump if equal 
+	\item [JL] jump if less 
+\end{description}
+
+%Seite 151
+
+Da es sich bei dem x86-Assembler nicht um eine Hochsprache handelt, verfügt die Sprache unter anderem nicht über Konstruke wie das \textit{if}-Statement. Dies kann mittels einem Vergleich und einem darauffolgenden bedingten Sprung nachgebildet werden.
+Hierzu wird erst die Bedingung überprüft und das Ergebnis in den \textit{Flag}-Registern abgespeichert.
+Je nach gesetzten Registerwerten wird nun der Sprungbefehl ausgeführt oder eben nicht.
+
+\begin{multicols}{2}
+\paragraph{Pseudocode}
+\begin{verbatim}
 if(ecx != edx)
 {
 	...
 }
-//equal
+//ifEnd
 \end{verbatim}
 
-\begin{verbatim}x86-Assembler
+\paragraph{x86 Assembler}
+\begin{verbatim}
         cmp ecx, edx
-        je equal
-				...
-equal:  ; Sprungadresse wenn ecx und edx gleich sind 
+        je ifEnd ; Sprung wenn ecx == edx
+        ...
+ifEnd:  ; Sprungadresse wenn ecx und edx
+        ; gleich sind 
 \end{verbatim}
-
+\end{multicols}
 
 
 \subsection{Stackoperationen}
-%push/pop und call/leave
-Funktionen werden mittels den Stack-Operatoren umgesetzt. 
+%s 194
+\subsubsection{x86 Stack}
+Der x86 verhält sich analog zu einer Stack-Datenstruktur. Hierbei handelt es sich um einen sogenannte FIFO-Speicher.
+%TODO: .STACK nur MASM Syntax!?!
+Die Größe des Speichers wird am Anfang eines jeden x86-Programms mittels des \texttt{.STACK}-Labels gesetzt.
+
+
+\paragraph{Daten auf dem Stack hinterlegen\newline} 
+Mit dem \texttt{PUSH}-Mnemonic können Werte auf dem Stack hinterlegt werden.
+Hierbei kann es sich um ein Register oder eine Speicherzellen handeln.
+Bei Ausführung der Instruktion wird nun der Inhalt des angegebenen Speichers in den Stackspeicher kopiert. 
+
+%s.196
+\begin{multicols}{3}
+%\paragraph{Stack vor der Operation\newline}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & \\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFF
+
+\begin{verbatim}push 10\end{verbatim}
+
+%\paragraph{Stack nach der Operation\newline}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFE
+\end{multicols}
+
+
+\paragraph{Daten vom Stack holen\newline}
+Um die hinterlegten Werte wieder abzurufen wird das \texttt{POP}-Mnemonic verwendet.
+Hierzu wird das oberste Element des Stacks in eine angegeben Ziel-Adresse kopiert. Als Ziel kann ein Register oder eine Speicherzelle fungieren.  
+
+%s.196
+\begin{multicols}{3}
+%\paragraph{Stack vor der Operation\newline}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFE
+
+\begin{verbatim}push eax\end{verbatim}
+
+%\paragraph{Stack nach der Operation\newline}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFF
+\end{multicols}
+
+Leicht zu erkennen ist, dass die Werte im Stack physikalisch nicht gelöscht werden. Jediglich der ESP \footnote{Register des \textit{Stack-Pointers}} wird verändert.
+
+\subsubsection{Funktionen und Prozeduren}
+%call/leave s201
+
+\begin{quote}Procedures are valuable in assembly language for the same reasons as in high-
+level languages. They help divide programs into manageable tasks and they isolate code
+that can be used multiple times within a single program or that can be saved and reused
+in several programs.
+\end{quote}
+
+Funktionen und Prozeduren sind nicht in der aus heutiger Sicht bekannten Art und Weise im x86 Asembler implementiert, sondern deutlich rudimentärer.
+Mnemonics wie \texttt{call} und \texttt{leave} ermöglichen einem das Aufrufen und Verlassen von Subroutinen.
+
+Das \texttt{call}-Mnemonic fungiert als Aufruf und sichert den aktuellen Zustand der Register.
+Es speichert die Adressen des bisherigen Codesegments (CS) und des \textit{Instruction Pointer} (IP) auf dem Stack ab und lädt diese für die anzuspringende Subroutine in die jeweiligen Register.
+
+...bild vom stack und register werte...
+\begin{verbatim}call initialize\end{verbatim}
+...bild vom stack und register werte...
+
+Hergestellt werden können die ursprünglichen Adresse des Codesegements, sowie des \textit{Instruction Pointers} mit Hilfe des \texttt{leave}-Mnemonic.
+
+...bild vom stack und register werte...
+\begin{verbatim}leave \end{verbatim}
+...bild vom stack und register werte...
