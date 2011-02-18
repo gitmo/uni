@@ -1,5 +1,70 @@
 \section{Instruktionen}
 
-\begin{frame}{Instruktionen}
-  % You might wish to add the option [pausesections]
+\begin{frame}[fragile]{Daten kopieren}
+\begin{lstlisting}
+mov    Ziel, Quelle
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{mathematische und logische Operationen}
+	Inkrementierung
+		\begin{lstlisting}
+		inc    Ziel, Quelle
+		\end{lstlisting}
+
+	Dekrementierung
+		\begin{lstlisting}
+		dec    Ziel, Quelle
+		\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{mathematische und logische Operationen}
+		\begin{lstlisting}
+		add    Ziel, Quelle
+		\end{lstlisting}
+
+		\begin{lstlisting}
+		sub    Ziel, Quelle
+		\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Vergleiche}
+\begin{itemize}
+	\item \texttt{cmp arg1, arg2} $\leftrightarrow \text{arg1} - \text{arg2}$
+
+	\item \texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{bedingte und unbedinge Sprünge}
+\begin{lstlisting}
+jmp    exit   ; Springe zum Label exit
+.
+.
+.
+exit: ...     ; Label exit
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{bedingte und unbedinge Sprünge}
+%\paragraph{Pseudocode\newline}
+\begin{lstlisting}
+if(ecx != edx)
+{
+	...
+}
+//ifEnd
+\end{lstlisting}
+
+%\paragraph{x86 Assembler\newline}
+\begin{lstlisting}
+        cmp ecx, edx
+        je ifEnd ; Sprung wenn ecx == edx
+        ...
+ifEnd:  ; Sprungadresse wenn ecx und edx
+        ; gleich sind 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Stack-Operationen}
 \end{frame}
