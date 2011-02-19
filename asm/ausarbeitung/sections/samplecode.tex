@@ -21,7 +21,8 @@ Der Assembler NASM (Netwide Assembler) übersetzt das Listing in Objektcode in 3
 
 \subsection{Code für BSD-Unix Systeme}
 
-Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt es sich nur bei den Zeilen ab \texttt{kernel:} um Assembler-Instruktionen. In den vorhergehenden Zeilen handelt es sich Präprozessor-Macros und Assembler-Direktiven.
+Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt es sich nur bei den Zeilen ab dem Label\texttt{kernel} um Assembler-Instruktionen. Die vorhergehenden Zeilen sind Präprozessor-Macros (Prefix \%) und Assembler-Direktiven. Der Linker benutzt das Label {\tt start} als Einsprungspunkt in das \emph{Executable} (Linux: {\tt \_start}).
+Dieses Label wird mit der Direktive {\tt global} als nach außen sichtbar markiert.
 
 \begin{lstlisting}[numbers=left,caption=hello.asm]
 ; Preprocessor macros
@@ -33,18 +34,18 @@ Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt 
 ; segment for static data
 section .data
 
-message   db 'Hello, World!', 0Ah     ; Terminate with newline
-length    equ $ - message             ; Length = Current - Previous Address
+message   db 'Hello, World!', 0Ah  ; End with newline
+length    equ $ - message          ; Length = current - previous address
 
 ; code segment
 section .text
-global start                ; Make the start function externally visible for the linker
+global start                ; Make start function externally visible for linker
 
 kernel:                     ; Expects syscall number in eax register
     int     80h             ; Call kernel
     ret
 
-start:                      ; entry symbol on OS X
+start:                      ; entry symbol on Mac OS X
 
     push    length          ; size_t nbyte
     push    message         ; const void *buf
@@ -59,7 +60,7 @@ start:                      ; entry symbol on OS X
     call    kernel
 \end{lstlisting}
 
-Das Programm besteht aus den Hauptprogramm das mit dem Label \texttt{start} versehen ist und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der "Hello, World"-Nachricht wird hier direkt auf den Systemcall \texttt{write} des Betriebssystemkernels zurückgegriffen. 
+Das Listing besteht aus den Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der "Hello, World"-Nachricht wird hier direkt auf den Systemcall \texttt{write} des Betriebssystemkernels zurückgegriffen. 
 
 Das Hauptprogramm bereitet die Parameter für \texttt{write} vor, in es sie nach C-Aufrufkonvention von hinten nach vorne mittels \texttt{push} auf dem Stack ablegt. Der Stackpointer \texttt{esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert – zur Errinerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der Systemcall benötigt beschreibt die Manual-Page \texttt{man 2 write}:
 
@@ -93,3 +94,5 @@ Der Linux-Kernel erwartet die sogenannten \emph{fastcall}-Konvention, wobei die 
     mov     eax, SYS_write  ; Make the system call to write
     call    kernel
 \end{lstlisting}
+
+Die zweite kleine Änderung betrifft das Label {\tt start}. Der Linker sucht unter Linux den Einsprungspunkt stattdessen bei {\tt \_start}.
