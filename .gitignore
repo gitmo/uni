@@ -27,6 +27,11 @@ local.properties
 *.snm
 *.toc
 *.idx
+*.vrb
+*.bbl
+*.blg
+*.ilg
+*.ind
 
 # Mac OS X goodness
 .DS_Store
@@ -39,4 +44,3 @@ release/
 
 build/
 *xcodeproj/
-
