@@ -9,4 +9,4 @@ openssl rsa -in my_private.pem -text
 read
 echo -n 'Dave' \
     | openssl rsautl -inkey my_private.pem -sign -hexdump
-rm my_private.pem
+rm my_private.pem msieve.dat

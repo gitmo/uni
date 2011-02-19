@@ -1,30 +1,33 @@
+/*
+ *  verify.c
+ *  Crackme
+ *
+ */
+
 #include <stdio.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <string.h>
-#include <time.h>
 #include <openssl/rsa.h>
 #include <openssl/bn.h>
-#include <openssl/err.h>
 #include "common.h"
 
 //#define DEBUG
 
-void initRSAPublicKey(RSA *rsa, char *modulus, char *exponent) {
-
-    // Initialize with known key components
-    if (!(BN_hex2bn(&rsa->n, modulus)   // public modulus
-          && BN_hex2bn(&rsa->e, exponent)  // public exponent
-          )) {
-        printf("Error creating RSA key: bignum conversion failed!\n");
-    }
-}
-
-int verify_msg(RSA *rsa, const char *name, size_t n, uint8_t *from) {
+int verify_msg(const char *modulus, const char *exponent, const char *name, size_t n, uint8_t *from) {
 
     int ok = 0;
 
-    puts("== Begin Verify ==");
+    puts("\n== Begin Verify ==");
+
+    // Create RSA public key
+    RSA *rsa = RSA_new();
+
+    // Initialize with public key components
+    if (! (BN_hex2bn(&rsa->n, modulus) && BN_hex2bn(&rsa->e, exponent)) ) {
+        printf("Error creating RSA key: bignum conversion failed!\n");
+        return EXIT_FAILURE;
+    }
 
     // RSA modulus size in bytes. It can be used to determine how much memory
     // must be allocated for an RSA encrypted value.
@@ -36,30 +39,26 @@ int verify_msg(RSA *rsa, const char *name, size_t n, uint8_t *from) {
     // Decrypt, returns the size of the recovered message digest.
     int size = RSA_public_decrypt(flen, from, to, rsa, RSA_PKCS1_PADDING);
 
+    #ifdef DEBUG
     // Error
     if (size == -1) {
-        #ifdef DEBUG
-            printf("Wrong signature!\n");
-        #endif DEBUG
-        goto end;
+        printf("Wrong signature!\n");
+    } else {
+        printf("RSA_public_decrypt returned:\n\t%d\n", size);
+        printHex("Decrypted data:", to, size);
+        to[size] = '\0';
+        printf("Signature decrypts to:\n\t%s\n", to);
     }
+    #endif
 
     // Compare to decrypted signature to name
     ok = (size == n) && (memcmp(name, to, n) == 0);
 
-    #ifdef DEBUG
-        printf("RSA_public_decrypt returned:\n\t%d\n", size);
-        printHex("Decrypted data:", to, size);
-    #endif
-
-    to[size] = '\0';
-    printf("Signature decrypts to:\n\t%s\n", to);
-
-end:
-    puts("== End Verify ==");
+    puts("== End Verify ==\n");
 
     return ok;
 }
+
 
 int main (int argc, const char * argv[]) {
 
@@ -74,27 +73,28 @@ int main (int argc, const char * argv[]) {
     // RSA public key components
     char *modulus   = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
     char *exponent  = "3";                                // Public exponent
+    size_t size     = strlen(modulus)/2;                  // Number of bytes of modulus
 
-    // Create RSA public key
-    RSA *rsa = RSA_new();
-    initRSAPublicKey(rsa, modulus, exponent);
+    // Byte array for signature
+    uint8_t signature[ size ];  // Signature length depends on key, eg. 16 Bytes
+    bzero(signature, size);     // Zero all bytes
 
-    uint8_t signature[RSA_size(rsa)];       // Signature length depends on key, eg. 16 Bytes
-    bzero(signature, sizeof signature);     // Zero all bytes
-
+    // Get signature as hex string from stdin
     char input[256];
-    printf("\nHello %s!\nPlease enter your hex signature:\n> ", name);
-    if(!scanf("%127[^\n]", input))
+
+    printf("\nHello %s! Please enter your hex signature:\n> ", name);
+    if (! scanf("%127[^\n]", input) )
         return EXIT_FAILURE;
 
     // Convert hex input string to binary data
     hex2data(input, signature);
+
     #ifdef DEBUG
         printHex("Input to data: ", signature, sizeof signature);
     #endif
 
     // Verify signature for name
-    if (verify_msg(rsa, name, strlen(name), signature)) {
+    if (verify_msg(modulus, exponent, name, strlen(name), signature)) {
         puts("You're cool!");
     } else {
         puts("Get lost!");
