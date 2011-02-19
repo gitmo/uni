@@ -8,13 +8,14 @@
 #include <openssl/err.h>
 #include "common.h"
 
-#define DEBUG   0
+// #define DEBUG
 
+// Default name, overwritten by args
 char *name = "Dave";
 
 // RSA key
-char *modulus = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
-char *exponent  = "3";                              // Public exponent
+char *modulus   = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
+char *exponent  = "3";                                // Public exponent
 
 void initRSAPublicKey(RSA *rsa) {
 
@@ -47,12 +48,13 @@ int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
     // Compare to decrypted signature to name
     int result = (size == n) && (memcmp(name, to, n) == 0);
 
-    if (DEBUG){
-        printf("RSA_public_decrypt returned:\n\t%d\n", size);
-        printHex("Decrypted data:", to, size);
-    }
+#ifdef DEBUG
+    printf("RSA_public_decrypt returned:\n\t%d\n", size);
+    printHex("Decrypted data:", to, size);
+#endif
+
     to[size] = '\0';
-    printf("Decrypted signature:\n\t%s\n", to);
+    printf("Signature decrypts to:\n\t%s\n", to);
 
     return result;
 }
@@ -67,11 +69,11 @@ int main (int argc, const char * argv[]) {
     RSA *rsa = RSA_new();
     initRSAPublicKey(rsa);
 
-    uint8_t signature[RSA_size(rsa)];       // Signature length, eg. 16 Bytes
+    uint8_t signature[RSA_size(rsa)];       // Signature length depends on key, eg. 16 Bytes
     bzero(signature, sizeof signature);     // Zero all bytes
 
     char input[256];
-    printf("\nHello %s!\nPlease enter your hex signature: ", name);
+    printf("\nHello %s!\nPlease enter your hex signature:\n>", name);
     if(!scanf("%127s", input))
         return EXIT_FAILURE;
 
@@ -83,9 +85,9 @@ int main (int argc, const char * argv[]) {
 
     // Verify signature for name
     if (verify_msg(rsa, name, strlen(name), signature)) {
-        printf("You're cool!\n");
+        puts("You're cool!");
     } else {
-        printf("Get lost!\n");
+        puts("Get lost!");
     }
 
     return EXIT_SUCCESS;

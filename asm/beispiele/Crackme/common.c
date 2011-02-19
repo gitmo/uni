@@ -14,16 +14,17 @@
 
 
 void printHex (const char *str, uint8_t *p, size_t n) {
+    int i;
     printf("%s\n\t", str);
     if (0 < n && n < 256)
-        for (size_t i = 0; i < n; i++)
+        for (i = 0; i < n; i++)
             printf("%02x", p[i]);
     printf("\n");
 }
 
 void hex2data (const char *hex, uint8_t *data) {
-    int pos = 0;
-    for (int i = 0; i < strlen(hex); i++) {
+    int i, pos = 0;
+    for (i = 0; i < strlen(hex); i++) {
         char d = hex[i] - '0';
         if (!(0 <= d && d < 10))
             d = toupper(hex[i]) - 'A' + 10;
@@ -40,15 +41,14 @@ void hex2data (const char *hex, uint8_t *data) {
 
 void parseNameFromArgs(char **nameref, int argc, const char * argv[]) {
     char *name = *nameref;
-    printf("parsing");
-    size_t sz = 1, n = 0;
-    for (int i = 1; i < argc; i++) {    // Determine size.
+    size_t i, j, sz = 1, n = 0;
+    for (i = 1; i < argc; i++) {    // Determine size.
         sz += strlen(argv[i]) + 1;      // Account for each space
     }
     name = malloc(sz);
-    for (int i = 1; i < argc; i++) {
+    for (i = 1; i < argc; i++) {
         // Concatenate strings char-by-char, convert to lowercase
-        for (int j = 0; argv[i][j]; j++)
+        for (j = 0; argv[i][j]; j++)
             name[n++] = tolower(argv[i][j]);
         name[n++] = ' ';
     }
