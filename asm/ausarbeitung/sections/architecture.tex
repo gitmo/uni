@@ -1,13 +1,13 @@
 %Register
 %Adressierung
 \section{Architektur}
-X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentierungsregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie dem FLAG-Register und dem Instruktionszeiger-Register.
+X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie dem FLAG-Register und dem Instruktionszeiger-Register.
 
-Der Registersatz wurde im Laufe der Zeiter mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden auf 32-Bit erweitert und mit dem Prefix E versehen.
+Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden auf 32-Bit erweitert und mit dem Präfix E versehen.
 
 \subsection{Prozessor-Register}
 
-Register der Intelprozessoren mit 32 Bit Instruktionssatz
+Register der Intel-Prozessoren mit 32 Bit Instruktionssatz
 
 \subsubsection{Allzweckregister}
 
@@ -26,7 +26,7 @@ Auch Rechenregister
 
 32 Bit Breite – ein Prozessor \emph{word}
 
-unteren Word kann unter alten 16-bit Namen ohne E-Prefix angesprochen werden
+unteren Word kann unter alten 16-bit Namen ohne E-Präfix angesprochen werden
 
 unteres Wort kann jeweils als zwei 8-Bit-breite Register angesprochen werden (z.b.AH, AL).
 
@@ -113,7 +113,7 @@ und \emph{carry flag}
 
 nehmen bestimmte Belegung nach verschiedenen Operationen ein
 
-beinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag})
+beeinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag})
 
 
 \subsection{Adressraum}
@@ -125,16 +125,16 @@ beinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag
 Segmentregister (CS, DS, SS, ES) sind relevant für segmentierte Adressierung im
 \emph{Real Mode} um über statt 16 Bit zur Adressierung, 20 Bit zu verfügen
 
-$Adresse = 16 * Segement + Offset$
+$Adresse = 16 * Segment + Offset$
 
 Dies erhöht den Adressraum von 64 KByte auf 1 MByte.
 
 
 \subsubsection{Protected Mode}
-Im \emph{protected mode} mit 32-Bit Addressierung werden alle 16-Bit auf 32-Bit erweitert
+Im \emph{protected mode} mit 32-Bit Adressierung werden alle 16-Bit auf 32-Bit erweitert
 
 \texttt{SEGMENT:OFFSET} Adressierung ist ebenfalls möglich, aber weniger relevant als im
-\emph{Real Mode}, da nun volle $2^{32}$-Bit (4 GByte) addressiert werden können
+\emph{Real Mode}, da nun volle $2^{32}$-Bit (4 GByte) adressiert werden können
 
 
 
@@ -145,7 +145,7 @@ Arten der Adressierung:
 \item Direktwertadressierung (Immediates)
 \item Direkte Adressierung
 \item Indirekte Registeradressierung
-\item Indizierte Resiteradressierung
+\item Indizierte Registeradressierung
 \end{enumerate}
 
 
