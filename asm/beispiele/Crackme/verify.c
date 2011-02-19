@@ -8,16 +8,9 @@
 #include <openssl/err.h>
 #include "common.h"
 
-// #define DEBUG
+//#define DEBUG
 
-// Default name, overwritten by args
-char *name = "Dave";
-
-// RSA key
-char *modulus   = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
-char *exponent  = "3";                                // Public exponent
-
-void initRSAPublicKey(RSA *rsa) {
+void initRSAPublicKey(RSA *rsa, char *modulus, char *exponent) {
 
     // Initialize with known key components
     if (!(BN_hex2bn(&rsa->n, modulus)   // public modulus
@@ -27,7 +20,7 @@ void initRSAPublicKey(RSA *rsa) {
     }
 }
 
-int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
+int verify_msg(RSA *rsa, const char *name, size_t n, uint8_t *from) {
 
     int ok = 0;
 
@@ -42,10 +35,12 @@ int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
 
     // Decrypt, returns the size of the recovered message digest.
     int size = RSA_public_decrypt(flen, from, to, rsa, RSA_PKCS1_PADDING);
-        
+
     // Error
     if (size == -1) {
-        printf("Wrong signature!\n");
+        #ifdef DEBUG
+            printf("Wrong signature!\n");
+        #endif DEBUG
         goto end;
     }
 
@@ -59,29 +54,37 @@ int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
 
     to[size] = '\0';
     printf("Signature decrypts to:\n\t%s\n", to);
- 
+
 end:
     puts("== End Verify ==");
- 
+
     return ok;
 }
 
 int main (int argc, const char * argv[]) {
 
+    // Default name, overwritten by args
+    char *name = "Dave";
+
+    // RSA key
     // Take the cmdline arguments as name if any
     if (argc > 1)
         parseNameFromArgs(&name, argc, argv);
 
-    // Create RSA key
+    // RSA public key components
+    char *modulus   = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
+    char *exponent  = "3";                                // Public exponent
+
+    // Create RSA public key
     RSA *rsa = RSA_new();
-    initRSAPublicKey(rsa);
+    initRSAPublicKey(rsa, modulus, exponent);
 
     uint8_t signature[RSA_size(rsa)];       // Signature length depends on key, eg. 16 Bytes
     bzero(signature, sizeof signature);     // Zero all bytes
 
     char input[256];
     printf("\nHello %s!\nPlease enter your hex signature:\n> ", name);
-    if(!scanf("%127s", input))
+    if(!scanf("%127[^\n]", input))
         return EXIT_FAILURE;
 
     // Convert hex input string to binary data

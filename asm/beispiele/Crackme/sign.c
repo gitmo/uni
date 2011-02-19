@@ -17,7 +17,7 @@
 
 // RSA key
 char *modulus = "eb9bf0b0f2565e3572e66b209bf6d643"; // Public modulus
-char *exponent  = "3";                              // Public exponent
+char *exponent  = "1";                              // Public exponent
 char *d = "9d12a075f6e43ecd0522320c1f0522db";       // Private exponent
 
 void initRSAPrivateKey(RSA *rsa) {
@@ -32,6 +32,7 @@ void initRSAPrivateKey(RSA *rsa) {
 }
 
 int sign_msg(RSA *rsa, const char *d, size_t n, uint8_t *to) {
+        printHex("RSA signature:", to, 16);
 
     int size = RSA_private_encrypt(n, (unsigned char *) d, to, rsa, RSA_PKCS1_PADDING);
     if (size != RSA_size(rsa)) {
@@ -51,11 +52,14 @@ int main (int argc, const char * argv[]) {
     if (argc > 1)
         parseNameFromArgs(&name, argc, argv);
 
+    printHex("Name data:", name, strlen(name));
+
     // Create RSA key
     RSA *rsa = RSA_new();
     initRSAPrivateKey(rsa);
 
     uint8_t signature[RSA_size(rsa)];   // Signature length, eg. 16 Bytes
+    bzero(signature, RSA_size(rsa));
 
     puts("== Signing ==");
 

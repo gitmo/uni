@@ -25,9 +25,12 @@ void printHex (const char *str, uint8_t *p, size_t n) {
 void hex2data (const char *hex, uint8_t *data) {
     int i, pos = 0;
     for (i = 0; i < strlen(hex); i++) {
-        char d = hex[i] - '0';
-        if (!(0 <= d && d < 10))
-            d = toupper(hex[i]) - 'A' + 10;
+        char d = toupper(hex[i]);
+        if ('0' <= d && d <= '9')
+            d -= '0';
+        else if ('A' <= d && d <= 'F')
+            d -= 'A' - 10;
+        else continue;
 
         if (0 <= d && d < 16) {
             if ((pos+1) % 2)    // Higher digit
