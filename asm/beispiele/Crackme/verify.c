@@ -29,6 +29,10 @@ void initRSAPublicKey(RSA *rsa) {
 
 int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
 
+    int ok = 0;
+
+    puts("== Begin Verify ==");
+
     // RSA modulus size in bytes. It can be used to determine how much memory
     // must be allocated for an RSA encrypted value.
     uint8_t flen = RSA_size(rsa);
@@ -38,25 +42,28 @@ int verify_msg(RSA *rsa, const char *d, size_t n, uint8_t *from) {
 
     // Decrypt, returns the size of the recovered message digest.
     int size = RSA_public_decrypt(flen, from, to, rsa, RSA_PKCS1_PADDING);
-
+        
     // Error
     if (size == -1) {
         printf("Wrong signature!\n");
-        return 0;
+        goto end;
     }
 
     // Compare to decrypted signature to name
-    int result = (size == n) && (memcmp(name, to, n) == 0);
+    ok = (size == n) && (memcmp(name, to, n) == 0);
 
-#ifdef DEBUG
-    printf("RSA_public_decrypt returned:\n\t%d\n", size);
-    printHex("Decrypted data:", to, size);
-#endif
+    #ifdef DEBUG
+        printf("RSA_public_decrypt returned:\n\t%d\n", size);
+        printHex("Decrypted data:", to, size);
+    #endif
 
     to[size] = '\0';
     printf("Signature decrypts to:\n\t%s\n", to);
-
-    return result;
+ 
+end:
+    puts("== End Verify ==");
+ 
+    return ok;
 }
 
 int main (int argc, const char * argv[]) {
@@ -73,15 +80,15 @@ int main (int argc, const char * argv[]) {
     bzero(signature, sizeof signature);     // Zero all bytes
 
     char input[256];
-    printf("\nHello %s!\nPlease enter your hex signature:\n>", name);
+    printf("\nHello %s!\nPlease enter your hex signature:\n> ", name);
     if(!scanf("%127s", input))
         return EXIT_FAILURE;
 
     // Convert hex input string to binary data
     hex2data(input, signature);
-    printHex("Input to data: ", signature, sizeof signature);
-
-    puts("== Verify ==");
+    #ifdef DEBUG
+        printHex("Input to data: ", signature, sizeof signature);
+    #endif
 
     // Verify signature for name
     if (verify_msg(rsa, name, strlen(name), signature)) {
