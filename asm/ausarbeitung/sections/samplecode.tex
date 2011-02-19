@@ -1,4 +1,98 @@
 \section{Hello World}
 
-\lstinputlisting[caption=hello.asm]
-{../beispiele/hello.asm}
+In diesem Abschnitt soll ein einführendes Beispiel zur Programmieren in x86-Assembler gegeben werden. Um in der Tradition von Programmiersprachen-Literatur zur bleiben soll hier ein einfaches Programm demonstriert werden, das "Hello, World!" auf der Konsole ausgibt.
+
+Assemblerprogramme sind naturgemäß stark Plattformabhängig, da auf niedriegster Ebene mit dem Betriebssytem kommuniziert wird.
+Das folgende Listing ist für \emph{Mac OS X} entwickelt worden, und 
+funktioniert auf verwandten BSD-Unix-Systemen. Mit wenigen Änderungen kann es für Linux angepasst werden. Dazu später mehr.
+
+\subsection{Assemblieren und Binden}
+
+Das Programm lässt sich mit folgender Shell Befehlen übersetzen und ausführen.
+
+\begin{lstlisting}[caption=Assemblieren und Binden von hello.asm]
+$ nasm -f macho32 hello.asm
+$ ld hello.o -o hello
+$ ./hello
+Hello, World!
+\end{lstlisting}
+
+Der Assembler NASM (Netwide Assembler) übersetzt das Listing in Objektcode in 32-bit Mach-O-Format – dabei handelt es sich um das Dateiformat für ausführbaren Code unter \emph{Mac OS X}. Das Ergebnis ist der Zwischencode in \texttt{hello.o}. Im zweiten Schritt wird der Linker \texttt{ld} angewiesen eine ausführbare Programmdatei (\emph{Executable}) mit dem Namen \texttt{hello} zu erzeugen, welche im Anschluss ausgeführt wird. Die Vorgehensweise beim Binden ist analog zur Arbeit mit dem C-Compiler von \emph{GCC} der ebenfalls im Zwischenschritt Objektcode-Dateien aus C-Programmen erzeugt.
+
+\subsection{Code für BSD-Unix Systeme}
+
+Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt es sich nur bei den Zeilen ab dem Label\texttt{kernel} um Assembler-Instruktionen. Die vorhergehenden Zeilen sind Präprozessor-Macros (Prefix \%) und Assembler-Direktiven. Der Linker benutzt das Label {\tt start} als Einsprungspunkt in das \emph{Executable} (Linux: {\tt \_start}).
+Dieses Label wird mit der Direktive {\tt global} als nach außen sichtbar markiert.
+
+\begin{lstlisting}[numbers=left,caption=hello.asm]
+; Preprocessor macros
+%define stdout  1
+
+%define SYS_exit    1       ; System calls
+%define SYS_write   4
+
+; segment for static data
+section .data
+
+message   db 'Hello, World!', 0Ah  ; End with newline
+length    equ $ - message          ; Length = current - previous address
+
+; code segment
+section .text
+global start                ; Make start function externally visible for linker
+
+kernel:                     ; Expects syscall number in eax register
+    int     80h             ; Call kernel
+    ret
+
+start:                      ; entry symbol on Mac OS X
+
+    push    length          ; size_t nbyte
+    push    message         ; const void *buf
+    push    stdout          ; int filedescriptor
+    mov     eax, SYS_write  ; Make the system call to write
+    call    kernel
+   
+    add     esp, 12         ; 3 args * 4 bytes each = 12 bytes
+
+    push    0               ; exit status returned to the operating system
+    mov     eax, SYS_exit   ; Make the syscall to exit
+    call    kernel
+\end{lstlisting}
+
+Das Listing besteht aus den Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der "Hello, World"-Nachricht wird hier direkt auf den Systemcall \texttt{write} des Betriebssystemkernels zurückgegriffen. 
+
+Das Hauptprogramm bereitet die Parameter für \texttt{write} vor, in es sie nach C-Aufrufkonvention von hinten nach vorne mittels \texttt{push} auf dem Stack ablegt. Der Stackpointer \texttt{esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert – zur Errinerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der Systemcall benötigt beschreibt die Manual-Page \texttt{man 2 write}:
+
+\begin{lstlisting}
+	ssize_t write(int fildes, const void *buf, size_t nbyte);
+\end{lstlisting}
+
+\begin{enumerate}
+\item {\tt length}:	Länge der Nachricht – eine Konstante definiert durch die
+NASM Anweisung {\tt equ} als Abstand in Bytes Zwischen dem Label length und message
+\item {\tt message}: Die Adresse der Nachricht definiert durch {\tt db} als String von ASCII-Bytes
+\item {\tt stdout}: Der Dateideskriptor der Standardausgabe (=1) unter Unix-artigen Systemen
+\end{enumerate}
+
+Der Kernel wird mit Hilfe des Softwareinterrupts 80h (hexadezimal 80, identisch unter Linux, BSD und OS X) angesprungen. Einen ganzahliger Wert im Register \texttt{eax} dient als Angabe welcher Systemcall verwendet werden soll. Für {\tt write} ist das die Konstante 4. Nach Behandlung des Interrupts wird mittels \texttt{ret} an die nächste Instruktion im Hauptprogramm zurückgekehrt an der vorher mittels \texttt{call kernel} der Prozedurausruf stattfand.
+
+Der Stack enthält nun immer noch die drei Parameter an der Stelle des Stackpointers ({\tt esp}), die durch das Addieren von 12 Bytes – jeder Parameter belegte 4 Bytes – freigegeben werden können. Da das Programm aber als nächstes mit dem Syscall \texttt{exit}beendet wird, ist dies optional, da der Stack dann auch vom Betriebssystem freigegeben wird.
+
+
+\subsection{Anpassungen für Linux}
+
+Wie bereits erwähnt wurde sind beim Aufruf von Betriebsystemfunktionen festen Konventionen \cite{wp:callconv} der Parameterübergabe einzuhalten. Diese unterscheiden sich von System zu System (definiert in der ABI \cite{wp:abi}) und sogar von einem Compiler zum Anderen.
+
+Der Linux-Kernel erwartet die sogenannten \emph{fastcall}-Konvention, wobei die Parameter über festgelegte Register übergeben werden, in sofern es deren Typ und Anzahl erlaubt. Dies ist oft effizienter, da es die Anzahl der teueren Speicherzugriffe auf den Stack minimiert. Prozessorregister arbeiten erheblich schneller als Cache oder Hauptspeicher. Das erste Argument wird dazu in {\tt ebx}, das zweite in {\tt ecx}, usw. übergeben.
+
+\begin{lstlisting}[caption=Linux-Kernel Aufrufkonvention]
+    ; Linux: fastcall convention
+    mov     edx, length
+    mov     ecx, message
+    mov     ebx, stdout
+    mov     eax, SYS_write  ; Make the system call to write
+    call    kernel
+\end{lstlisting}
+
+Die zweite kleine Änderung betrifft das Label {\tt start}. Der Linker sucht unter Linux den Einsprungspunkt stattdessen bei {\tt \_start}.

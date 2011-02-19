@@ -38,7 +38,7 @@ Mittels \texttt{INC} und \texttt{DEC} können Register in- beziehungsweise dekre
 Da bei einigen Operationen Sonderfälle auftreten können, werden Informationen diesbezüglich in den sogenannten \textit{Flag}-Registern gespeichert.
 Hier kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
 
-\textbf{Beispiel}
+\paragraph{Beispiel\newline}\makebox{}
 
 \begin{lstlisting}
 mov    eax, 255  ; Register eax wird der Wert 255 zugewiesen
@@ -69,8 +69,8 @@ Das Ergebnis kann nur anhand der gesetzten \textit{Flags} ausgelesen werden.
 	\item \texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
 \end{itemize}
 
-\textbf{Beispiel}
-
+\paragraph{Beispiel\newline}
+\makebox{}
 \begin{lstlisting}
 mov    eax, 5
 mov    ebx, 5
@@ -95,8 +95,7 @@ Statt die Adresse der sequentiell darauffolgende Instruktion zu laden wird die A
 
 Um die Adresse zu ermitteln wird hier meist mit sogenannten \textit{Labels} gearbeitet. Diese werden vor der eigentlichen anzuspringenden Instruktion geschrieben. Der Compiler ersetzt dann dieses Label mit der richtigen Adresse. Es können desweiteren auch Register angegeben. In diesem Falle wird der Inhalt des Registers als Adresse interpretiert und angesprungen.
 
-\textbf{Beispiel}
-
+\paragraph{Beispiel\newline}\makebox{}
 \begin{lstlisting}
 jmp    exit   ; Springe zum Label exit
 .
@@ -130,7 +129,7 @@ Hier kann der bedingte Sprung mit einem vorherigen Vergleich Abhilfe leisten.
 Hierzu wird erst die Bedingung überprüft und das Ergebnis in den \textit{Flag}-Registern abgespeichert.
 Je nach gesetzten Registerwerten wird nun der Sprungbefehl ausgeführt oder eben nicht.
 
-\textbf{Pseudocode}
+\paragraph{Pseudocode\newline}\makebox{}
 \begin{lstlisting}
 if(ecx != edx)
 {
@@ -139,7 +138,7 @@ if(ecx != edx)
 //ifEnd
 \end{lstlisting}
 
-\textbf{x86 Assembler}
+\paragraph{x86 Assembler\newline}\makebox{}
 \begin{lstlisting}
         cmp ecx, edx
         je ifEnd ; Sprung wenn ecx == edx
@@ -280,7 +279,7 @@ Auch das \texttt{ret}-Mnemonic lässt sich für einen \textit{near call} in foge
 	\item Fortführung des Hauptprogramms 	
 \end{enumerate}
 
-\textbf{Beispiel}
+\paragraph{Beispiel\newline}\makebox{}
 \begin{lstlisting}
 myFunc: mov    eax, 10 ; Speichert im Register eax den Wert 10
         ret            ; Stellt den IP wiederher
