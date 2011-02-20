@@ -1,66 +1,60 @@
 \section{Syntax}
 
 In der Welt des x86-Assemblers gibt es zwei große Syntaxfamilien: die Intel und
-die AT\&T-Syntax. Während Erstere in einer Vielzahl von Assemblern (NASM, TASM,
-MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zur Standardsyntax zählt
-und Intel die x86-Platform damit dokumentiert, ist Letztere dennoch nicht
+die AT\&T-Syntax. Während erstere fast ausschließlich in einer Vielzahl von Assemblern (NASM, TASM, MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zum Einsatz 
+kommt
+und Intel die x86-Platform damit dokumentiert, ist letztere dennoch nicht
 gänzlich irrelevant. In der UNIX und Linux-Welt wurde lange Zeit nur AT\&T's
 Syntaxstil von den ausgelieferten Assemblern \texttt{as} bzw. \texttt{gas}
-unterstütlich. Insbesondere durch die Verbreitung der GNU Compiler Collection
+unterstützt. Insbesondere durch die Verbreitung der GNU Compiler Collection
 hat sich dieser Stil bis heute gehalten, obwohl der GNU Assembler mittlerweile
-auch die Intel-Syntax beherscht.
+auch die Intel-Syntax beherrscht.
 
-Überhaupt sind die Unterschiede breider Stile gleichmächtig und lassen sich
+Überhaupt sind die Unterschiede beider Stile gleichmächtig und lassen sich
 trotz erheblicher optischer Unterschiede problemlos ineinander konvertieren
-(z.B. mit Intel2GAS \cite{i2g}). Für die Folgenden Beispiele wird die
+(z.B. mit Intel2GAS \cite{i2g}). Für die folgenden Beispiele wird die
 Intel-Syntax als die kanonische Referenz betrachtet und jeweils der
-äquivilenten AT\&T-Syntax gegenübergestellt.
-
-% [i2g] http://www.niksula.hut.fi/~mtiihone/intel2gas/
+äquivalenten AT\&T-Syntax gegenübergestellt.
 
 \subsection{Arbeitsweise des Assemblers}
 
 Beim Programmieren mit einem Assembler beschreibt jede Zeile genau eine
-Prozessorinstruktion über ihr Symbol, dem sogenannten Mnemonic, gefolgt von
+Prozessorinstruktion über ihr Symbol, dem sogenannten Mnemonik, gefolgt von
 den dazugehörigen optionalen Argumenten. Die Aufgabe des Assemblers ist es nun,
-dieses Symbolische Programm direkt in die entsprechende Folge binären
-x86-Maschinencode – sogenannte Opcodes, die üblicherweise byteweise,
+dieses symbolische Programm direkt in die entsprechende Folge binären
+x86-Maschinencode – sogenannten Opcodes, die üblicherweise byteweise,
 hexadezimal dargestellt werden – zu übersetzen.
 
-Vereinfacht gesagt bedient sich der Assembler einer großen Symboltabelle in der
-für jedes Tupel von Mnemnonic und Argumenten der entsprechende Opcode vermerkt
-ist. Der Programmierer könnte zwar auch direkt in Opcodes programmieren bekommt
-aber durch den Assembler die Hilfestellung sich Symbole statt hexadezimalen Code
-merken zu dürfen.
+Vereinfacht betrachtet schlägt der Assembler dazu in einer großen Symboltabelle nach in der für jedes Tupel von Mnemonik und Argumenten der entsprechende Opcode vermerkt
+ist. Der Programmierer könnte zwar auch direkt in Opcodes programmieren, bekommt
+aber durch den Assembler die Hilfestellung sich statt hexadezimalen Code
+Symbole merken zu dürfen.
 
 \subsection{Instruktionen}
 
-Eine Zeile in einem Assemblerprogramm hat folgende Form und ist in beiden
-Syntaxstilen gleich:
+Eine Zeile in einem Assemblerprogramm hat folgende Form, die in beiden
+Syntaxstilen identisch ist. Zwischen Groß- und Kleinschreibung wird nicht unterschieden.
 
 \texttt{[label:] mnemonic [argument1][, argument2][, argument3]}
 
 Label ist eine Sprungmarke und optional, ebenso wie die Argumente. Deren
-erforderliche Anzahl hängt von der Instruktion ab. Maximal drei, häufiger zwei
-Argumente sind üblich. Das Mnemnonic bzw. Instruktionssymbol ist eine kurze
-Zeichenkette, wie zum Beispiel MOV, ADD oder PUSH, und abstrahiert gleich über
-eine Klasse von Opcodes mit derselben Funktion.\cite{intelmanual} So ist zum
+erforderliche Anzahl hängt von der Instruktion ab. Maximal sind drei, häufiger zwei
+üblich. Das Mnemonik bzw. Instruktionssymbol ist eine kurze
+Zeichenkette, wie zum Beispiel {\tt MOV, ADD} oder {\tt PUSH}, und abstrahiert gleich über eine ganze Klasse von Opcodes mit derselben Funktion.\cite{intelmanual} So ist zum
 Beispiel die Kopieroperation für Argumente verschiedene Art (Register,
-Konstanten) immer das Mnemnonic MOV obwohl sich die Opcodes unterscheiden.
-
-Groß- und Kleinschreibung wird nicht unterschieden.
+Konstanten) immer das Mnemonik {\tt MOV} obwohl sich die Opcodes unterscheiden.
 
 \subsection{Parameter}
 
-Bei vielen Befehlen sind zwei Argumente üblich. Es wird dann meist von Quell-
+Bei vielen Befehlen sind zwei Parameter üblich. Es wird dann meist von Quell-
 und Zieloperanden gesprochen (source and destination parameter). Die Semantik
-der Parameterreihenfolge bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
+der Parameterreihenfolge ist bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
 
 Ein Parameter kann von dreierlei Art sein: ein Register, eine Konstante oder
-Speicheradresse. Die Registerbezeichnungen (z.B. EAX, EBP) sind bei Intel und
-AT\&T identisch, allerdings erfodert Letztere noch ein Prozentzeichen im
-Prefix. Konstanten erhalten bei AT\&T ein Dollarzeichen-Prefix. Intel-Assembler
-benötigt diese Kennzeichnung nicht.
+eine Speicheradresse. Die Registerbezeichnungen (z.B. {\tt EAX, EBP}) sind bei Intel und
+AT\&T identisch, allerdings erfordert letztere noch ein Prozentzeichen im
+Prefix. Konstanten erhalten bei AT\&T ein Dollarzeichen-Präfix. Intel-Assembler
+benötigen diese Kennzeichnung nicht.
 
 \hspace{5mm} \makebox[1.5cm]{Intel: \hfill}
 \texttt{mov eax, 5}
@@ -74,10 +68,10 @@ Syntax leitet der Assembler den Typ automatisch vom Parameter ab.
 \texttt{movl \$5, \%eax}
 
 Ein Parameter kann eine absolute Adresse enthalten oder indirekt auf den Inhalt
-einer Speicherstelle zeigen. Die Speicheradresse für die Derefeerenzierung kann
+einer Speicherstelle zeigen. Die Speicheradresse für die Dereferenzierung kann
 aus einem Ausdruck berechnet werden.  Diese effektive Adresse wird bei Intel
-aus Variblen in eckigen Klammern gebildet und kann eine Typangabe wie
-\texttt{BYTE},  \texttt{WORD} und \texttt{DWORD} gefolgt von  \texttt{PTR}
+aus Variablen in eckigen Klammern gebildet und kann eine Typangabe wie
+\texttt{BYTE},  \texttt{WORD} (2 Byte) und \texttt{DWORD} (4 Byte) gefolgt von  \texttt{PTR}
 (Pointer) vorangestellt bekommen.
 
 \hspace{5mm} \makebox[1.5cm]{Intel: \hfill}
@@ -85,13 +79,13 @@ aus Variblen in eckigen Klammern gebildet und kann eine Typangabe wie
 
 In AT\&T Syntax berechnet sich eine Adresse nach dem sogenannten \emph{base
 indexed addressing}-Schema aus den Einzelkomponenten Verschiebung (auch
-\emph{displacement}), Basis, Index, Skalierung, wie folgt: $Verschiebung + Basis +
+\emph{displacement}), Basis, Index und Skalierung, wie folgt: $Verschiebung + Basis +
 Index*Skalierung$ . Ein Beispiel:
 
 \hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
 \texttt{movl 4(\%ebp), \%eax}
 
-Die wesentliche Syntax-Unterschiede sind in der Tabelle~\ref{tab:syntaxdiffs}
+Die wesentlichen Syntax-Unterschiede sind in der Tabelle~\ref{tab:syntaxdiffs}
 zusammengefasst.
 
 %\clearpage
@@ -104,7 +98,7 @@ zusammengefasst.
 \\  Adressierung  				  	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
 \\	Register      						& \tt eax              					& \tt \%eax
 \\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
-\\	Dereferenzieung   				& \tt [addr]           					& \tt addr(,1)
+\\	Dereferenzierung   				& \tt [addr]           					& \tt addr(,1)
 \\	Absolute Adresse 			 	  & \tt addr             					& \tt *addr
 \\	{\tt byte} Instruktion    & \tt mov byte ptr     					& \tt movb
 \\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
@@ -113,28 +107,28 @@ zusammengefasst.
 \caption{Syntax Unterschiede} \label{tab:syntaxdiffs}
 \end{table}
 
-\subsection{Assembler-Directiven}
+\subsection{Assembler-Direktiven}
 Jeder Assembler besitzt einen eigenen Satz an spezifischen Direktiven. Streng
 genommen gehören diese nicht zur Syntax, allerdings sind sie nötig um einige
-Metainformationen zur Code-Struktur zu definieren. Die Direktiven sind stark
+Meta-Informationen zur Code-Struktur zu definieren. Die Direktiven sind stark
 abhängig von der eingesetzten Software (NASM, YASM, GNU as, etc.) und selten
-kompatibel zwischen diesen Assembler-Dialekten. Fast immer gibt es aber eine
+herrscht Kompatibilität innerhalb der Assembler-Dialekte. Fast immer gibt es aber eine
 ähnlich lautende Entsprechung. 
 
-Eine Typische Anweisung ist die Zuordung eines Bezeichners zu einem Code- oder
-Datensegment. Die Addressen der Instruktionen werden beim Assemblieren ihrem
+Eine Typische Anweisung ist die Zuordnung eines Bezeichners zu einem Code- oder
+Datensegment. Die Adressen der Instruktionen werden beim Assemblieren ihrem
 Segment zugeordnet. Bei NASM heißt die Direktive \texttt{section}
 bei GAS \texttt{.section}. Die Sektionen \texttt{.text} und
 \texttt{.data} für das Code- bzw. statische Datensegment sind dabei traditionell
-unter Unix-artigen Systemem gebräuchlich. Die Bezeichner können aber 
+unter Unix-artigen Systemen gebräuchlich. Die Bezeichner können aber 
 beliebig gewählt werden.
 
 Oft ist es auch nötig Datenbereiche zu reservieren oder statisch zu
 initialisieren, zum Beispiel um feste Strings zu definieren. Dazu dienen
-Pseudo-Instructionen wie \texttt{DB, DW, DD}, etc. (\emph{define byte, define
+Pseudo-Instruktionen wie \texttt{DB, DW, DD}, etc. (\emph{define byte, define
 word, define dword}) und \texttt{RESB, RESW, RESQ} (\emph{reserve byte}, usw.)
 bei NASM und auch MASM. Die Definition von Konstanten erfolgt mittels
 \texttt{EQU}. Diesen Definitionen kann ein Label vorangestellt werden über
 welches man die Adresse der jeweiligen Daten im Code referenzieren kann. Beim
-assemblieren werden dieses Label in konkrete Adressen übersetzt.
+Assemblieren werden diese Labels in konkrete Adressen übersetzt.
 

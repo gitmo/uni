@@ -1,7 +1,7 @@
 %Register
 %Adressierung
 \section{Architektur}
-X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie dem FLAG-Register und dem Instruktionszeiger-Register.
+X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer Von-Neumann-Architektur. Hier wird, im Gegensatz zum Harvard-Modell, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie ein FLAG-Register und ein Instruktionszeiger-Register.
 
 \subsection{Prozessor-Register}
 
@@ -18,7 +18,7 @@ Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen e
 
 Die vier Allzweckregister, \emph{general-purpose} oder auch Rechenregister dienen als Operanden für vielerlei Instruktionen und ermöglichen eine freie Manipulation der Daten mit denen der Prozessor rechnet.
 
-Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word}, wird so bezeichnet da ein Prozessorwort ursprünglich aus 16-bit beinhalten konnte). Die alten Bezeichner {\tt AX, BX, CX} und {\tt DX} können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
+Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word} -- ein Prozessorwort entsprach ursprünglich 16-bit). Die alten Bezeichner {\tt AX, BX, CX} und {\tt DX} können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
 
 Darüber hinaus war es beim 8086 möglich die Allzweckregister in zwei Teilen anzusprechen: dem \emph{High-Byte} für Bits 8-15 in {\tt AH, BH, CH} für  und {\tt DH} und dem \emph{Low-Byte} mit Bits 0-7 in {\tt AL, BL, CL} und {\tt DL}. Eine Operation auf einen dieser 8-bit Hälften geschieht ohne Seiteneffekte auf jeweils andere.
 
