@@ -3,61 +3,42 @@
 \section{Architektur}
 X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer "von Neumann"-Architektur. Hier wird, im Gegensatz zur Harvard-Architektur, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie dem FLAG-Register und dem Instruktionszeiger-Register.
 
-Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden auf 32-Bit erweitert und mit dem Präfix E versehen.
-
 \subsection{Prozessor-Register}
 
-Register der Intel-Prozessoren mit 32 Bit Instruktionssatz
+Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden in ihrer Größe verdoppelt und mit dem Präfix E versehen. Mit der Einführung von 32-Bit Registern, Adressbus und Instruktionen spricht man auch von der IA-32 Plattform (\emph{Intel Architecture, 32-bit)}.
 
 \subsubsection{Allzweckregister}
 
 \begin{tabular}{|c|l|l|}
-\hline EAX & \emph{accumulator} & AX, AH, AL
-\\
-\hline EBX & \emph{base register} & BX, BH, BL
-\\
-\hline ECX & \emph{counter register} & BX, CH, CL
-\\
-\hline EDX & \emph{data register} & DX, DH, DL
-\\
+\hline EAX & \emph{accumulator} & AX, AH, AL \\
+\hline EBX & \emph{base register} & BX, BH, BL \\
+\hline ECX & \emph{counter register} & BX, CH, CL \\
+\hline EDX & \emph{data register} & DX, DH, DL \\
 \hline \end{tabular}
 
-Auch Rechenregister
+Die vier Allzweckregister, \emph{general-purpose} oder auch Rechenregister dienen als Operanden für vielerlei Instruktionen und ermöglichen eine freie Manipulation der Daten mit denen der Prozessor rechnet.
 
-32 Bit Breite – ein Prozessor \emph{word}
+Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word}, wird so bezeichnet da ein Prozessorwort ursprünglich aus 16-bit beinhalten konnte). Die alten Bezeichner AX, BX, CX und DX können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
 
-unteren Word kann unter alten 16-bit Namen ohne E-Präfix angesprochen werden
+Darüber hinaus war es beim 8086 möglich die Allzweckregister in zwei Teilen anzusprechen: dem \emph{High-Byte} für Bits 8-15 in {\tt AH, BH, CH} für  und {\tt DH} und dem \emph{Low-Byte} mit Bits 0-7 in {\tt AL, BL, CL} und {\tt DL}. Eine Operation auf einen dieser 8-bit Hälften geschieht ohne Seiteneffekte auf jeweils andere.
 
-unteres Wort kann jeweils als zwei 8-Bit-breite Register angesprochen werden (z.b.AH, AL).
+Obwohl fast alle Rechenoperationen auf alle vier Register angewendet werden können, erfüllen sie für manche Instruktionen spezielle Aufgaben. Genaue Angaben findet der Programmierer dazu zum Beispiel in Intels Referenz-Dokumentation. \cite{intelreferenz}
 
-Manipulation der Daten mit denen der Prozessor rechnet
-
-erfüllen spezielle Aufgaben
-
-Rechenoperationen können aber auf alle vier Register angewendet werden
-
-EAX erhält meist den Rückgabewert bei Funktionsaufrufen
-
-
+Ein Compiler legt über seine Aufrufkonvention oft fest ob den Registern besondere Aufgaben zukommen sollen. So wird {\tt EAX} von vielen C-Compilern immer als Register für den Rückgabewert eines Funktionsaufrufs benutzt. \cite{wp:callconv}
 
 \subsubsection{Segmentregister und Adressierung}
 
 \begin{tabular}{|c|c|}
-\hline CS & Codesegment \\
-\hline DS & Datensegment \\
-\hline SS & Stacksegment \\
-\hline ES & Extrasegment\\
+\hline CS & \emph{code segment} \\
+\hline DS & \emph{daten segment} \\
+\hline SS & \emph{stack segment} \\
+\hline ES, FS, GS & \emph {extra segment registers} \\
 \hline
 \end{tabular}
 
-Die Segmentregister nehmen Anfangsadressen von Segmenten im Speicher auf.
+Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht in byteweise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, denn sie nehmen Anfangsadressen von Segmenten im Speicher auf. Dies ist nützlich zur Bildung von Pointern. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar SS:ESP ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um die vollen 20-Bit des Adressbusses bei nur 16-Bit Registerbreite bei der Adressierung verwenden zu können.
 
-16 Bit breit, lassen sich nicht in aufteilen
-
-lassen sich lediglich auslesen und beschreiben
-
-Besonders relevant für segmentierte adressierung im \emph{Real Mode} um über statt 16 Bit
-zur Adressierung, 20 Bit zu verfügen
+% lassen sich lediglich auslesen und beschreiben
 
 \subsubsection{Zeige- und Indexregister}
 
@@ -97,9 +78,7 @@ wird ausschließlich intern durch den Prozessor verändert.
 
 \subsubsection{Statusregister}
 
-Ein 16 Bit Flag-Register FLAGS
-
-32 Bit EFLAGS erhält einige weitere Flags
+Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben folgende Bedeutung. Die 32-Bit des {\tt EFLAGS} erhält einige weitere Flags.
 
 {\small 15}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
