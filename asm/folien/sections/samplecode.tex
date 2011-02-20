@@ -1,5 +1,47 @@
 \section{Hello World}
 
-\begin{frame}{Hello World}
-  % You might wish to add the option [pausesections]
+\begin{frame}[fragile]{Hello World}
+\begin{lstlisting}[numbers=left,caption=Datensegment]
+; Preprocessor macros
+%define stdout  1
+
+%define SYS_exit    1       ; System calls
+%define SYS_write   4
+
+; segment for static data
+section .data
+
+message   db 'Hello, World!', 0Ah  ; End with newline
+length    equ $\$$ - message          ; Length = current - previous address
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=left,firstnumber=12,caption=Codesegment - Syscall]
+
+; code segment
+section .text
+global start                ; Make start function externally visible for linker
+
+kernel:                     ; Expects syscall number in eax register
+    int     80h             ; Call kernel
+    ret
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{Hello World}
+\begin{lstlisting}[numbers=left,firstnumber=19,caption=Codesegment - Hello World]
+start:                      ; entry symbol on Mac OS X
+
+    push    length          ; size_t nbyte
+    push    message         ; const void *buf
+    push    stdout          ; int filedescriptor
+    mov     eax, SYS_write  ; Make the system call to write
+    call    kernel
+   
+    add     esp, 12         ; 3 args * 4 bytes each = 12 bytes
+
+    push    0               ; exit status returned to the operating system
+    mov     eax, SYS_exit   ; Make the syscall to exit
+    call    kernel
+\end{lstlisting}
 \end{frame}
