@@ -21,7 +21,7 @@ Der Assembler NASM (Netwide Assembler) übersetzt das Listing in Objektcode in 3
 
 \subsection{Code für BSD-Unix Systeme}
 
-Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt es sich nur bei den Zeilen ab dem Label\texttt{kernel} um Assembler-Instruktionen. Die vorhergehenden Zeilen sind Präprozessor-Makros (Prefix \%) und Assembler-Direktiven. Der Linker benutzt das Label {\tt start} als Einsprungspunkt in das \emph{Executable} (Linux: {\tt \_start}).
+Im Folgenden soll das Programm genauer erläutert werden. Genaugenommen handelt es sich nur bei den Zeilen ab dem Label \texttt{kernel} um Assembler-Instruktionen. Die vorhergehenden Zeilen sind Präprozessor-Makros (Prefix \%) und Assembler-Direktiven. Der Linker benutzt das Label {\tt start} als Einsprungspunkt in das \emph{Executable} (Linux: {\tt \_start}).
 Dieses Label wird mit der Direktive {\tt global} als nach außen sichtbar markiert.
 
 \begin{lstlisting}[numbers=left,caption=hello.asm]
