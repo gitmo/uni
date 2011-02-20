@@ -22,6 +22,8 @@
 % Running Headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancyplain}
+%\pagestyle{fancy}
+%\fancyhf{}
 
 \usepackage{url}
 \usepackage{makeidx}
@@ -63,9 +65,9 @@
 	breaklines=true,                % sets automatic line breaking
 	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
 	escapeinside={\%*}{*)},         % if you want to add a comment within your code
-  frameround=tttt,
-  extendedchars=true,
-  literate=%
+    frameround=tttt,
+    extendedchars=true,
+    literate=%
     {Ö}{{\"O}}1
     {Ä}{{\"A}}1
     {Ü}{{\"U}}1
@@ -78,16 +80,19 @@
 
 \makeindex
 
-\title{Intel x86 Assembler\\\small{Proseminar Programmiersprachen}}
+\title{Intel x86 Assembler \\ \vspace{1cm} \small{Proseminar Programmiersprachen} \\ \vspace{1cm}}
 \author{Sebastian Raitza, Nico von Geyso}
 
 
 \begin{document}
 
+\vspace{5cm}
+
 \maketitle
 
-\input{sections/abstract.tex}
+% \input{sections/abstract.tex}
 
+\clearpage
 \tableofcontents
 
 \input{sections/introduction.tex}

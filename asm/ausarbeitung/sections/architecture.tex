@@ -18,7 +18,7 @@ Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen e
 
 Die vier Allzweckregister, \emph{general-purpose} oder auch Rechenregister dienen als Operanden für vielerlei Instruktionen und ermöglichen eine freie Manipulation der Daten mit denen der Prozessor rechnet.
 
-Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word}, wird so bezeichnet da ein Prozessorwort ursprünglich aus 16-bit beinhalten konnte). Die alten Bezeichner AX, BX, CX und DX können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
+Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word}, wird so bezeichnet da ein Prozessorwort ursprünglich aus 16-bit beinhalten konnte). Die alten Bezeichner {\tt AX, BX, CX} und {\tt DX} können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
 
 Darüber hinaus war es beim 8086 möglich die Allzweckregister in zwei Teilen anzusprechen: dem \emph{High-Byte} für Bits 8-15 in {\tt AH, BH, CH} für  und {\tt DH} und dem \emph{Low-Byte} mit Bits 0-7 in {\tt AL, BL, CL} und {\tt DL}. Eine Operation auf einen dieser 8-bit Hälften geschieht ohne Seiteneffekte auf jeweils andere.
 
@@ -28,7 +28,7 @@ Ein Compiler legt über seine Aufrufkonvention oft fest ob den Registern besonde
 
 \subsubsection{Segmentregister und Adressierung}
 
-\begin{tabular}{|c|c|}
+\begin{tabular}{|c|l|}
 \hline CS & \emph{code segment} \\
 \hline DS & \emph{daten segment} \\
 \hline SS & \emph{stack segment} \\
@@ -37,48 +37,40 @@ Ein Compiler legt über seine Aufrufkonvention oft fest ob den Registern besonde
 \end{tabular}
 
 Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht in byteweise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, denn sie nehmen Anfangsadressen von Segmenten im Speicher auf. Dies ist nützlich zur Bildung von Pointern. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar SS:ESP ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um die vollen 20-Bit des Adressbusses bei nur 16-Bit Registerbreite bei der Adressierung verwenden zu können.
+Segmentregister können immer nur mittels eines Allzweckregisters oder spezielle Instruktionen gesetzt werden.
 
 % lassen sich lediglich auslesen und beschreiben
 
 \subsubsection{Zeige- und Indexregister}
 
-\begin{tabular}{|c|l|}
-\hline ESI & \emph{source index} \\
-\hline EDI & \emph{destination index} \\
+Diese Register sind nützlich als Zeiger auf Datenstrukturen, Indexierung in Arrays und bei String-Manipulation und als Offset als Teil einer Adresse. Sie lassen sich mit den Segmentregistern kombinieren, um in weit entfernte Speicherbereiche zu zeigen. 
+
+\begin{tabular}{|c|l|l|}
+\hline ESI & \emph{source index} & DS:ESI, SI\\
+\hline EDI & \emph{destination index} & ES:EDI, DI\\
 \hline
 \end{tabular}
 
-Nützlich als Zeiger auf Datenstrukturen
-
-z.B. String-Manipulation
-
+ESI und EDI dienen als String und Speicherkopieroperationen in Arrays und lassen sich mit DS bzw. DS kombinieren.
 
 \begin{tabular}{|c|l|}
-\hline ESP & \emph{stack pointer}\\
-\hline EBP & \emph{base pointer} \\
+\hline ESP & \emph{stack pointer} SS\\
+\hline EBP & \emph{base pointer} SS\\
 \hline
 \end{tabular}
 
-Zeiger für den Stack
-
-ESP und EBP dienen zum Aufspannen eines Stackframes bei Funktionsaufrufen
-
-ESP zeigt auf den aktuellen \emph{top}
-
-EBP zeigt auf den \emph{bottom}
+Die Zeiger für den Stack {\tt ESP} und {\tt EBP} dienen zum Aufspannen eines Stackbereich bei Funktionsaufrufen. {\tt ESP} zeigt dabei immer auf das oberste Element im Stack und wird bei {\tt push}- und {\tt pop}-Befehlen manipuliert, während {\tt EBP} auf eine anderen Adresse im Stack zeigen kann um die Basis eines Stackbereichs zu definieren. Das Stack-Segmentregister SS definiert das aktuelle Speichersegment für die Offsets in {\tt ESP} und {\tt EBP}.
 
 \begin{tabular}{|c|l|}
 \hline EIP & \emph{instruction pointer} \\
 \hline
 \end{tabular}
 
-Zeiger auf den nächsten Befehl in der Ausführung
-
-wird ausschließlich intern durch den Prozessor verändert.
+Der Instruktionszeiger ist ein spezielles Register und zeigt immer auf den aktuell nächsten Befehl in der Ausführung. Der {\tt EIP} wird ausschließlich intern durch den Prozessor verändert – der Programmieren manipuliert diesen indirekt über bedingte und unbedingte Sprungbefehle. Bei Unterfunktionsaufrufen wird der aktuelle {\tt EIP}, der  auf die nächste Instruktion hinter {\tt call} zeigt, automatisch auf den Stack gelegt und bei der Rückkehr mittels {\tt ret} an diese Adresse zurückverzweigt.
 
 \subsubsection{Statusregister}
 
-Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben folgende Bedeutung. Die 32-Bit des {\tt EFLAGS} erhält einige weitere Flags.
+Das Register {\tt EFLAGS} enthält Informationen über den aktuellen Zustand des Prozessors in Form von binären Flags. Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben untenstehende Bedeutung. Die 32-Bit des {\tt EFLAGS} erhält noch einige zusätzliche Flags.
 
 {\small 15}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -89,11 +81,6 @@ Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben folgende
 
 \emph{overflow, direction, interrupt, trap, sign, zero, auxiliary, parity}
 und \emph{carry flag} 
-
-nehmen bestimmte Belegung nach verschiedenen Operationen ein
-
-beeinflussen bestimmte Entscheidungen wie z.B. bedingte Sprünge (\emph{zero flag})
-
 
 \subsection{Adressraum}
 
