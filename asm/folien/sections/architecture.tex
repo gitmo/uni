@@ -1,5 +1,69 @@
 \section{Architektur}
 
 \begin{frame}{Architektur}
-  % You might wish to add the option [pausesections]
+	\begin{center}
+	\textbf{Überblick}
+	\end{center}
+
+	\begin{itemize}
+		\item von Neumann-Architektur
+		\item ursprünglich 16 Bit Word-Breite
+		\item basierend auf der Instruktionmenge des 8086 Mikrocontroller
+		\item Abwärtskompatibilität mit Hilfe von verschiedenen Operationsmodi
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Architektur}
+	\begin{center}
+	\textbf{Register}
+	\end{center}
+
+	\begin{itemize}
+		\item Allzweckregister: \texttt{AX, BX, CX, DX}
+		\item Segmentregister: u.a. \texttt{CS}, \texttt{DS} und \texttt{SS}
+		\item Zeige- und Indexregister: u.a. \texttt{ESP} und \texttt{EIP}   
+		\item Statusregister
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Architektur}
+	\begin{center}
+	\textbf{Statusregister}
+	\end{center}
+
+	oft genutzte \textit{Flag}-Register
+	\begin{itemize}
+		\item overflow
+		\item sign
+		\item zero
+		\item ...
+	\end{itemize}
+
+	\makebox{}
+
+	Statusregister im Überblick (16 Bit)
+	\begin{center}
+		{\small 15}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline & & & & O & D & I & T & S & Z & & A & & P & & C \\
+		\hline
+		\end{tabular}
+		{\small 0}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Architektur}
+	\begin{center}
+	\textbf{Adressierungsarten}
+	\end{center}
+
+	\begin{itemize}
+		\item Direktwertadressierung (Immediates): {\tt mov bx,FFF0h}
+		\item Registeradressierung: {\tt mov 	ax,bx}
+		\item Direkte Adressierung: {\tt mov 	ax,ds:index}
+		\item Indirekte Registeradressierung: {\tt mov ax,[bx]}
+		\item Indizierte Registeradressierung: {\tt mov [Array+bx],bx}
+	\end{itemize}
 \end{frame}
