@@ -70,7 +70,7 @@ Der Instruktionszeiger ist ein spezielles Register und zeigt immer auf den aktue
 
 \subsubsection{Statusregister}
 
-Das Register {\tt EFLAGS} enthält Informationen über den aktuellen Zustand des Prozessors in Form von binären Flags. Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben untenstehende Bedeutung. Die 32-Bit des {\tt EFLAGS} erhält noch einige zusätzliche Flags.
+Das Register {\tt EFLAGS} enthält Informationen über den aktuellen Zustand des Prozessors in Form von binären Flags. Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben untenstehende Bedeutung. Die 32-Bit des {\tt EFLAGS} enthalten darüber hinaus noch einige seltener genutzte Zusatzflags.
 
 {\small 15}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -84,35 +84,33 @@ und \emph{carry flag}
 
 \subsection{Adressraum}
 
+Die Anzahl der Adressleitungen eines Prozessors bestimmt die Größe des Speichers der vom Adressbus angesprochen werden kann. Der 8086 hatte noch 20-Adressleitungen und damit einen Adressraum von $2^20 Byte = 1024 KBytes = 1 MBytes$, während seit dem 80386 mit $2^32$ Bytes ein Adressraum von 4 GB zur Verfügung steht.
+
 \subsubsection{Real Mode}
 
-16 bit Mode, seit 8086
+Der \emph{Real Mode} ist der Operationsmodus des 8086 mit 16-Bit Instruktionssatz und 20-Bit Adressierung, in dem aus Gründen der Rückwärtskompatibilität auf allen x86-Prozessoren gestartet wird. Um mit 16-Bit Registern auf 1 MByte Speicher zurückgreifen zu können bedarf es einem ingenieurstechnischen Trick, der sogenannten segmentierte Adressierung. Mit Hilfe der Segmentregister (CS, DS, SS, ES) werden effektiv 4 weitere Bits auf Folgende Art zur Adressenberechnung genutzt:
 
-Segmentregister (CS, DS, SS, ES) sind relevant für segmentierte Adressierung im
-\emph{Real Mode} um über statt 16 Bit zur Adressierung, 20 Bit zu verfügen
+$Adresse = (16 * Segment + Offset) \text{ modulo } 20$
 
-$Adresse = 16 * Segment + Offset$
+Man spricht von der Bildung der \emph{effektiven Adresse}. Es hierbei viele überlappende Segmente bzw. viele mögliche \texttt{SEGMENT:OFFSET} Kombinationen die selbe Adresse anzusprechen.
 
-Dies erhöht den Adressraum von 64 KByte auf 1 MByte.
-
-
-\subsubsection{Protected Mode}
-Im \emph{protected mode} mit 32-Bit Adressierung werden alle 16-Bit auf 32-Bit erweitert
-
-\texttt{SEGMENT:OFFSET} Adressierung ist ebenfalls möglich, aber weniger relevant als im
-\emph{Real Mode}, da nun volle $2^{32}$-Bit (4 GByte) adressiert werden können
-
-
-
-
-Arten der Adressierung:
+Die möglichen Arten der Adressierung:
 
 \begin{enumerate}
-\item Direktwertadressierung (Immediates)
-\item Direkte Adressierung
-\item Indirekte Registeradressierung
-\item Indizierte Registeradressierung
+\item Direktwertadressierung (Immediates): {\tt mov bx,FFF0h}
+\item Registeradressierung: {\tt mov 	ax,bx}
+\item Direkte Adressierung: {\tt mov 	ax,ds:index}
+\item Indirekte Registeradressierung: {\tt mov ax,[bx]}
+\item Indizierte Registeradressierung: {\tt mov [Array+bx],bx}
 \end{enumerate}
+Eckige Klammern der Art {\tt [Adresse]} bezeichnen den Inhalt der Speicherstelle an Adresse.
+
+\subsubsection{Protected Mode}
+
+Mit der Einführung des Protected Mode ab dem 80286 erlaubt ein virtueller Speicher-Mechanismus die Segmentierung in isolierte 32-bit-Adressräume die auf den physikalische Speicher abgebildet werden können. Durch die Verdoppelung der Registerbreite kann mit einem Register bereits der gesamte Adressraum angesprochen werden jedoch ist segmentierte Adressierung ebenfalls möglich jedoch wenig relevant  in der Praxis. Betriebssyteme wie Linux setzen auf ein "flaches" Speichermodell \emph{flat memory model} bei denen die Segmentbasen auf 0 gesetzt werden.
+
+
+
 
 
 % \section{Unterprogramme}

@@ -1,7 +1,6 @@
 \section{Instruktionen}
 
-Anders als in Hochsprachen wird bei der Assemblerprogrammierung meist mit Registern gearbeitet.
-Auf diese können dann Instruktionen angewendet werden. Diese sind in ihrer Anzahl limitiert.
+Anders als in Hochsprachen wird bei der Assemblerprogrammierung statt mit Variablen auf Registern gearbeitet. Auf diese können dann Instruktionen angewendet werden.
 
 \subsection{Daten kopieren}
 %Introduction to 80x86 Assembly Language and Computer Architecture - Seite 86
@@ -300,7 +299,7 @@ Auch das \texttt{ret}-Mnemonic lässt sich für einen \textit{near call} in foge
 \begin{lstlisting}
 myFunc: mov    eax, 10 ; Speichert im Register eax den Wert 10
         ret            ; Stellt den IP wiederher
-				               ; und springt somit zurück zum Aufrufer
+				       ; und springt somit zurück zum Aufrufer
 
 main:   call myFunc    ; Ruft die Subroutine myFunc auf
 \end{lstlisting}
