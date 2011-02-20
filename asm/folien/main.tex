@@ -62,7 +62,7 @@
 
 % Delete this, if you do not want the table of contents to pop up at
 % the beginning of each subsection:
-\AtBeginSubsection[]
+\AtBeginSection[]
 {
   \begin{frame}<beamer>{Outline}
     \tableofcontents[currentsection,currentsubsection]
@@ -102,6 +102,8 @@
     {ö}{{\"o}}1
     {°}{{}}0
 }
+
+\setcounter{tocdepth}{1}
 
 \begin{document}
 
