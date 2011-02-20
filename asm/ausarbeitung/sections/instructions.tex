@@ -60,7 +60,6 @@ Ein Blick auf die \textit{Flag}-Register zeigt uns genau dies:
 Bei der Lösung von Problemen ist man als Programmierer oft auf Vergleiche zwischen Werten angewiesen.
 Hier gibt zwei Mnemonics um Operanten zu vergleichen. Zum einen das \texttt{test}- und das \texttt{cmp}-Mnemonic.
 Der Unterschied zwischen beiden ist die mathematische Umsetzung der Operation. Während beim ersteren beide Operanten logisch miteinander verundet werden, werden beim letzteren diese einfach voneinander abgezogen. 
-Das Ergebnis kann nur anhand der gesetzten \textit{Flags} ausgelesen werden.
 
 \paragraph{Überblick}
 \begin{itemize}
@@ -68,6 +67,24 @@ Das Ergebnis kann nur anhand der gesetzten \textit{Flags} ausgelesen werden.
 
 	\item \texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
 \end{itemize}
+
+Das Ergebnis kann nur anhand der gesetzten \textit{Flags} ausgelesen werden.
+Welche \textit{Flag}-Kombinationen für das \texttt{CMP}-Mnemonic unter anderem für welche Relationen stehen kann im Folgenden eingesehen werden:
+
+%s.147 (160 im pdf)
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+1. Operand & 2. Operand & Ergebnis & 
+CF & 
+OF & 
+SF &
+ZF
+& Relation \\ \hline 
+5          & 5          & 0        & 0  & 0  & 0  & 1  & $\text{op1} = \text{op2}$ \\ \hline
+10         & 5          & 5        & 0  & 0  & 0  & 0  & $\text{op1} > \text{op2}$ \\ \hline
+5          & 10         & -5       & 1  & 0  & 1  & 0  & $\text{op1} < \text{op2}$ \\ \hline
+\multicolumn{8}{|c|}{...} \\ \hline
+\end{tabular}
 
 \paragraph{Beispiel\newline}
 \makebox{}
@@ -78,7 +95,7 @@ cmp    eax, ebx
 \end{lstlisting}
 
 Anhand des gesetzten \textit{Z}-Flags\footnote{Zero Flag} ist es klar, dass beide Argumente den gleichen Wert haben ($5 = 5$). 
-
+ 
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline Werte & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 \hline Register & & & & O & D & I & T & S & Z & & A & & P & & C & \\
@@ -113,7 +130,7 @@ Beachtet werden sollte, dass eine bedingte Sprunganweisung die \textit{Flag}-Wer
 
 Die Dauer eines bedingten Sprunges beträgt seit Mitte der 90er Jahre\footnote{Einführung des Pentium} einen Taktzyklus.
 
-\paragraph{oft benutzte bedingte Sprünganweisungen}
+\paragraph{oft benutzte bedingte Sprunganweisungen}
 \begin{description}
 	\item [JZ] jump if zero
 	\item [JG] jump if greater 

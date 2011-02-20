@@ -1,42 +1,160 @@
 \section{Instruktionen}
 
 \begin{frame}[fragile]{Daten kopieren}
+
+\begin{center}
+\textbf{\texttt{MOV}-Mnemonic}
+\end{center}
+
+Syntax
 \begin{lstlisting}
 mov    Ziel, Quelle
 \end{lstlisting}
-\end{frame}
 
-\begin{frame}[fragile]{mathematische und logische Operationen}
-	Inkrementierung
-		\begin{lstlisting}
-		inc    Ziel, Quelle
-		\end{lstlisting}
+\makebox{}
 
-	Dekrementierung
-		\begin{lstlisting}
-		dec    Ziel, Quelle
-		\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{mathematische und logische Operationen}
-		\begin{lstlisting}
-		add    Ziel, Quelle
-		\end{lstlisting}
-
-		\begin{lstlisting}
-		sub    Ziel, Quelle
-		\end{lstlisting}
-\end{frame}
-
-\begin{frame}{Vergleiche}
+Semantik
 \begin{itemize}
-	\item \texttt{cmp arg1, arg2} $\leftrightarrow \text{arg1} - \text{arg2}$
+	\item Daten in oder aus einem Register/Speicher kopieren
+	\item einem Register einen Wert zu weisen
+\end{itemize}
 
-	\item \texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
+\makebox{}
+
+Beispiel
+\begin{lstlisting}
+mov    eax, 5    ; Register eax Wert 5 zu weisen
+mov    eax, ebx  ; Wert vno Register ebx in eax kopieren
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{mathematische und logische Operationen}
+
+\begin{center}
+\textbf{mathematische Operationen}
+\end{center}
+
+verfügbare Operationen / Mnemonics
+\begin{description}
+	\item [INC] Inkrementierung
+	\item [DEC] Dekrementierung
+	\item [ADD] Addition
+	\item [SUB] Subtraktion
+	\item [...]
+\end{description}
+
+\makebox{}
+
+Syntax
+\begin{lstlisting}
+Mnemonic    Ziel[, Quelle]
+\end{lstlisting}
+
+\makebox{}
+
+Semantik
+\begin{itemize}
+	\item Ergebnis wird im Ziel-Register gespeichert
+
+	\item auftretende Sonderfälle werden in den \textit{Flag}-Registern gespeichert
+	\begin{itemize}
+		\item Overflow
+		\item Zero
+		\item ...
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{bedingte und unbedinge Sprünge}
+\begin{frame}[fragile]{mathematische und logische Operationen}
+
+\begin{center}
+\textbf{Beispiele}
+\end{center}
+
+Addition
+\begin{lstlisting}
+mov    eax, 5  ; Zuweisung eax = 5
+add    eax, 5  ; 5+5 = 10 
+\end{lstlisting}
+
+\makebox{}
+
+Dekrementierung
+\begin{lstlisting}
+mov    eax, 1  ; Zuweisung eax = 1
+dec    eax     ; 1 - 1 = 0
+               ; Zero-Flag gesetzt
+\end{lstlisting}
+
+\end{frame}
+
+\begin{frame}{Vergleiche}
+
+\begin{center}
+\textbf{Vergleiche}
+\end{center}
+
+Ergebnisse von Vergleichen werden in den \textit{Flag}-Registern gespeichert
+
+\makebox{}
+
+Vergleichs-Operationen
+\begin{itemize}
+	\item \textbf{binäre Subtraktion}\\
+		\texttt{cmp arg1, arg2} $\leftrightarrow \text{arg1} - \text{arg2}$
+
+	\item \textbf{logische Verundung}\\
+		\texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Vergleiche}
+
+Beispiel
+\begin{lstlisting}
+mov    eax, 5  ; eax = 5
+cmp    eax, 5  ; Zero Flag gesetzt -> 5 == 5
+\end{lstlisting}
+
+\makebox{}
+
+\textit{Flag}-Kombination und ihre Aussage über die Relation:
+
+\makebox{}
+
+\begin{small}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+1. Operand & 2. Operand & Ergebnis & 
+CF\footnote{Carry Flag} & 
+OF\footnote{Overflow Flag} & 
+SF\footnote{Sign Flag} &
+ZF\footnote{Zero Flag}
+& Relation \\ \hline 
+5          & 5          & 0        & 0  & 0  & 0  & 1  & $\text{op1} = \text{op2}$ \\ \hline
+10         & 5          & 5        & 0  & 0  & 0  & 0  & $\text{op1} > \text{op2}$ \\ \hline
+5          & 10         & -5       & 1  & 0  & 1  & 0  & $\text{op1} < \text{op2}$ \\ \hline
+\multicolumn{8}{|c|}{...} \\ \hline
+\end{tabular}
+\end{small}
+
+\end{frame}
+
+\begin{frame}[fragile]{bedingte und unbedingte Sprünge}
+
+\begin{center}
+\textbf{unbedingte Sprünge / \texttt{JMP}-Mnemonic}
+\end{center}
+
+\begin{itemize}
+	\item ermöglicht das Anspringen von Adressen ferner Instruktionen
+	\item Umgesetzt mittels Manipulation des \textit{Instruction Pointers}
+\end{itemize}
+
+\makebox{}
+
+Beispiel
 \begin{lstlisting}
 jmp    exit   ; Springe zum Label exit
 .
@@ -47,6 +165,48 @@ exit: ...     ; Label exit
 \end{frame}
 
 \begin{frame}[fragile]{bedingte und unbedinge Sprünge}
+
+\begin{center}
+\textbf{bedingte Sprünge}
+\end{center}
+
+\begin{itemize}
+	\item Realisierung von aus Hochsprachen bekannten Konstrukten
+	\begin{itemize}
+		\item if/else
+		\item switch
+		\item ...
+	\end{itemize}
+\end{itemize}
+
+\makebox{}
+
+Semantik
+\begin{itemize}
+	\item Sprung wird genommen, wenn die Bedingung erfüllt ist
+	\item Bedingungsergebnis wird mit Hilfe der \textit{Flag}-Register ermittelt
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+oft benutzte bedingte Sprunganweisungen
+\begin{description}
+	\item [JZ] jump if zero
+	\item [JG] jump if greater 
+	\item [JE] jump if equal 
+	\item [JL] jump if less 
+	\item [...]
+\end{description}
+\end{frame}
+
+
+\begin{frame}[fragile]{bedingte Sprünge}
+
+\begin{center}
+\textbf{Beispiel}
+\end{center}
+
 Pseudocode
 \begin{lstlisting}
 if(ecx != edx)
@@ -59,12 +219,198 @@ if(ecx != edx)
 x86 Assembler
 \begin{lstlisting}
         cmp ecx, edx
-        je ifEnd ; Sprung wenn ecx == edx
+        je ifEnd ; "Jump if equal", Sprung wenn ecx == edx
+				; ansonsten wird der Code ausgeführt
         ...
 ifEnd:  ; Sprungadresse wenn ecx und edx
         ; gleich sind 
 \end{lstlisting}
 \end{frame}
 
+
 \begin{frame}{Stack-Operationen}
+
+\begin{center}
+\textbf{Stack}
+\end{center}
+
+\begin{itemize}
+	\item analog zur Stack-Datenstruktur
+
+	\item Operationen
+	\begin{description}
+		\item [PUSH] Hinzufügen von einem Element
+		
+		\item [POP] Löschen von einem Elementen
+	\end{description}
+
+	\item \textit{Stack Pointer} (ESP) zeigt auf das oberste Element
+
+	\item ESP wächst nach unten
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Beispiel - PUSH}
+\end{center}
+
+\begin{lstlisting}
+push    10  ; Speichert den Wert 10 auf dem Stack
+\end{lstlisting}
+
+\begin{multicols}{2}
+\begin{minipage}{5cm}
+\emph{Stack vor der Operation}\\
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & \\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFF
+\end{minipage}
+
+\begin{minipage}{5cm}
+\emph{Stack nach der Operation}\\
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFE
+\end{minipage}
+\end{multicols}
+\end{frame}
+
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Beispiel - POP}
+\end{center}
+
+\begin{lstlisting}
+push    eax  ; Speichert das zuletzt hinzugefügte Element
+             ; im Stack in das Register eax
+\end{lstlisting}
+
+\begin{multicols}{2}
+
+\begin{minipage}{5cm}
+\emph{Stack vor der Operation}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFE
+\end{minipage}
+
+\begin{minipage}{5cm}
+\emph{Stack nach der Operation}
+\begin{tabular}{c|c|}
+	\cline{2-2}
+   0xFF & 42\\ \cline{2-2}
+   0xFE & 10\\ \cline{2-2}
+   0xFD & \\ \cline{2-2}
+	      & ... \\ \cline{2-2}
+	 0x00 & \\ \cline{2-2}
+\end{tabular}
+ESP: 0xFF
+\end{minipage}
+\end{multicols}
+\end{frame}
+
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Funktionen / Prozeduren}
+\end{center}
+
+Nutzen \begin{itemize}
+	\item Wiederverwendbarkeit 
+	\item Isolation von Quellcode
+\end{itemize}
+
+\makebox{}
+
+Funktionen lassen in drei Teilschritte zerlegen
+\begin{enumerate}
+	\item Eintreten in die Funktion (Subroutine)
+	\item Abarbeitung der Funktion
+	\item Verlassen der Funktion (Subroutine)
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Eintreten in die Funktion - call-Mnemonic}
+\end{center}
+
+Syntax
+\begin{lstlisting}
+call    Adresse
+\end{lstlisting}
+
+Als Adresse wird meistens ein Label benutzt, dass vom Compiler dann automatisch durch die richtige Adresse ersetzt wird.
+
+\makebox{}
+
+Ablauf des \texttt{call}-Mnemonic
+\begin{enumerate}
+	\item Abspeichern des aktuellen \textit{Instruction Pointers} auf dem Stack
+	\item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
+	\item Begin der Abarbeitung der Subroutine	
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Verlassen der Funktion - ret-Mnemonic}
+\end{center}
+
+Syntax
+\begin{lstlisting}
+ret    [AnzahlDerRückgabeParameter]
+\end{lstlisting}
+
+\makebox
+
+\begin{enumerate}
+	\item \textit{Instruction Pointer} in das \texttt{EIP} Register laden
+	\item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parametern. 
+	\item Fortführung des Hauptprogramms 	
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]{Stack-Operationen}
+
+\begin{center}
+\textbf{Beispiel}
+\end{center}
+
+\begin{lstlisting}
+myFunc: mov    eax, 10 ; Speichert im Register eax den Wert 10
+        ret            ; Stellt den IP wiederher
+				               ; und springt somit zurück zum Aufrufer
+
+main:   call myFunc    ; Ruft die Subroutine myFunc auf
+\end{lstlisting}
 \end{frame}
