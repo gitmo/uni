@@ -29,14 +29,14 @@ Ein Compiler legt über seine Aufrufkonvention oft fest ob den Registern besonde
 \subsubsection{Segmentregister und Adressierung}
 
 \begin{tabular}{|c|c|}
-\hline CS & Codesegment \\
-\hline DS & Datensegment \\
-\hline SS & Stacksegment \\
-\hline ES & Extrasegment\\
+\hline CS & \emph{code segment} \\
+\hline DS & \emph{daten segment} \\
+\hline SS & \emph{stack segment} \\
+\hline ES, FS, GS & \emph {extra segment registers} \\
 \hline
 \end{tabular}
 
-Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht in byteweise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, dann sie nehmen Anfangsadressen von Segmenten im Speicher auf. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar SS:ESP ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um über statt 16-Bit zur Adressierung über 20-Bit zu verfügen.
+Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht in byteweise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, denn sie nehmen Anfangsadressen von Segmenten im Speicher auf. Dies ist nützlich zur Bildung von Pointern. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar SS:ESP ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um die vollen 20-Bit des Adressbusses bei nur 16-Bit Registerbreite bei der Adressierung verwenden zu können.
 
 % lassen sich lediglich auslesen und beschreiben
 
@@ -78,9 +78,7 @@ wird ausschließlich intern durch den Prozessor verändert.
 
 \subsubsection{Statusregister}
 
-Ein 16 Bit Flag-Register FLAGS
-
-32 Bit EFLAGS erhält einige weitere Flags
+Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben folgende Bedeutung. Die 32-Bit des {\tt EFLAGS} erhält einige weitere Flags.
 
 {\small 15}
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
