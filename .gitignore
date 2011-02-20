@@ -44,3 +44,7 @@ release/
 
 build/
 *xcodeproj/
+
+
+# asm
+!uni/asm/folien/FULogo_RGB.pdf
