@@ -117,6 +117,28 @@ mov    eax, 5  ; eax = 5
 cmp    eax, 5  ; Zero Flag gesetzt -> 5 == 5
 \end{lstlisting}
 
+\makebox{}
+
+\textit{Flag}-Kombination und ihre Aussage über die Relation:
+
+\makebox{}
+
+\begin{small}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+1. Operand & 2. Operand & Ergebnis & 
+CF\footnote{Carry Flag} & 
+OF\footnote{Overflow Flag} & 
+SF\footnote{Sign Flag} &
+ZF\footnote{Zero Flag}
+& Relation \\ \hline 
+5          & 5          & 0        & 0  & 0  & 0  & 1  & $\text{op1} = \text{op2}$ \\ \hline
+10         & 5          & 5        & 0  & 0  & 0  & 0  & $\text{op1} > \text{op2}$ \\ \hline
+5          & 10         & -5       & 1  & 0  & 1  & 0  & $\text{op1} < \text{op2}$ \\ \hline
+\multicolumn{8}{|c|}{...} \\ \hline
+\end{tabular}
+\end{small}
+
 \end{frame}
 
 \begin{frame}[fragile]{bedingte und unbedingte Sprünge}
