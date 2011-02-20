@@ -15,7 +15,7 @@ _main:
 
     lea     eax, [rel message]
     mov     [esp], eax
-  	call    _printf
+    call    _printf
  
     mov     [esp], dword 0       ; exit status returned to the operating system
     call    _exit

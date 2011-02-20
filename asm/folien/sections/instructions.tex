@@ -29,10 +29,10 @@ mov    eax, ebx  ; Wert vno Register ebx in eax kopieren
 
 \end{frame}
 
-\begin{frame}[fragile]{mathematische und logische Operationen}
+\begin{frame}[fragile]{Mathematische und logische Operationen}
 
 \begin{center}
-\textbf{mathematische Operationen}
+\textbf{Mathematische Operationen}
 \end{center}
 
 verfügbare Operationen / Mnemonics
@@ -66,7 +66,7 @@ Semantik
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{mathematische und logische Operationen}
+\begin{frame}[fragile]{Mathematische und logische Operationen}
 
 \begin{center}
 \textbf{Beispiele}
@@ -82,7 +82,7 @@ add    eax, 5  ; 5+5 = 10
 
 Dekrementierung
 \begin{lstlisting}
-mov    eax, 1  ; Zuweisung eax = 1
+mov    eax, 1   ; Zuweisung eax = 1
 dec    eax     ; 1 - 1 = 0
                ; Zero-Flag gesetzt
 \end{lstlisting}
@@ -141,10 +141,10 @@ ZF\footnote{Zero Flag}
 
 \end{frame}
 
-\begin{frame}[fragile]{bedingte und unbedingte Sprünge}
+\begin{frame}[fragile]{Bedingte und unbedingte Sprünge}
 
 \begin{center}
-\textbf{unbedingte Sprünge / \texttt{JMP}-Mnemonic}
+\textbf{Unbedingte Sprünge / \texttt{JMP}-Mnemonic}
 \end{center}
 
 \begin{itemize}
@@ -164,18 +164,18 @@ exit: ...     ; Label exit
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{bedingte und unbedinge Sprünge}
+\begin{frame}[fragile]{Bedingte und unbedinge Sprünge}
 
 \begin{center}
-\textbf{bedingte Sprünge}
+\textbf{Bedingte Sprünge}
 \end{center}
 
 \begin{itemize}
 	\item Realisierung von aus Hochsprachen bekannten Konstrukten
 	\begin{itemize}
-		\item if/else
+		\item if, then, else
 		\item switch
-		\item ...
+		\item while, for, ...
 	\end{itemize}
 \end{itemize}
 
@@ -190,7 +190,7 @@ Semantik
 
 
 \begin{frame}
-oft benutzte bedingte Sprunganweisungen
+Oft benutzte bedingte Sprunganweisungen
 \begin{description}
 	\item [JZ] jump if zero
 	\item [JG] jump if greater 
@@ -246,7 +246,7 @@ ifEnd:  ; Sprungadresse wenn ecx und edx
 
 	\item \textit{Stack Pointer} (ESP) zeigt auf das oberste Element
 
-	\item ESP wächst nach unten
+	\item ESP wächst nach unten (zu den niedrigeren Adressen)
 \end{itemize}
 \end{frame}
 
