@@ -104,7 +104,7 @@ Anhand des gesetzten \textit{Z}-Flags\footnote{Zero Flag} ist es klar, dass beid
 
 \subsection{Verzweigungen und bedingte Anweisungen}
 
-\subsubsection{unbedingter Sprung}
+\subsubsection{Unbedingter Sprung}
 Ein unbedingter Sprung kann hilfreich sein um zum einem einen besseren Überblick zu gewährleisten und zum anderen Wiederverwendbarkeit von Quelltext zu ermöglichen.
 
 Ein unbedingter Sprung wird mittels Manipulation des \textit{Instruction Pointer} realisiert.
@@ -121,7 +121,7 @@ jmp    exit   ; Springe zum Label exit
 exit: ...     ; Label exit
 \end{lstlisting}
 
-\subsubsection{bedingter Sprung}
+\subsubsection{Bedingter Sprung}
 Bei einem bedingten Sprung wird je nach erfolgreicher Bedingung der Sprung ausgeführt oder ignoriert. Die Bedingung wird mittels Mnemonic beschrieben. Die für den Vergleich benötigten Werte, werden aus den \textit{Flag}-Registern ausgelesen.
 
 Hierzu wird meist eine Vergleichs-Operation vor dem eigentlichen Sprung benutzt. Diese setzt die \textit{Flag}-Register neu. Je nachdem ob nun die Bedingung anhand dieser Register-Werte wahr oder falsch ist, wird die Sprunganweisung ausgeführt oder eben nicht. 
