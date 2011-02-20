@@ -1,5 +1,64 @@
 \section{Syntax}
 
 \begin{frame}{Syntax}
-  % You might wish to add the option [pausesections]
+\begin{center}
+\textbf{grundlegende Syntax}
+\end{center}
+
+	Syntax
+	\texttt{[label:] mnemonic [argument1][, argument2][, argument3]}
+
+	\makebox{}
+
+	\begin{description}
+		\item [label] Sprungmarke (optional)
+		\item [mnemonic] Instruktionssymbol 
+		\item [argument] Parameter (optional, maximal 3)
+	\end{description}
+
+	\makebox{}
+
+	jede Zeile entspricht einer Prozessorinstruktion  
+\end{frame}
+
+
+\begin{frame}{Syntax}
+	\begin{center}
+	\textbf{synaktische Unterschiede zwischen Intel und AT\&T}
+	\end{center}
+
+	\begin{small}
+	\begin{table}[h]	% place here\usepackage[cm]{fullpage}
+	\begin{tabular}{lll}
+	\\	                          & INTEL SYNTAX                  & AT\&T SYNTAX
+	\\\hline
+	\\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
+	\\  Adressierung  				  	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
+	\\	Register      						& \tt eax              					& \tt \%eax
+	\\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
+	\\	Dereferenzieung   				& \tt [addr]           					& \tt addr(,1)
+	\\	Absolute Adresse 			 	  & \tt addr             					& \tt *addr
+	\\	{\tt byte} Instruktion    & \tt mov byte ptr     					& \tt movb
+	\\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
+	\\  {\tt dword} Instruktion   & \tt mov dword ptr    					& \tt movl
+	\end{tabular}
+	\end{table}
+	\end{small}
+
+	\begin{multicols}{2}
+		\begin{minipage}{5cm}
+			\begin{center}
+			\textbf{Intel}\\
+				\texttt{mov    eax, 5}
+			\end{center}
+		\end{minipage}
+
+		\begin{minipage}{5cm}
+			\begin{center}
+			\textbf{AT\&T}\\
+				\texttt{movw   \$5, \%eax}
+			\end{center}
+		\end{minipage}
+	\end{multicols}
+
 \end{frame}
