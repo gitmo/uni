@@ -48,3 +48,7 @@ build/
 
 # asm
 !FULogo_RGB.pdf
+
+# IDA
+*.id?
+*.nam
