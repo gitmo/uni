@@ -1,5 +1,3 @@
-%Register
-%Adressierung
 \section{Architektur}
 X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 CPU konzipiert war. Diese basiert auf einer Von-Neumann-Architektur. Hier wird, im Gegensatz zum Harvard-Modell, für Daten und Programme der gleiche Speicher verwendet. Es existierte ein fester Registersatz von 16 Registern der sich im Laufe der Zeit immer weiter vergrößert hat. Ursprünglich hatte x86 vier general-purpose Register (AX, BX, CX und DX), vier Segmentregister zur Speicheradressierung (CS, DS, ES und SS), vier Indexregistern (SP, BP, SI, DI), sowie ein FLAG-Register und ein Instruktionszeiger-Register.
 
@@ -43,7 +41,7 @@ Segmentregister können immer nur mittels eines Allzweckregisters oder spezielle
 
 \subsubsection{Zeige- und Indexregister}
 
-Diese Register sind nützlich als Zeiger auf Datenstrukturen, Indexierung in Arrays und bei String-Manipulation und als Offset als Teil einer Adresse. Sie lassen sich mit den Segmentregistern kombinieren, um in weit entfernte Speicherbereiche zu zeigen. 
+Diese Register sind nützlich als Zeiger auf Datenstrukturen, Indexierung in Arrays und bei String-Manipulation und als Offset als Teil einer Adresse. Sie lassen sich mit den Segmentregistern kombinieren, um in weit entfernte Speicherbereiche zu zeigen.
 
 \begin{tabular}{|c|l|l|}
 \hline ESI & \emph{source index} & DS:ESI, SI\\
@@ -51,7 +49,7 @@ Diese Register sind nützlich als Zeiger auf Datenstrukturen, Indexierung in Arr
 \hline
 \end{tabular}
 
-ESI und EDI dienen als String und Speicherkopieroperationen in Arrays und lassen sich mit DS bzw. DS kombinieren.
+ESI und EDI dienen als Zeiger für String- und Kopieroperationen in Arrayspeicher und lassen sich mit DS bzw. DS kombinieren.
 
 \begin{tabular}{|c|l|}
 \hline ESP & \emph{stack pointer} SS\\
@@ -59,7 +57,7 @@ ESI und EDI dienen als String und Speicherkopieroperationen in Arrays und lassen
 \hline
 \end{tabular}
 
-Die Zeiger für den Stack {\tt ESP} und {\tt EBP} dienen zum Aufspannen eines Stackbereich bei Funktionsaufrufen. {\tt ESP} zeigt dabei immer auf das oberste Element im Stack und wird bei {\tt push}- und {\tt pop}-Befehlen manipuliert, während {\tt EBP} auf eine anderen Adresse im Stack zeigen kann um die Basis eines Stackbereichs zu definieren. Das Stack-Segmentregister SS definiert das aktuelle Speichersegment für die Offsets in {\tt ESP} und {\tt EBP}.
+Die Zeiger für den Stack {\tt ESP} und {\tt EBP} dienen zum Aufspannen eines Stackbereich bei Funktionsaufrufen. {\tt ESP} zeigt dabei immer auf das oberste Element im Stack und wird bei {\tt Push}- und {\tt Pop}-Befehlen manipuliert, während {\tt EBP} auf eine anderen Adresse im Stack zeigen kann um die Basis eines Stackbereichs zu definieren. Das Stack-Segmentregister SS definiert das aktuelle Speichersegment für die Offsets in {\tt ESP} und {\tt EBP}.
 
 \begin{tabular}{|c|l|}
 \hline EIP & \emph{instruction pointer} \\
@@ -80,7 +78,7 @@ Das Register {\tt EFLAGS} enthält Informationen über den aktuellen Zustand des
 {\small 0}
 
 \emph{overflow, direction, interrupt, trap, sign, zero, auxiliary, parity}
-und \emph{carry flag} 
+und \emph{carry flag}
 
 \subsection{Adressraum}
 
@@ -88,7 +86,7 @@ Die Anzahl der Adressleitungen eines Prozessors bestimmt die Größe des Speiche
 
 \subsubsection{Real Mode}
 
-Der \emph{Real Mode} ist der Operationsmodus des 8086 mit 16-Bit Instruktionssatz und 20-Bit Adressierung, in dem aus Gründen der Rückwärtskompatibilität auf allen x86-Prozessoren gestartet wird. Um mit 16-Bit Registern auf 1 MByte Speicher zurückgreifen zu können bedarf es einem ingenieurstechnischen Trick, der sogenannten segmentierte Adressierung. Mit Hilfe der Segmentregister (CS, DS, SS, ES) werden effektiv 4 weitere Bits auf Folgende Art zur Adressenberechnung genutzt:
+Der \emph{Real Mode} ist der Operationsmodus des 8086 mit 16-Bit Instruktionssatz und 20-Bit Adressierung, in dem aus Gründen der Rückwärtskompatibilität auf allen x86-Prozessoren gestartet wird. Um mit 16-Bit Registern auf 1 MByte Speicher zurückgreifen zu können bedarf es einem Ingenieurs-Trick, der sogenannten segmentierte Adressierung. Mit Hilfe der Segmentregister (CS, DS, SS, ES) werden effektiv 4 weitere Bits auf Folgende Art zur Adressenberechnung genutzt:
 
 $Adresse = (16 * Segment + Offset) \text{ modulo } 20$
 
@@ -107,10 +105,5 @@ Eckige Klammern der Art {\tt [Adresse]} bezeichnen den Inhalt der Speicherstelle
 
 \subsubsection{Protected Mode}
 
-Mit der Einführung des Protected Mode ab dem 80286 erlaubt ein virtueller Speicher-Mechanismus die Segmentierung in isolierte 32-bit-Adressräume die auf den physikalische Speicher abgebildet werden können. Durch die Verdoppelung der Registerbreite kann mit einem Register bereits der gesamte Adressraum angesprochen werden jedoch ist segmentierte Adressierung ebenfalls möglich jedoch wenig relevant  in der Praxis. Betriebssyteme wie Linux setzen auf ein "flaches" Speichermodell \emph{flat memory model} bei denen die Segmentbasen auf 0 gesetzt werden.
+Mit der Einführung des Protected Mode ab dem 80286 erlaubt ein virtueller Speicher-Mechanismus die Segmentierung in isolierte 32-bit-Adressräume die auf den physikalische Speicher abgebildet werden können. Durch die Verdoppelung der Registerbreite kann mit einem Register bereits der gesamte Adressraum angesprochen werden jedoch ist segmentierte Adressierung ebenfalls möglich jedoch wenig relevant  in der Praxis. Betriebssyteme wie Linux setzen auf ein ``flaches'' Speichermodell \emph{flat memory model} bei denen die Segmentbasen auf 0 gesetzt werden.
 
-
-
-
-
-% \section{Unterprogramme}

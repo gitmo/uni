@@ -89,19 +89,19 @@ zusammengefasst.
 
 %\clearpage
 
-\begin{table}[h]	% place here
+\begin{table}[ht]  % place here
 \begin{tabular}{lll}
-\\	                          & INTEL SYNTAX                  & AT\&T SYNTAX
+\\                            & INTEL SYNTAX                  & AT\&T SYNTAX
 \\\hline
-\\	Parameter 								& \tt mnem dest, src, const  	  & \tt mnem src, dest, const
-\\  Adressierung  				  	&	\tt [base+index*scale+disp]   & \tt disp(base, index, scale)
-\\	Register      						& \tt eax              					& \tt \%eax
-\\	Konstante     						& \tt 0xFF             					& \tt \$0xFF
-\\	Dereferenzierung   				& \tt [addr]           					& \tt addr(,1)
-\\	Absolute Adresse 			 	  & \tt addr             					& \tt *addr
-\\	{\tt byte} Instruktion    & \tt mov byte ptr     					& \tt movb
-\\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
-\\  {\tt dword} Instruktion   & \tt mov dword ptr    					& \tt movl
+\\  Parameter                 & \tt mnem dest, src, const     & \tt mnem src, dest, const
+\\  Adressierung              & \tt [base+index*scale+disp]   & \tt disp(base, index, scale)
+\\  Register                  & \tt eax                       & \tt \%eax
+\\  Konstante                 & \tt 0xFF                      & \tt \$0xFF
+\\  Dereferenzierung          & \tt [addr]                    & \tt addr(,1)
+\\  Absolute Adresse          & \tt addr                      & \tt *addr
+\\  {\tt byte} Instruktion    & \tt mov byte ptr              & \tt movb
+\\  {\tt word} Instruktion    & \tt mov word ptr              & \tt movw
+\\  {\tt dword} Instruktion   & \tt mov dword ptr             & \tt movl
 \end{tabular}
 \caption{Syntaktische Unterschiede} \label{tab:syntaxdiffs}
 \end{table}
@@ -112,14 +112,14 @@ genommen gehören diese nicht zur Syntax, allerdings sind sie nötig um einige
 Meta-Informationen zur Code-Struktur zu definieren. Die Direktiven sind stark
 abhängig von der eingesetzten Software (NASM, YASM, GNU as, etc.) und selten
 herrscht Kompatibilität innerhalb der Assembler-Dialekte. Fast immer gibt es aber eine
-ähnlich lautende Entsprechung. 
+ähnlich lautende Entsprechung.
 
 Eine Typische Anweisung ist die Zuordnung eines Bezeichners zu einem Code- oder
 Datensegment. Die Adressen der Instruktionen werden beim Assemblieren ihrem
 Segment zugeordnet. Bei NASM heißt die Direktive \texttt{section}
 bei GAS \texttt{.section}. Die Sektionen \texttt{.text} und
 \texttt{.data} für das Code- bzw. statische Datensegment sind dabei traditionell
-unter Unix-artigen Systemen gebräuchlich. Die Bezeichner können aber 
+unter Unix-artigen Systemen gebräuchlich. Die Bezeichner können aber
 beliebig gewählt werden.
 
 Oft ist es auch nötig Datenbereiche zu reservieren oder statisch zu

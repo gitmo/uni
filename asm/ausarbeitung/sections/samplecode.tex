@@ -1,10 +1,10 @@
 \section{Hello World}
 
-In diesem Abschnitt soll ein einführendes Beispiel zur Programmieren in x86-Assembler gegeben werden. Um in der Tradition von Programmiersprachen-Literatur zu bleiben, wird hier ein kurzes Programm demonstriert, das "Hello, World!" auf der Konsole ausgibt.
+In diesem Abschnitt soll ein einführendes Beispiel zur Programmieren in x86-Assembler gegeben werden. Um in der Tradition von Programmiersprachen-Literatur zu bleiben, wird hier ein kurzes Programm demonstriert, das ``Hello, World!'' auf der Konsole ausgibt.
 
 Assembler-Programme sind naturgemäß stark Plattformabhängig, da auf niedrigster Ebene mit dem Betriebssystem kommuniziert wird.
-Das folgende Listing ist für \emph{Mac OS X} entwickelt worden, und 
-funktioniert auch auf den nahverwandten BSD-Unix-Systemen. Mit kleinen Änderungen kann es für Linux angepasst werden, die in einem extra Abschnitt beschrieben werden.
+Das folgende Listing ist für \emph{Mac OS X} entwickelt worden, und
+funktioniert auch auf den nah verwandten BSD-Unix-Systemen. Mit kleinen Änderungen kann es für Linux angepasst werden, die in einem extra Abschnitt beschrieben werden.
 
 \subsection{Assemblieren und Binden}
 
@@ -52,7 +52,7 @@ start:                      ; entry symbol on Mac OS X
     push    stdout          ; int filedescriptor
     mov     eax, SYS_write  ; Make the system call to write
     call    kernel
-   
+
     add     esp, 12         ; 3 args * 4 bytes each = 12 bytes
 
     push    0               ; exit status returned to the operating system
@@ -60,16 +60,16 @@ start:                      ; entry symbol on Mac OS X
     call    kernel
 \end{lstlisting}
 
-Das Listing besteht aus den Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der "Hello, World"-Nachricht wird hier direkt auf den System-Call \texttt{write} des Betriebssystemkernels zurückgegriffen. 
+Das Listing besteht aus den Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der Textnachricht wird hier direkt auf den System-Call \texttt{write} des Betriebssystemkernels zurückgegriffen.
 
-Das Hauptprogramm bereitet die Parameter für \texttt{write} vor, in es sie nach C-Aufrufkonvention von hinten nach vorne mittels \texttt{push} auf dem Stack ablegt. Der Stackpointer \texttt{esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert – zur Erinnerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der System-Call benötigt beschreibt die Manual-Page \texttt{man 2 write}:
+Das Hauptprogramm bereitet die Parameter für {\tt write} vor, in dem es sie nach C-Aufruf"-konvention von hinten nach vorne mittels {\tt push} auf dem Stack ablegt. Der Stackpointer {\tt esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert -- zur Erinnerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der System-Call benötigt beschreibt die Manual-Page {\tt man 2 write}:
 
 \begin{lstlisting}
-	ssize_t write(int fildes, const void *buf, size_t nbyte);
+    ssize_t write(int fildes, const void *buf, size_t nbyte);
 \end{lstlisting}
 
 \begin{enumerate}
-\item {\tt length}:	Länge der Nachricht – eine Konstante definiert durch die
+\item {\tt length}: Länge der Nachricht – eine Konstante definiert durch die
 NASM Anweisung {\tt equ} als Abstand in Bytes Zwischen dem Label length und message
 \item {\tt message}: Die Adresse der Nachricht definiert durch {\tt db} als String von ASCII-Bytes
 \item {\tt stdout}: Der Dateideskriptor der Standardausgabe (=1) unter Unix-artigen Systemen
@@ -77,7 +77,7 @@ NASM Anweisung {\tt equ} als Abstand in Bytes Zwischen dem Label length und mess
 
 Der Kernel wird mit Hilfe des Software-Interrupts 80h (hexadezimal 80, identisch unter Linux, BSD und OS X) angesprungen. Einen ganzzahliger Wert im Register \texttt{eax} dient als Angabe welcher System-call verwendet werden soll. Für {\tt write} ist das die Konstante 4. Nach Behandlung des Interrupts wird mittels \texttt{ret} an die nächste Instruktion im Hauptprogramm zurückgekehrt an der vorher mittels \texttt{call kernel} der Prozeduraufruf stattfand.
 
-Der Stack enthält nun immer noch die drei Parameter an der Stelle des Stackpointers ({\tt esp}), die durch das Addieren von 12 Bytes – jeder Parameter belegte 4 Bytes – freigegeben werden können. Da das Programm aber als nächstes mit dem Syscall \texttt{exit}beendet wird, ist dies optional, da der Stack dann auch vom Betriebssystem freigegeben wird.
+Der Stack enthält nun immer noch die drei Parameter an der Stelle des Stackpointers ({\tt esp}), die durch das Addieren von 12 Bytes -- jeder Parameter belegte 4 Bytes -- freigegeben werden können. Da das Programm aber als nächstes mit dem Syscall \texttt{exit} beendet wird, ist dies optional, da der Stack dann auch vom Betriebssystem freigegeben wird.
 
 
 \subsection{Anpassungen für Linux}

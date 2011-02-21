@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EmbeddedEditorHidden:sebrz</key>
+	<false/>
+	<key>ExpandedEditorWidth:sebrz:displays([(0, 0), (1680, 1050)]:[(1680, 250), (1280, 800)])</key>
+	<integer>640</integer>
+	<key>ExpandedItems:sebrz</key>
+	<array>
+		<string>9CE9511B-4954-4429-81F2-FEBFA9953A1B</string>
+		<dict>
+			<key>AliasData</key>
+			<data>
+			AAAAAALSAAIAAQVzZWJyegAAAAAAAAAAAAAAAAAAAAAAAAAAAADH
+			W/vBSCsABQAqLNEIc2VjdGlvbnMAAAAAAAAAAAAAAAAAAAAAAAAA
+			AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACos
+			1slLRxoAAAAAAAAAAP////8AAA0CAAAAAAAAAAAAAAAAAAAADGF1
+			c2FyYmVpdHVuZwAQAAgAAMdb7bEAAAARAAgAAMlLOQoAAAABABQA
+			KizRACIZ8wAc3hYAFzwTAADLmgACACxzZWJyejpDb2RlOmdpdDp1
+			bmk6YXNtOmF1c2FyYmVpdHVuZzpzZWN0aW9ucwAOABIACABzAGUA
+			YwB0AGkAbwBuAHMADwAMAAUAcwBlAGIAcgB6ABIAJy9Db2RlL2dp
+			dC91bmkvYXNtL2F1c2FyYmVpdHVuZy9zZWN0aW9ucwAAEwAML1Vz
+			ZXJzL3NlYnJ6ABQBXAAAAAABXAACAAEHTWFjIFNTRAAAAAAAAAAA
+			AAAAAAAAAAAAAAAAx1v0rEgrAAAAAzo0EnNlYnJ6LnNwYXJzZWJ1
+			bmRsZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+			AAAAAAAAAAAAAAADOevHW/vBAAAAAAAAAAD/////AAAJIAAAAAAA
+			AAAAAAAAAAAAAAYuc2VicnoAEAAIAADHW+acAAAAEQAIAADHW+2x
+			AAAAAQAIAAM6NAAAkPoAAgAnTWFjIFNTRDpVc2Vyczouc2Vicno6
+			c2Vicnouc3BhcnNlYnVuZGxlAAAOACYAEgBzAGUAYgByAHoALgBz
+			AHAAYQByAHMAZQBiAHUAbgBkAGwAZQAPABAABwBNAGEAYwAgAFMA
+			UwBEABIAH1VzZXJzLy5zZWJyei9zZWJyei5zcGFyc2VidW5kbGUA
+			ABMAAS8A//8AAAAVAAIADP//AAA=
+			</data>
+			<key>FileURL</key>
+			<string>file://localhost/Users/sebrz/Code/git/uni/asm/ausarbeitung/sections/</string>
+			<key>TypeID</key>
+			<string>_CFileLocator</string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>FileFilterID:sebrz</key>
+	<string>msng</string>
+	<key>OpenDocuments:sebrz</key>
+	<array/>
+	<key>ShowInvisibles:sebrz</key>
+	<false/>
+	<key>TextFilesOnly:sebrz</key>
+	<true/>
+	<key>ToolbarVisible:sebrz</key>
+	<true/>
+	<key>ViewSplitterPosition:sebrz</key>
+	<real>0.26011559367179871</real>
+	<key>WindowFrame:sebrz:displays([(0, 0), (1680, 1050)]:[(1680, 250), (1280, 800)])</key>
+	<string>rect(44,4,1050,869)</string>
+</dict>
+</plist>
