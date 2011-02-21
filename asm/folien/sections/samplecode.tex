@@ -1,7 +1,7 @@
 \section{Hello World}
 
 \begin{frame}[fragile]{Hello World}
-\begin{lstlisting}[numbers=left,caption=Datensegment]
+\begin{lstlisting}[numbers=left,caption=Makros und Datensegment]
 ; Preprocessor macros
 %define stdout  1
 
@@ -12,7 +12,7 @@
 section .data
 
 message   db 'Hello, World!', 0Ah  ; End with newline
-length    equ $\$$ - message          ; Length = current - previous address
+length    equ $\$$ - message        ; Length = current - previous address
 \end{lstlisting}
 
 \begin{lstlisting}[numbers=left,firstnumber=12,caption=Codesegment - Syscall]
@@ -29,7 +29,7 @@ kernel:                     ; Expects syscall number in eax register
 \end{frame}
 
 \begin{frame}[fragile]{Hello World}
-\begin{lstlisting}[numbers=left,firstnumber=19,caption=Codesegment - Hello World]
+\begin{lstlisting}[numbers=left,firstnumber=19,caption=Codesegment - Hauptprogramm]
 start:                      ; entry symbol on Mac OS X
 
     push    length          ; size_t nbyte
@@ -37,7 +37,7 @@ start:                      ; entry symbol on Mac OS X
     push    stdout          ; int filedescriptor
     mov     eax, SYS_write  ; Make the system call to write
     call    kernel
-   
+
     add     esp, 12         ; 3 args * 4 bytes each = 12 bytes
 
     push    0               ; exit status returned to the operating system

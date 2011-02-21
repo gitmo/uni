@@ -15,8 +15,8 @@ mov    Ziel, Quelle
 
 Semantik
 \begin{itemize}
-	\item Daten in oder aus einem Register/Speicher kopieren
-	\item einem Register einen Wert zu weisen
+    \item Daten in oder aus einem Register/Speicher kopieren
+    \item einem Register einen Wert zu weisen
 \end{itemize}
 
 \makebox{}
@@ -24,7 +24,7 @@ Semantik
 Beispiel
 \begin{lstlisting}
 mov    eax, 5    ; Register eax Wert 5 zu weisen
-mov    eax, ebx  ; Wert vno Register ebx in eax kopieren
+mov    eax, ebx  ; Wert von Register ebx in eax kopieren
 \end{lstlisting}
 
 \end{frame}
@@ -37,11 +37,11 @@ mov    eax, ebx  ; Wert vno Register ebx in eax kopieren
 
 verfügbare Operationen / Mnemonics
 \begin{description}
-	\item [INC] Inkrementierung
-	\item [DEC] Dekrementierung
-	\item [ADD] Addition
-	\item [SUB] Subtraktion
-	\item [...]
+    \item [INC] Inkrementierung
+    \item [DEC] Dekrementierung
+    \item [ADD] Addition
+    \item [SUB] Subtraktion
+    \item [...]
 \end{description}
 
 \makebox{}
@@ -55,14 +55,14 @@ Mnemonic    Ziel[, Quelle]
 
 Semantik
 \begin{itemize}
-	\item Ergebnis wird im Ziel-Register gespeichert
+    \item Ergebnis wird im Ziel-Register gespeichert
 
-	\item auftretende Sonderfälle werden in den \textit{Flag}-Registern gespeichert
-	\begin{itemize}
-		\item Overflow
-		\item Zero
-		\item ...
-	\end{itemize}
+    \item auftretende Sonderfälle werden in den \textit{Flag}-Registern gespeichert
+    \begin{itemize}
+        \item Overflow
+        \item Zero
+        \item ...
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -75,7 +75,7 @@ Semantik
 Addition
 \begin{lstlisting}
 mov    eax, 5  ; Zuweisung eax = 5
-add    eax, 5  ; 5+5 = 10 
+add    eax, 5  ; 5+5 = 10
 \end{lstlisting}
 
 \makebox{}
@@ -83,8 +83,8 @@ add    eax, 5  ; 5+5 = 10
 Dekrementierung
 \begin{lstlisting}
 mov    eax, 1   ; Zuweisung eax = 1
-dec    eax     ; 1 - 1 = 0
-               ; Zero-Flag gesetzt
+dec    eax      ; 1 - 1 = 0
+                ; Zero-Flag gesetzt
 \end{lstlisting}
 
 \end{frame}
@@ -101,11 +101,11 @@ Ergebnisse von Vergleichen werden in den \textit{Flag}-Registern gespeichert
 
 Vergleichs-Operationen
 \begin{itemize}
-	\item \textbf{binäre Subtraktion}\\
-		\texttt{cmp arg1, arg2} $\leftrightarrow \text{arg1} - \text{arg2}$
+    \item \textbf{binäre Subtraktion}\\
+        \texttt{cmp arg1, arg2} $\leftrightarrow \text{arg1} - \text{arg2}$
 
-	\item \textbf{logische Verundung}\\
-		\texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
+    \item \textbf{logische VerUNDung}\\
+        \texttt{test arg1, arg2} $\leftrightarrow \text{arg1} \wedge \text{arg2}$
 \end{itemize}
 \end{frame}
 
@@ -126,12 +126,12 @@ cmp    eax, 5  ; Zero Flag gesetzt -> 5 == 5
 \begin{small}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-1. Operand & 2. Operand & Ergebnis & 
-CF\footnote{Carry Flag} & 
-OF\footnote{Overflow Flag} & 
+1. Operand & 2. Operand & Ergebnis &
+CF\footnote{Carry Flag} &
+OF\footnote{Overflow Flag} &
 SF\footnote{Sign Flag} &
 ZF\footnote{Zero Flag}
-& Relation \\ \hline 
+& Relation \\ \hline
 5          & 5          & 0        & 0  & 0  & 0  & 1  & $\text{op1} = \text{op2}$ \\ \hline
 10         & 5          & 5        & 0  & 0  & 0  & 0  & $\text{op1} > \text{op2}$ \\ \hline
 5          & 10         & -5       & 0  & 0  & 1  & 0  & $\text{op1} < \text{op2}$ \\ \hline
@@ -148,8 +148,8 @@ ZF\footnote{Zero Flag}
 \end{center}
 
 \begin{itemize}
-	\item ermöglicht das Anspringen von Adressen ferner Instruktionen
-	\item Umgesetzt mittels Manipulation des \textit{Instruction Pointers}
+    \item ermöglicht das Anspringen von Adressen ferner Instruktionen
+    \item Umgesetzt mittels Manipulation des \textit{Instruction Pointers}
 \end{itemize}
 
 \makebox{}
@@ -164,27 +164,28 @@ exit: ...     ; Label exit
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile]{Bedingte und unbedinge Sprünge}
+\begin{frame}[fragile]{Bedingte und unbedingte Sprünge}
 
 \begin{center}
 \textbf{Bedingte Sprünge}
 \end{center}
 
 \begin{itemize}
-	\item Realisierung von aus Hochsprachen bekannten Konstrukten
-	\begin{itemize}
-		\item if, then, else
-		\item switch
-		\item while, for, ...
-	\end{itemize}
+    \item Realisierung von aus Hochsprachen bekannten Konstrukten
+    \begin{itemize}
+        \item if/then, else
+        \item switch
+        \item while, for
+        \item ...
+    \end{itemize}
 \end{itemize}
 
 \makebox{}
 
 Semantik
 \begin{itemize}
-	\item Sprung wird genommen, wenn die Bedingung erfüllt ist
-	\item Bedingungsergebnis wird mit Hilfe der \textit{Flag}-Register ermittelt
+    \item Sprung wird genommen, wenn die Bedingung erfüllt ist
+    \item Bedingungsergebnis wird mit Hilfe der \textit{Flag}-Register ermittelt
 \end{itemize}
 \end{frame}
 
@@ -192,11 +193,11 @@ Semantik
 \begin{frame}
 Oft benutzte bedingte Sprunganweisungen
 \begin{description}
-	\item [JZ] jump if zero
-	\item [JG] jump if greater 
-	\item [JE] jump if equal 
-	\item [JL] jump if less 
-	\item [...]
+    \item [JZ] jump if zero
+    \item [JG] jump if greater
+    \item [JE] jump if equal
+    \item [JL] jump if less
+    \item [...]
 \end{description}
 \end{frame}
 
@@ -211,7 +212,7 @@ Pseudocode
 \begin{lstlisting}
 if(ecx != edx)
 {
-	...
+    ...
 }
 //ifEnd
 \end{lstlisting}
@@ -220,10 +221,10 @@ x86 Assembler
 \begin{lstlisting}
         cmp ecx, edx
         je ifEnd ; "Jump if equal", Sprung wenn ecx == edx
-				; ansonsten wird der Code ausgeführt
+                 ; ansonsten wird der Code ausgeführt
         ...
 ifEnd:  ; Sprungadresse wenn ecx und edx
-        ; gleich sind 
+        ; gleich sind
 \end{lstlisting}
 \end{frame}
 
@@ -235,18 +236,18 @@ ifEnd:  ; Sprungadresse wenn ecx und edx
 \end{center}
 
 \begin{itemize}
-	\item analog zur Stack-Datenstruktur
+    \item analog zur Stack-Datenstruktur
 
-	\item Operationen
-	\begin{description}
-		\item [PUSH] Hinzufügen von einem Element
-		
-		\item [POP] Löschen von einem Elementen
-	\end{description}
+    \item Operationen
+    \begin{description}
+        \item [PUSH] Hinzufügen von einem Element
 
-	\item \textit{Stack Pointer} (ESP) zeigt auf das oberste Element
+        \item [POP] Löschen von einem Elementen
+    \end{description}
 
-	\item ESP wächst nach unten (zu den niedrigeren Adressen)
+    \item \textit{Stack Pointer} (ESP) zeigt auf das oberste Element
+
+    \item ESP wächst nach unten (zu den niedrigeren Adressen)
 \end{itemize}
 \end{frame}
 
@@ -265,12 +266,12 @@ push    10  ; Speichert den Wert 10 auf dem Stack
 \begin{minipage}{5cm}
 \emph{Stack vor der Operation}\\
 \begin{tabular}{c|c|}
-	\cline{2-2}
+    \cline{2-2}
    0xFF & 42\\ \cline{2-2}
    0xFE & \\ \cline{2-2}
    0xFD & \\ \cline{2-2}
-	      & ... \\ \cline{2-2}
-	 0x00 & \\ \cline{2-2}
+        & ... \\ \cline{2-2}
+   0x00 & \\ \cline{2-2}
 \end{tabular}
 ESP: 0xFF
 \end{minipage}
@@ -278,12 +279,12 @@ ESP: 0xFF
 \begin{minipage}{5cm}
 \emph{Stack nach der Operation}\\
 \begin{tabular}{c|c|}
-	\cline{2-2}
+    \cline{2-2}
    0xFF & 42\\ \cline{2-2}
    0xFE & 10\\ \cline{2-2}
    0xFD & \\ \cline{2-2}
-	      & ... \\ \cline{2-2}
-	 0x00 & \\ \cline{2-2}
+          & ... \\ \cline{2-2}
+     0x00 & \\ \cline{2-2}
 \end{tabular}
 ESP: 0xFE
 \end{minipage}
@@ -307,12 +308,12 @@ push    eax  ; Speichert das zuletzt hinzugefügte Element
 \begin{minipage}{5cm}
 \emph{Stack vor der Operation}
 \begin{tabular}{c|c|}
-	\cline{2-2}
+    \cline{2-2}
    0xFF & 42\\ \cline{2-2}
    0xFE & 10\\ \cline{2-2}
    0xFD & \\ \cline{2-2}
-	      & ... \\ \cline{2-2}
-	 0x00 & \\ \cline{2-2}
+        & ... \\ \cline{2-2}
+     0x00 & \\ \cline{2-2}
 \end{tabular}
 ESP: 0xFE
 \end{minipage}
@@ -320,12 +321,12 @@ ESP: 0xFE
 \begin{minipage}{5cm}
 \emph{Stack nach der Operation}
 \begin{tabular}{c|c|}
-	\cline{2-2}
+    \cline{2-2}
    0xFF & 42\\ \cline{2-2}
    0xFE & 10\\ \cline{2-2}
    0xFD & \\ \cline{2-2}
-	      & ... \\ \cline{2-2}
-	 0x00 & \\ \cline{2-2}
+          & ... \\ \cline{2-2}
+     0x00 & \\ \cline{2-2}
 \end{tabular}
 ESP: 0xFF
 \end{minipage}
@@ -340,17 +341,17 @@ ESP: 0xFF
 \end{center}
 
 Nutzen \begin{itemize}
-	\item Wiederverwendbarkeit 
-	\item Isolation von Quellcode
+    \item Wiederverwendbarkeit
+    \item Isolation von Quellcode
 \end{itemize}
 
 \makebox{}
 
 Funktionen lassen in drei Teilschritte zerlegen
 \begin{enumerate}
-	\item Eintreten in die Funktion (Subroutine)
-	\item Abarbeitung der Funktion
-	\item Verlassen der Funktion (Subroutine)
+    \item Eintreten in die Funktion (Subroutine)
+    \item Abarbeitung der Funktion
+    \item Verlassen der Funktion (Subroutine)
 \end{enumerate}
 \end{frame}
 
@@ -371,9 +372,9 @@ Als Adresse wird meistens ein Label benutzt, dass vom Compiler dann automatisch 
 
 Ablauf des \texttt{call}-Mnemonic
 \begin{enumerate}
-	\item Abspeichern des aktuellen \textit{Instruction Pointers} auf dem Stack
-	\item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
-	\item Begin der Abarbeitung der Subroutine	
+    \item Speichern des aktuellen \textit{Instruction Pointers} auf dem Stack
+    \item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
+    \item Begin der Abarbeitung der Subroutine
 \end{enumerate}
 
 \end{frame}
@@ -393,9 +394,9 @@ ret    [AnzahlDerRückgabeParameter]
 \makebox
 
 \begin{enumerate}
-	\item \textit{Instruction Pointer} in das \texttt{EIP} Register laden
-	\item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parametern. 
-	\item Fortführung des Hauptprogramms 	
+    \item \textit{Instruction Pointer} in das \texttt{EIP} Register laden
+    \item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parametern.
+    \item Fortführung des Hauptprogramms
 \end{enumerate}
 \end{frame}
 
@@ -408,8 +409,8 @@ ret    [AnzahlDerRückgabeParameter]
 
 \begin{lstlisting}
 myFunc: mov    eax, 10 ; Speichert im Register eax den Wert 10
-        ret            ; Stellt den IP wiederher
-				               ; und springt somit zurück zum Aufrufer
+        ret            ; Stellt den IP wieder her
+                       ; und springt somit zurück zum Aufrufer
 
 main:   call myFunc    ; Ruft die Subroutine myFunc auf
 \end{lstlisting}
