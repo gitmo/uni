@@ -17,7 +17,7 @@ $ ./hello
 Hello, World!
 \end{lstlisting}
 
-Der Assembler NASM (Netwide Assembler) übersetzt das Listing in Objektcode in 32-bit Mach-O-Format – dabei handelt es sich um das Dateiformat für ausführbaren Code unter \emph{Mac OS X}. Das Ergebnis ist der Zwischencode in \texttt{hello.o}. Im zweiten Schritt wird der Linker \texttt{ld} angewiesen eine ausführbare Programmdatei (\emph{ Executable}) mit dem Namen \texttt{hello} zu erzeugen, welche im Anschluss ausgeführt wird. Die Vorgehensweise beim Binden ist analog zur Arbeit mit dem C-Compiler von \emph{GCC} der ebenfalls im Zwischenschritt Objektcode-Dateien aus C-Programmen erzeugt.
+Der Assembler NASM (Netwide Assembler) übersetzt das Listing in Objektcode im Mach-O-Format – dabei handelt es sich um das Dateiformat für ausführbaren Code unter \emph{Mac OS X}. Das Ergebnis ist der Zwischencode in \texttt{hello.o}. Im zweiten Schritt wird der Linker \texttt{ld} angewiesen eine ausführbare Programmdatei (\emph{ Executable}) mit dem Namen \texttt{hello} zu erzeugen, welche im Anschluss ausgeführt wird. Die Vorgehensweise beim Binden ist analog zur Arbeit mit dem C-Compiler von \emph{GCC} der ebenfalls im Zwischenschritt Objektcode-Dateien aus C-Programmen erzeugt.
 
 \subsection{Code für BSD-Unix Systeme}
 
@@ -60,9 +60,9 @@ start:                      ; entry symbol on Mac OS X
     call    kernel
 \end{lstlisting}
 
-Das Listing besteht aus den Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der Textnachricht wird hier direkt auf den System-Call \texttt{write} des Betriebssystemkernels zurückgegriffen.
+Das Listing besteht aus dem Hauptprogramm, gekennzeichnet mit dem Label \texttt{start} und einem Unterprogramm mit dem Label \texttt{kernel}. Zur Ausgabe der Textnachricht wird hier direkt auf den System-Call \texttt{write} des Betriebssystemkernels zurückgegriffen.
 
-Das Hauptprogramm bereitet die Parameter für {\tt write} vor, in dem es sie nach C-Aufruf"-konvention von hinten nach vorne mittels {\tt push} auf dem Stack ablegt. Der Stackpointer {\tt esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert -- zur Erinnerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der System-Call benötigt beschreibt die Manual-Page {\tt man 2 write}:
+Das Hauptprogramm bereitet die Parameter für {\tt write} vor, indem es sie nach C-Aufruf"-konvention von hinten nach vorne mittels {\tt push} auf dem Stack ablegt. Der Stackpointer {\tt esp} wird mit jedem Push um 4 Bytes ($=$ 32 Bit) verringert -- zur Erinnerung: der Stack wächst von den hohen zu niedrigen Speicheradressen. Welche Parameter der System-Call benötigt beschreibt die Manual-Page {\tt man 2 write}:
 
 \begin{lstlisting}
     ssize_t write(int fildes, const void *buf, size_t nbyte);
@@ -70,9 +70,9 @@ Das Hauptprogramm bereitet die Parameter für {\tt write} vor, in dem es sie nac
 
 \begin{enumerate}
 \item {\tt length}: Länge der Nachricht – eine Konstante definiert durch die
-NASM Anweisung {\tt equ} als Abstand in Bytes Zwischen dem Label length und message
-\item {\tt message}: Die Adresse der Nachricht definiert durch {\tt db} als String von ASCII-Bytes
-\item {\tt stdout}: Der Dateideskriptor der Standardausgabe (=1) unter Unix-artigen Systemen
+NASM Anweisung {\tt equ} als Abstand in Bytes Zwischen dem Label length und message.
+\item {\tt message}: Die Adresse der Nachricht definiert durch {\tt db} als String von ASCII-Bytes.
+\item {\tt stdout}: Der Dateideskriptor der Standardausgabe (=1) unter Unix-artigen Systemen.
 \end{enumerate}
 
 Der Kernel wird mit Hilfe des Software-Interrupts 80h (hexadezimal 80, identisch unter Linux, BSD und OS X) angesprungen. Einen ganzzahliger Wert im Register \texttt{eax} dient als Angabe welcher System-call verwendet werden soll. Für {\tt write} ist das die Konstante 4. Nach Behandlung des Interrupts wird mittels \texttt{ret} an die nächste Instruktion im Hauptprogramm zurückgekehrt an der vorher mittels \texttt{call kernel} der Prozeduraufruf stattfand.
@@ -82,9 +82,9 @@ Der Stack enthält nun immer noch die drei Parameter an der Stelle des Stackpoin
 
 \subsection{Anpassungen für Linux}
 
-Wie bereits erwähnt wurde sind beim Aufruf von Betriebssystemfunktionen festen Konventionen \cite{wp:callconv} der Parameterübergabe einzuhalten. Diese unterscheiden sich von System zu System (definiert in der ABI \cite{wp:abi}) und sogar von einem Compiler zum Anderen.
+Wie bereits erwähnt wurde, sind beim Aufruf von Betriebssystemfunktionen feste Konventionen \cite{wp:callconv} der Parameterübergabe einzuhalten. Diese unterscheiden sich von System zu System (definiert in der ABI \cite{wp:abi}) und sogar von einem Compiler zum Anderen.
 
-Der Linux-Kernel erwartet die sogenannten \emph{fastcall}-Konvention, wobei die Parameter über festgelegte Register übergeben werden, in sofern es deren Typ und Anzahl erlaubt. Dies ist oft effizienter, da es die Anzahl der teueren Speicherzugriffe auf den Stack minimiert. Prozessorregister arbeiten erheblich schneller als Cache oder Hauptspeicher. Das erste Argument wird dazu in {\tt ebx}, das zweite in {\tt ecx}, usw. übergeben.
+Der Linux-Kernel erwartet die sogenannten \emph{fastcall}-Konvention, wobei die Parameter über festgelegte Register übergeben werden, insofern es deren Typ und Anzahl erlaubt. Dies ist oft effizienter, da es die Anzahl der teueren Speicherzugriffe auf den Stack minimiert. Prozessorregister arbeiten erheblich schneller als Cache oder Hauptspeicher. Das erste Argument wird dazu in {\tt ebx}, das zweite in {\tt ecx}, usw. übergeben.
 
 \begin{lstlisting}[caption=Linux-Kernel Aufrufkonvention]
     ; Linux: fastcall convention

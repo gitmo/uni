@@ -8,7 +8,7 @@ Eine der am häufigsten verwendeten Operationen ist das Kopieren von Daten vom S
 Darunter fällt auch das Zuweisen eines konstanten Wertes eines Registers oder einer Speicherzelle.
 Hierzu wird im x86-Assembler das \texttt{mov}-Mnemonik verwendet.
 Es können immer nur Daten der gleichen Größe kopiert werden.
-Das heißt es muss sichergestellt sein, dass die Register beziehungsweise Adressen dementsprechend gleich große Werte speichern können.
+Das heißt, es muss sichergestellt sein, dass die Register beziehungsweise Adressen dementsprechend gleich große Werte speichern können.
 Wichtig ist, dass es sich bei einer der beiden Adressen immer um ein Register handeln muss.
 
 Im folgendem Beispiel wird in das Register \texttt{eax} der Wert aus dem Register \texttt{ebx} kopiert:
@@ -35,7 +35,7 @@ Hierzu zählen arithmetische Funktionen, wie die Addition und Subtraktion, sowie
 Mittels des \texttt{INC}-, sowie des \texttt{DEC}-Mnemonik können Register in- beziehungsweise dekrementiert werden. Um zwei Register zu addieren oder subtrahieren, wird das \texttt{ADD}- beziehungsweise das \texttt{SUB}-Mnemonik verwendet.
 
 Da bei einigen Operationen Sonderfälle auftreten können, werden Informationen diesbezüglich in den sogenannten \textit{Flag}-Registern gespeichert.
-Hier kann überprüft werden ob das Ergebnis negativ oder null ist, sowie festgestellt werden ob es einen Überlauf gab.
+Hier kann überprüft werden, ob das Ergebnis negativ oder null ist oder ob es bei der Berechnung einen Überlauf gab.
 
 \paragraph{Beispiel\newline}\makebox{}
 
@@ -107,9 +107,9 @@ Anhand des gesetzten \textit{Z}-Flags\footnote{Zero Flag} ist es klar, dass beid
 Ein unbedingter Sprung kann hilfreich sein um zum einem einen besseren Überblick zu gewährleisten und zum anderen Wiederverwendbarkeit von Quelltext zu ermöglichen.
 
 Ein unbedingter Sprung wird mittels Manipulation des \textit{Instruction Pointer} realisiert.
-Statt die Adresse der sequentiell darauf folgende Instruktion zu laden wird die Adresse der anzuspringenden Instruktion gesetzt.
+Statt die Adresse der sequentiell darauffolgenden Instruktion zu laden wird die Adresse der anzuspringenden Instruktion gesetzt.
 
-Um die Adresse zu ermitteln wird hier meist mit sogenannten \textit{Labels} gearbeitet. Diese werden vor der eigentlichen anzuspringenden Instruktion geschrieben. Der Compiler ersetzt dann dieses Label mit der richtigen Adresse. Es können des Weiteren auch Register angegeben. In diesem Falle wird der Inhalt des Registers als Adresse interpretiert und angesprungen.
+Um die Adresse zu ermitteln wird hier meist mit sogenannten \textit{Labels} gearbeitet. Diese werden vor der eigentlichen anzuspringenden Instruktion geschrieben. Der Compiler ersetzt dann dieses Label mit der richtigen Adresse. Es können des Weiteren auch Register angegeben werden. In diesem Falle wird der Inhalt des Registers als Adresse interpretiert und angesprungen.
 
 \paragraph{Beispiel\newline}\makebox{}
 \begin{lstlisting}
@@ -125,7 +125,7 @@ Bei einem bedingten Sprung wird je nach erfolgreicher Bedingung der Sprung ausge
 
 Hierzu wird meist eine Vergleichs-Operation vor dem eigentlichen Sprung benutzt. Diese setzt die \textit{Flag}-Register neu. Je nachdem ob nun die Bedingung anhand dieser Register-Werte wahr oder falsch ist, wird die Sprunganweisung ausgeführt oder eben nicht.
 
-Beachtet werden sollte, dass eine bedingte Sprunganweisung die \textit{Flag}-Werte nicht verändert. Das heißt, dass der Programmier dafür zuständig ist, dass die richtigen Werte vor dem Vergleich in diesen Registern stehen. Das \texttt{CMP}-Mnemonik zum Beispiel setzt diese anhand des Ergebnisses, das \texttt{MOV}-Mnemonik dagegen nicht.
+Beachtet werden sollte, dass eine bedingte Sprunganweisung die \textit{Flag}-Werte nicht verändert. Das heißt, dass der Programmierer dafür zuständig ist, dass die richtigen Werte vor dem Vergleich in diesen Registern stehen. Das \texttt{CMP}-Mnemonik zum Beispiel setzt diese anhand des Ergebnisses, das \texttt{MOV}-Mnemonik dagegen nicht.
 
 Die Dauer eines bedingten Sprunges beträgt seit Mitte der 90er Jahre\footnote{Einführung des Pentium} einen Taktzyklus.
 
@@ -138,12 +138,12 @@ Die Dauer eines bedingten Sprunges beträgt seit Mitte der 90er Jahre\footnote{E
 \end{description}
 
 %Seite 151
-\paragraph{if Statement}
+\paragraph{If-Statement}
 
 Da es sich bei dem x86-Assembler nicht um eine Hochsprache handelt, verfügt die Sprache unter anderem nicht über Konstrukte wie das \textit{If}-Statement.
 Hier kann der bedingte Sprung mit einem vorherigen Vergleich Abhilfe leisten.
 Hierzu wird erst die Bedingung überprüft und das Ergebnis in den \textit{Flag}-Registern abgespeichert.
-Je nach gesetzten Registerwerten wird nun der Sprungbefehl ausgeführt oder eben nicht.
+Je nach gesetzten Registerwerten wird nun der Sprungbefehl entweder ausgeführt oder nicht.
 
 \paragraph{Pseudocode\newline}\makebox{}
 \begin{lstlisting}
@@ -174,7 +174,7 @@ Die Größe des Speichers wird am Anfang eines jeden x86-Programms gesetzt.
 
 \paragraph{Daten auf dem Stack hinterlegen\newline}
 Mit dem \texttt{PUSH}-Mnemonik können Werte auf dem Stack hinterlegt werden.
-Hierbei kann es sich um ein Register oder eine Speicherzellen handeln.
+Hierbei kann es sich um ein Register oder eine Speicherzelle handeln.
 Bei Ausführung der Instruktion wird nun der Inhalt des angegebenen Speichers in den Stackspeicher kopiert
 und der sogenannte \textit{ESP}\footnote{Register des \textit{Stack-Pointers}} dekrementiert.
 Der Stack wächst nämlich nach unten.
@@ -267,20 +267,20 @@ Leicht zu erkennen ist, dass die Werte im Stack physikalisch nicht gelöscht wer
 Um Programme in Unterprogramme unterteilen zu können, sowie Quellcode zu isolieren um Wiederverwendbarkeit zu ermöglichen, sind Funktionen von hohem Nutzen.\cite[S. 179]{intelmanual}
 
 Leider sind Funktionen und Prozeduren nicht in der aus heutiger Sicht bekannten Art und Weise im x86-Assembler implementiert, sondern deutlich rudimentärer.
-Mnemonik wie \texttt{call} und \texttt{ret} ermöglichen einem das Aufrufen und Verlassen von Subroutinen.
+Mnemonik wie \texttt{call} und \texttt{ret} ermöglichen das Aufrufen und Verlassen von Subroutinen.
 
 \paragraph{Eintreten in eine Subroutine}
 Das \texttt{call}-Mnemonik fungiert als Aufruf und sichert den aktuellen Zustand der Register.
-Es gibt zum einen den sogenannten \textit{near call} und den \textit{far call}.
+Es gibt einen sogenannten \textit{near call} und den \textit{far call}.
 Der Unterschied liegt darin, ob das bisherige Codesegment neu geladen werden muss oder nicht.
 Das \texttt{call}-Mnemonik sichert den \textit{Instruction Pointer} (IP) und wenn nötig auch das Codesegment auf dem Stack ab und lädt diese für die anzuspringende Subroutine in die jeweiligen Register.
 
 Die Ausführung eines \texttt{near call's} lässt sich in folgende Unterschritte unterteilen:
 
 \begin{enumerate}
-    \item Speichern des aktuellen \textit{Instruction Pointers} auf dem Stack
-    \item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
-    \item Begin der Abarbeitung der Subroutine
+    \item Speichern des aktuellen \textit{Instruction Pointers} auf dem Stack.
+    \item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}.
+    \item Beginn der Abarbeitung der Subroutine.
 \end{enumerate}
 
 \paragraph{Verlassen einer Subroutine}
@@ -290,9 +290,9 @@ Mithilfe des \texttt{ret}-Mnemonik wird der \textit{Instruction Pointer} wieder 
 
 Auch das \texttt{ret}-Mnemonik lässt sich für einen \textit{near call} in folgende Teilschritte unterteilen:
 \begin{enumerate}
-    \item \textit{Instruction Pointer} in das \texttt{EIP} Register laden
-    \item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parametern.
-    \item Fortführung des Hauptprogramms
+    \item \textit{Instruction Pointer} in das \texttt{EIP} Register laden.
+    \item Modifizierung des \textit{Stack Pointers} je nach Anzahl der zurückgebenden Parameter.
+    \item Fortführung des Hauptprogramms.
 \end{enumerate}
 
 \paragraph{Beispiel\newline}\makebox{}

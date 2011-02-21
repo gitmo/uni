@@ -40,14 +40,14 @@ Label ist eine Sprungmarke und optional, ebenso wie die Argumente. Deren
 erforderliche Anzahl hängt von der Instruktion ab. Maximal sind drei, häufiger zwei
 üblich. Das Mnemonik bzw. Instruktionssymbol ist eine kurze
 Zeichenkette, wie zum Beispiel {\tt MOV, ADD} oder {\tt PUSH}, und abstrahiert gleich über eine ganze Klasse von Opcodes mit derselben Funktion.\cite{intelmanual} So ist zum
-Beispiel die Kopieroperation für Argumente verschiedene Art (Register,
+Beispiel die Kopieroperation für Argumente verschiedener Art (Register,
 Konstanten) immer das Mnemonik {\tt MOV} obwohl sich die Opcodes unterscheiden.
 
 \subsection{Parameter}
 
 Bei vielen Befehlen sind zwei Parameter üblich. Es wird dann meist von Quell-
 und Zieloperanden gesprochen (source and destination parameter). Die Semantik
-der Parameterreihenfolge ist bei Intel-Syntax entgegengesetzt zur AT\&-Syntax.
+der Parameterreihenfolge der Intel-Syntax ist entgegengesetzt zur AT\&-Syntax.
 
 Ein Parameter kann von dreierlei Art sein: ein Register, eine Konstante oder
 eine Speicheradresse. Die Registerbezeichnungen (z.B. {\tt EAX, EBP}) sind bei Intel und
@@ -60,8 +60,8 @@ benötigen diese Kennzeichnung nicht.
 
 Eine weitere Eigenart der AT\&T-Syntax ist ein Suffix für Befehle (siehe
 Tabelle~\ref{tab:syntaxdiffs}), der die Parametergröße beschreibt: Byte, Word
-(16 Bit), Long oder Double-Word  (32 Bit) bzw.  Quad-Word (64-Bit). Für Intels
-Syntax leitet der Assembler den Typ automatisch vom Parameter ab.
+(16 Bit), Long oder Double-Word  (32 Bit) bzw.  Quad-Word (64-Bit). Für die
+Syntax von Intel leitet der Assembler den Typ automatisch vom Parameter ab.
 
 \hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
 \texttt{movl \$5, \%eax}
@@ -78,7 +78,7 @@ aus Variablen in eckigen Klammern gebildet und kann eine Typangabe wie
 
 In AT\&T Syntax berechnet sich eine Adresse nach dem sogenannten \emph{base
 indexed addressing}-Schema aus den Einzelkomponenten Verschiebung (auch
-\emph{displacement}), Basis, Index und Skalierung, wie folgt: $Verschiebung + Basis +
+\emph{displacement}), Basis, Index und Skalierung wie folgt: $Verschiebung + Basis +
 Index*Skalierung$ . Ein Beispiel:
 
 \hspace{5mm} \makebox[1.5cm]{AT\&T: \hfill}
@@ -110,14 +110,13 @@ zusammengefasst.
 Jeder Assembler besitzt einen eigenen Satz an spezifischen Direktiven. Streng
 genommen gehören diese nicht zur Syntax, allerdings sind sie nötig um einige
 Meta-Informationen zur Code-Struktur zu definieren. Die Direktiven sind stark
-abhängig von der eingesetzten Software (NASM, YASM, GNU as, etc.) und selten
-herrscht Kompatibilität innerhalb der Assembler-Dialekte. Fast immer gibt es aber eine
-ähnlich lautende Entsprechung.
+abhängig von der eingesetzten Software (\emph{NASM, YASM, GNU as}, etc.) und selten
+herrscht Kompatibilität unter den Assembler-Dialekten. Fast immer gibt es aber ähnlich lautende Entsprechungen.
 
 Eine Typische Anweisung ist die Zuordnung eines Bezeichners zu einem Code- oder
 Datensegment. Die Adressen der Instruktionen werden beim Assemblieren ihrem
-Segment zugeordnet. Bei NASM heißt die Direktive \texttt{section}
-bei GAS \texttt{.section}. Die Sektionen \texttt{.text} und
+Segment zugeordnet. Bei \emph{NASM} heißt die Direktive \texttt{section}
+bei \emph{GAS} \texttt{.section}. Die Sektionen \texttt{.text} und
 \texttt{.data} für das Code- bzw. statische Datensegment sind dabei traditionell
 unter Unix-artigen Systemen gebräuchlich. Die Bezeichner können aber
 beliebig gewählt werden.
@@ -126,8 +125,8 @@ Oft ist es auch nötig Datenbereiche zu reservieren oder statisch zu
 initialisieren, zum Beispiel um feste Strings zu definieren. Dazu dienen
 Pseudo-Instruktionen wie \texttt{DB, DW, DD}, etc. (\emph{define byte, define
 word, define dword}) und \texttt{RESB, RESW, RESQ} (\emph{reserve byte}, usw.)
-bei NASM und auch MASM. Die Definition von Konstanten erfolgt mittels
-\texttt{EQU}. Diesen Definitionen kann ein Label vorangestellt werden über
-welches man die Adresse der jeweiligen Daten im Code referenzieren kann. Beim
+bei \emph{NASM} und auch \emph{MASM}. Die Definition von Konstanten erfolgt mittels
+\texttt{EQU}. Diesen Definitionen kann ein Label vorangestellt werden, über
+welches die Adresse der jeweiligen Daten im Code referenziert wird. Beim
 Assemblieren werden diese Labels in konkrete Adressen übersetzt.
 

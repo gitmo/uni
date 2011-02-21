@@ -3,7 +3,7 @@ X86-Assembler umfasst eine Instruktionsmenge die ursprünglich für Intels 8086 
 
 \subsection{Prozessor-Register}
 
-Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden in ihrer Größe verdoppelt und mit dem Präfix E versehen. Mit der Einführung von 32-Bit Registern, Adressbus und Instruktionen spricht man auch von der IA-32 Plattform (\emph{Intel Architecture, 32-bit)}.
+Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen erweitert. Wichtigster Schritt war dabei die Einführung von 32-Bit Registern mit dem 80386. Alle 16-bit Grundregister mit Ausnahme der Segmentregister wurden in ihrer Breite verdoppelt und mit dem Präfix E versehen. Mit der Einführung von 32-Bit Registern, Adressbus und Instruktionen spricht man auch von der IA-32 Plattform (\emph{Intel Architecture, 32-bit)}.
 
 \subsubsection{Allzweckregister}
 
@@ -16,9 +16,9 @@ Der Registersatz wurde im Laufe der Zeit mit jeder neuen Prozessorgenerationen e
 
 Die vier Allzweckregister, \emph{general-purpose} oder auch Rechenregister dienen als Operanden für vielerlei Instruktionen und ermöglichen eine freie Manipulation der Daten mit denen der Prozessor rechnet.
 
-Sie besitzen seit dem 80386 eine Größe von 32-bit – in der Intel-Sprache ein DWord (\emph{double-word} -- ein Prozessorwort entsprach ursprünglich 16-bit). Die alten Bezeichner {\tt AX, BX, CX} und {\tt DX} können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
+Sie besitzen seit dem 80386 eine Größe von 32-Bit – in der Intel-Sprache ein DWord (\emph{double-word} -- ein Prozessorwort entsprach ursprünglich 16-Bit). Die alten Bezeichner {\tt AX, BX, CX} und {\tt DX} können nach wie vor verwendet werden und meinen dann die unteren 16-Bit des Registers.
 
-Darüber hinaus war es beim 8086 möglich die Allzweckregister in zwei Teilen anzusprechen: dem \emph{High-Byte} für Bits 8-15 in {\tt AH, BH, CH} für  und {\tt DH} und dem \emph{Low-Byte} mit Bits 0-7 in {\tt AL, BL, CL} und {\tt DL}. Eine Operation auf einen dieser 8-bit Hälften geschieht ohne Seiteneffekte auf jeweils andere.
+Darüber hinaus war es beim 8086 möglich die Allzweckregister in zwei Teilen anzusprechen: dem \emph{High-Byte} für Bits 8-15 in {\tt AH, BH, CH} für  und {\tt DH} und dem \emph{Low-Byte} mit Bits 0-7 in {\tt AL, BL, CL} und {\tt DL}. Eine Operation auf eine dieser 8-Bit Hälften geschieht ohne Seiteneffekte auf jeweils andere.
 
 Obwohl fast alle Rechenoperationen auf alle vier Register angewendet werden können, erfüllen sie für manche Instruktionen spezielle Aufgaben. Genaue Angaben findet der Programmierer dazu zum Beispiel in Intels Referenz-Dokumentation. \cite{intelreferenz}
 
@@ -34,8 +34,8 @@ Ein Compiler legt über seine Aufrufkonvention oft fest ob den Registern besonde
 \hline
 \end{tabular}
 
-Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht in byteweise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, denn sie nehmen Anfangsadressen von Segmenten im Speicher auf. Dies ist nützlich zur Bildung von Pointern. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar SS:ESP ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um die vollen 20-Bit des Adressbusses bei nur 16-Bit Registerbreite bei der Adressierung verwenden zu können.
-Segmentregister können immer nur mittels eines Allzweckregisters oder spezielle Instruktionen gesetzt werden.
+Die Segmentregister sind als einzige Register 16-Bit breit geblieben und lassen sich nicht byte-weise aufteilen. Das hängt mit ihrer speziellen Funktion zusammen, denn sie nehmen Anfangsadressen von Segmenten im Speicher auf. Dies ist nützlich zur Bildung von Pointern. Die Adresse des Stack-Speichers wird so zum Beispiel über das Registerpaar {\tt SS:ESP} ermittelt. Vor dem 80386 Prozessor waren sie besonders relevant für die sogenannte segmentierte Adressierung im \emph{Real Mode} um die vollen 20-Bit des Adressbusses bei nur 16-Bit Registerbreite zur Adressierung verwenden zu können.
+Segmentregister können immer nur mittels eines Allzweckregisters oder einigen speziellen Instruktionen gesetzt werden.
 
 % lassen sich lediglich auslesen und beschreiben
 
@@ -49,7 +49,7 @@ Diese Register sind nützlich als Zeiger auf Datenstrukturen, Indexierung in Arr
 \hline
 \end{tabular}
 
-ESI und EDI dienen als Zeiger für String- und Kopieroperationen in Arrayspeicher und lassen sich mit DS bzw. DS kombinieren.
+{\tt ESI} und {\tt EDI} dienen als Zeiger für String- und Kopieroperationen in Arrayspeicher und lassen sich mit DS bzw. DS kombinieren.
 
 \begin{tabular}{|c|l|}
 \hline ESP & \emph{stack pointer} SS\\
@@ -57,7 +57,7 @@ ESI und EDI dienen als Zeiger für String- und Kopieroperationen in Arrayspeiche
 \hline
 \end{tabular}
 
-Die Zeiger für den Stack {\tt ESP} und {\tt EBP} dienen zum Aufspannen eines Stackbereich bei Funktionsaufrufen. {\tt ESP} zeigt dabei immer auf das oberste Element im Stack und wird bei {\tt Push}- und {\tt Pop}-Befehlen manipuliert, während {\tt EBP} auf eine anderen Adresse im Stack zeigen kann um die Basis eines Stackbereichs zu definieren. Das Stack-Segmentregister SS definiert das aktuelle Speichersegment für die Offsets in {\tt ESP} und {\tt EBP}.
+Die Zeiger für den Stack {\tt ESP} und {\tt EBP} spannen einen Stackrahmens bei Funktionsaufrufen auf. {\tt ESP} zeigt dabei immer auf das oberste Element im Stack und wird bei {\tt Push}- und {\tt Pop}-Befehlen manipuliert, während {\tt EBP} auf eine anderen Adresse im Stack zeigen kann um die Basis eines Stackbereichs zu definieren. Das Stack-Segmentregister SS definiert das aktuelle Speichersegment für die Offsets in {\tt ESP} und {\tt EBP}.
 
 \begin{tabular}{|c|l|}
 \hline EIP & \emph{instruction pointer} \\
@@ -69,20 +69,24 @@ Der Instruktionszeiger ist ein spezielles Register und zeigt immer auf den aktue
 \subsubsection{Statusregister}
 
 Das Register {\tt EFLAGS} enthält Informationen über den aktuellen Zustand des Prozessors in Form von binären Flags. Die unteren 16-Bits (ursprünglich das 8086-Register {\tt FLAGS}) haben untenstehende Bedeutung. Die 32-Bit des {\tt EFLAGS} enthalten darüber hinaus noch einige seltener genutzte Zusatzflags.
+\begin{figure}[h]
+  \begin{center}
+	{\small 15}
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+	\hline & & & & O & D & I & T & S & Z & & A & & P & & C \\
+	\hline
+	\end{tabular}
+	{\small 0}
+  \end{center}
+  \caption{\emph{overflow, direction, interrupt, trap, sign, zero, auxiliary, parity}
+und \emph{carry}}
+\end{figure}
 
-{\small 15}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline & & & & O & D & I & T & S & Z & & A & & P & & C \\
-\hline
-\end{tabular}
-{\small 0}
-
-\emph{overflow, direction, interrupt, trap, sign, zero, auxiliary, parity}
-und \emph{carry flag}
+Eine nähere Beschreibung zu häufig verwendeten Flags wird im Kapitel zu den Instruktionen unternommen.
 
 \subsection{Adressraum}
 
-Die Anzahl der Adressleitungen eines Prozessors bestimmt die Größe des Speichers der vom Adressbus angesprochen werden kann. Der 8086 hatte noch 20-Adressleitungen und damit einen Adressraum von $2^20 Byte = 1024 KBytes = 1 MBytes$, während seit dem 80386 mit $2^32$ Bytes ein Adressraum von 4 GB zur Verfügung steht.
+Die Anzahl der Adressleitungen eines Prozessors bestimmt die Größe des Speichers der vom Adressbus angesprochen werden kann. Der 8086 hatte noch 20-Adressleitungen und damit einen Adressraum von $2^{20} \text{ Byte} = 1024 \text{ KBytes} = 1 \text{ MBytes}$, während seit dem 80386 mit $2^{32}$ Bytes ein Adressraum von 4 GB zur Verfügung steht.
 
 \subsubsection{Real Mode}
 
@@ -90,7 +94,7 @@ Der \emph{Real Mode} ist der Operationsmodus des 8086 mit 16-Bit Instruktionssat
 
 $Adresse = (16 * Segment + Offset) \text{ modulo } 20$
 
-Man spricht von der Bildung der \emph{effektiven Adresse}. Es hierbei viele überlappende Segmente bzw. viele mögliche \texttt{SEGMENT:OFFSET} Kombinationen die selbe Adresse anzusprechen.
+Man spricht von der Bildung der \emph{effektiven Adresse}. Es hierbei viele überlappende Segmente bzw. viele mögliche \texttt{SEGMENT:OFFSET} Kombinationen dieselbe Adresse anzusprechen.
 
 Die möglichen Arten der Adressierung:
 
@@ -101,7 +105,7 @@ Die möglichen Arten der Adressierung:
 \item Indirekte Registeradressierung: {\tt mov ax,[bx]}
 \item Indizierte Registeradressierung: {\tt mov [Array+bx],bx}
 \end{enumerate}
-Eckige Klammern der Art {\tt [Adresse]} bezeichnen den Inhalt der Speicherstelle an Adresse.
+Eckige Klammern der Form {\tt [Adresse]} bezeichnen den Inhalt der Speicherstelle an Adresse.
 
 \subsubsection{Protected Mode}
 
