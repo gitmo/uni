@@ -1,18 +1,17 @@
 \section{Syntax}
 
 In der Welt des x86-Assemblers gibt es zwei große Syntaxfamilien: die Intel und
-die AT\&T-Syntax. Während erstere fast ausschließlich in einer Vielzahl von Assemblern (NASM, TASM, MASM, YASM, usw.) und Disassemblern (IDA Pro, OllyDbg) zum Einsatz 
-kommt
+die AT\&T-Syntax. Während erstere fast ausschließlich in einer Vielzahl von Assemblern (NASM, TASM, MASM, YASM, usw.) und Disassemblern (\emph{IDA Pro, OllyDbg}\cite{disasm}) zum Einsatz kommt
 und Intel die x86-Platform damit dokumentiert, ist letztere dennoch nicht
-gänzlich irrelevant. In der UNIX und Linux-Welt wurde lange Zeit nur AT\&T's
-Syntaxstil von den ausgelieferten Assemblern \texttt{as} bzw. \texttt{gas}
-unterstützt. Insbesondere durch die Verbreitung der GNU Compiler Collection
-hat sich dieser Stil bis heute gehalten, obwohl der GNU Assembler mittlerweile
+gänzlich irrelevant. Auf UNIX- und Linux-Betriebssystemen wurde lange Zeit nur AT\&T's
+Syntaxstil von den mitgelieferten Assemblern \texttt{as} bzw. \texttt{gas}
+unterstützt. Insbesondere durch die Verbreitung der \emph{GNU Compiler Collection}
+hat sich dieser Stil bis heute gehalten, obwohl der \emph{GNU Assembler} mittlerweile
 auch die Intel-Syntax beherrscht.
 
 Überhaupt sind die Unterschiede beider Stile gleichmächtig und lassen sich
-trotz erheblicher optischer Unterschiede problemlos ineinander konvertieren
-(z.B. mit Intel2GAS \cite{i2g}). Für die folgenden Beispiele wird die
+trotz erheblicher Unterschiede im Erscheinungsbild problemlos ineinander konvertieren
+(z.B. mit \emph{Intel2GAS} \cite{i2g}). Für die folgenden Beispiele wird die
 Intel-Syntax als die kanonische Referenz betrachtet und jeweils der
 äquivalenten AT\&T-Syntax gegenübergestellt.
 
@@ -104,7 +103,7 @@ zusammengefasst.
 \\	{\tt word} Instruktion    & \tt mov word ptr     					& \tt movw
 \\  {\tt dword} Instruktion   & \tt mov dword ptr    					& \tt movl
 \end{tabular}
-\caption{Syntax Unterschiede} \label{tab:syntaxdiffs}
+\caption{Syntaktische Unterschiede} \label{tab:syntaxdiffs}
 \end{table}
 
 \subsection{Assembler-Direktiven}
