@@ -1,17 +1,18 @@
-\documentclass[11pt,german]{scrartcl}
+\documentclass[12pt,german]{scrartcl}
 
 % See geometry.pdf to learn the layout options.
-\usepackage{geometry}
+\usepackage[bottom=3.5cm,left=2.5cm,right=2.5cm]{geometry}
 \geometry{a4paper}
-
-% To begin paragraphs with an empty line
-\usepackage[parfill]{parskip}
 
 % Use utf-8 encoding for foreign characters
 \usepackage[utf8]{inputenc}
 
-% Setup for fullpage use
-\usepackage{fullpage}
+% Running Headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+
+% To begin paragraphs with an empty line
+\usepackage[parfill]{parskip}
 
 % use multicol package
 \usepackage{multicol}
@@ -19,12 +20,8 @@
 % use multirow package
 \usepackage{multirow}
 
-% Running Headers and footers
-\usepackage{fancyhdr}
-\pagestyle{fancyplain}
-%\pagestyle{fancy}
-%\fancyhf{}
 
+% URLs and Links
 \usepackage{url}
 \usepackage{makeidx}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
@@ -37,54 +34,52 @@
 \usepackage{color}
 \usepackage{moreverb}
 
-% match packages
+% Math packages
 \usepackage{amsmath}
 
 % Alternative monospaced font
 \usepackage[T1]{fontenc}
-\usepackage[scaled]{beramono}		% Debian: texlive-fonts-extra
+\usepackage[scaled]{beramono}       % Debian: texlive-fonts-extra
 
 \usepackage{graphicx}
 
-%listings config
+% Listings color
 \definecolor{light-gray}{gray}{0.95}
 
 \lstset{
-	language={[x86masm]Assembler},                  % choose the language of the code
-	                                % size of fonts used for the code
-	basicstyle=\ttfamily\footnotesize,
-	%numbers=left,                   % where to put the line-numbers
-	numberstyle=\footnotesize,      % size of fonts for used line-numbers
-	stepnumber=1,                   % step between line-numbers
-	numbersep=10pt,                  % how far the line-numbers are from the code
-	backgroundcolor=\color{light-gray},  % choose background color. You must add \usepackage{color}
-	showspaces=false,               % show spaces adding particular underscores
-	showstringspaces=false,         % underline spaces within strings
-	showtabs=false,                 % show tabs within strings adding particular underscores
-	frame=single,                   % adds a frame around the code
-	tabsize=4,                      % sets default tabsize to 2 spaces
-	captionpos=b,                   % sets the caption-position to bottom
-	breaklines=true,                % sets automatic line breaking
-	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
-	escapeinside={\%*}{*)},         % if you want to add a comment within your code
+    language={[x86masm]Assembler},      % choose the language of the code
+    basicstyle=\ttfamily\footnotesize,  % size of fonts used for the code
+    %numbers=left,                      % where to put the line-numbers
+    numberstyle=\footnotesize,          % size of fonts for used line-numbers
+    stepnumber=1,                       % step between line-numbers
+    numbersep=10pt,                     % how far the line-numbers are from the code
+    backgroundcolor=\color{light-gray}, % choose background color. You must add \usepackage{color}
+    showspaces=false,                   % spaces adding particular underscores
+    showstringspaces=false,             % underline spaces within strings
+    showtabs=false,                     % tabs within strings adding particular underscores
+    frame=single,                       % adds a frame around the code
+    tabsize=4,                          % sets default tabsize to 2 spaces
+    captionpos=b,                       % sets the caption-position to bottom
+    breaklines=true,                    % sets automatic line breaking
+    breakatwhitespace=false,            % if automatic breaks should only happen at whitespace
+    escapeinside={\%*}{*)},             % if you want to add a comment within your code
     frameround=tttt,
     extendedchars=true,
     literate=%
-    {Ö}{{\"O}}1
-    {Ä}{{\"A}}1
-    {Ü}{{\"U}}1
-    {ß}{{\ss}}2
-    {ü}{{\"u}}1
-    {ä}{{\"a}}1
-    {ö}{{\"o}}1
-    {°}{{}}0
+        {Ö}{{\"O}}1
+        {Ä}{{\"A}}1
+        {Ü}{{\"U}}1
+        {ß}{{\ss}}2
+        {ü}{{\"u}}1
+        {ä}{{\"a}}1
+        {ö}{{\"o}}1
+        {°}{{}}0
 }
 
 \makeindex
 
 \title{Intel x86 Assembler \\ \vspace{1cm} \small{Proseminar Programmiersprachen} \\ \vspace{1cm}}
 \author{Sebastian Raitza, Nico von Geyso}
-
 
 \begin{document}
 
@@ -103,8 +98,6 @@
 
 \input{sections/syntax.tex}
 
-%Register
-%Adressierung
 \input{sections/architecture.tex}
 
 \input{sections/instructions.tex}
