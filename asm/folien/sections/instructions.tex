@@ -299,7 +299,7 @@ ESP: 0xFE
 \end{center}
 
 \begin{lstlisting}
-push    eax  ; Speichert das zuletzt hinzugefügte Element
+pop    eax  ; Speichert das zuletzt hinzugefügte Element
              ; im Stack in das Register eax
 \end{lstlisting}
 
@@ -374,7 +374,7 @@ Ablauf des \texttt{call}-Mnemonic
 \begin{enumerate}
     \item Speichern des aktuellen \textit{Instruction Pointers} auf dem Stack
     \item Laden des neuen \textit{Instruction Pointers} in das Register \texttt{EIP}
-    \item Begin der Abarbeitung der Subroutine
+    \item Beginn der Abarbeitung der Subroutine
 \end{enumerate}
 
 \end{frame}
