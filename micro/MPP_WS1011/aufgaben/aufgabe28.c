@@ -14,7 +14,7 @@
 
 #define LAB_ID 7        // Number on the desk
 #define CHAN LAB_ID     // Channel
-#define TXID LAB_ID +10 // Sender ID 
+#define TXID LAB_ID +10 // Sender ID
 #define RXID LAB_ID     // Receiver ID
 
 void sendSensors()
@@ -22,21 +22,19 @@ void sendSensors()
     char buffer[BUFFER_SIZE];
     char mmaBuffer[32];
     int taster;
-    
+
     SHT11_Read_Sensor();
 
     printMMAValues("%f\t%f\t%f", mmaBuffer);
     taster = TASTEN_BITS & (TASTE0+TASTE1);
 
     sprintf(buffer, "%s \t %s \t %s \t %d\r\n", temp_char, humi_char, mmaBuffer, taster);
-    
+
 	// Toggle red LED on port 5
     LED_TOGGLE(LED_ROT);
-	
-	// Actual send: dest, source        
+
+	// Actual send: dest, source
     sendPacket(RXID, TXID, buffer, strlen(buffer)+1);
-    //str = "lame0";
-//    sendPacket(RXID, TXID, str, strlen(str)+1);
 
     // Toggle red LED on port 5
     // TODO: Toggle on ack from receiver instead
@@ -58,14 +56,14 @@ void parsePacket() {
                     case 1:
                         SET(LED_BITS, LED_GRUEN);
                         break;
-                    case 2: 
+                    case 2:
                         CLEAR(LED_BITS, LED_GRUEN);
                         break;
-                    case 3: 
+                    case 3:
                         CLEAR(LED_BITS, LED_GRUEN);
                         break;
                 }
-                    
+
             }
         }
 }
@@ -114,7 +112,7 @@ __interrupt void TIMERB0_ISR (void)
 }
 //==============================================================
 
-  
+
 void initSender() {
     setUid(TXID);
     initSecTimer(1);
