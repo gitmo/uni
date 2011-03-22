@@ -73,15 +73,15 @@ void printMMAValues(char* format, char* buffer)
 
     while(ADC12CTL1 & ADC12BUSY);
 
-    // P6.0 – ax
+    // P6.0 -- ax
     ax = ADC12MEM0;
     x = convertAduValue(ax);
 
-    // P6.1 – ay
+    // P6.1 -- ay
     ay = ADC12MEM1;
     y = convertAduValue(ay);
 
-    // P6.2 – az
+    // P6.2 -- az
     az = ADC12MEM2;
     z = convertAduValue(az);
 
