@@ -1,4 +1,4 @@
-\subsection*
+\subsection
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040203.html}
 {Aufgabe 7: Dynamische Taktfrequenzumschaltung}}
 
@@ -16,13 +16,21 @@ Diese Macros erlauben das schnelle Zurücksetzen der jeweiligen Bitgruppen der D
 #define DIVM_RESET      (BCSCTL2 &= ~(DIVM0 | DIVM1))
 \end{lstlisting}
 
-Die Interruptroutine für einen Tastendruck, stellt unter Zuhilfenahme obiger Macros und durch Setzen entsprechender Werte in den Clock-Kontrollregistern einen der beiden Frequenzpunkte ein. Eine Variable $freqState$ speichert, ob der Controller mit hohem oder niedrigem Takt bestrieben wird.
+Die Interruptroutine für einen Tastendruck, stellt unter Zuhilfenahme obiger Macros und durch Setzen entsprechender Werte in den Clock-Kontrollregistern einen der beiden Frequenzpunkte ein. Eine Variable $freqState$ speichert, ob der Controller mit hohem oder niedrigem Takt betrieben wird.
 
 \lstinputlisting[linerange=57-95,firstnumber=57,caption=interrupts\_a07.c]
 {../MPP_WS1011/aufgaben/interrupts_a07.c}
 
 \subsubsection*{Messwerte}
 
-Je höher die Frequenz, desto höher der Stromverbrauch:
+Messungen des Programms mit Tasteninterrupt-Routine (statt mit ``leerem'' Programm).
 
-\includegraphics[width=\textwidth]{aufgaben/07/CLK.pdf}
+Auch hier, je höher die Frequenz, desto höher der Stromverbrauch:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+Frequenz in kHz & Strom in mA & RSEL & DCO & MOD & DIVM \\\hline
+4094 & 3,27 & 7 & 4 & 11 & 0 \\\hline
+7366 & 5,10 & 5 & 5 & 29 & 0 \\\hline
+\end{tabular}
+\end{center}

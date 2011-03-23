@@ -74,7 +74,8 @@ __interrupt void PORT1 (void)
 
         freqState = FAST;
     } else {
-        //4,096kHz      RSEL_RESET;
+        //4,096kHz
+        RSEL_RESET;
         BCSCTL1 |= (RSEL0 | RSEL1| RSEL2);
 
         DCO_RESET;
