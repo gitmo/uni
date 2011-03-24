@@ -122,8 +122,8 @@
 
 \tableofcontents
 
-\section{Modulbeschreibung des Mikroprozessor-Praktikum}
-%\addcontentsline{toc}{section}{Modulbeschreibung des Mikroprozessor-Praktikum}
+\section{Modulbeschreibung des Mikroprozessor-Praktikums}
+%\addcontentsline{toc}{section}{Modulbeschreibung des Mikroprozessor-Praktikums}
 
 Die überwältigende Mehrheit zukünftiger Computersysteme wird durch miteinander kommunizierende, eingebettete Systeme geprägt sein.
 Diese finden sich in Maschinensteuerungen, Haushaltsgeräten, Kraftfahrzeugen, Flugzeugen, intelligenten Gebäuden etc. und
@@ -151,7 +151,7 @@ Schwerpunkte des in einzelne Versuche gegliederten Praktikums sind:
 Auf dem zum entwickelten Board handelt es sich um das Entwicklungsboard MSB430H.
 Der hier verwendete Mikrocontroller ist ein MSP430F1612 von Texas Instrument.
 Dieser verfügt neben einem universellen Clock-System unter anderem über 55 kByte Flash, 5kByte Ram, USART und einem Watchdog.
-Das Board ist zusätzlich mit einem 868MHz Transciever (CC1100),
+Das Board ist zusätzlich mit einem 868MHz Transceiver (CC1100),
 sowie einem Luftfeuchtigkeits- und Temperatursensor (SHT11), einem 3D-Beschleunigungssensor (MMA7260Q)
 und einer SD-Karte ausgestattet.
 
@@ -263,7 +263,7 @@ Mittels Interrupts ist es möglich bei einer ausgeschalteten CPU diese wieder zu
 Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 \begin{description}
     \item [aktiver Modus]
-    \item [LPM 4]  CPU und alle Taktgeber sind aus. Nur eine Flanke an den Ports 1 und 2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
+    \item [LPM 4] CPU und alle Taktgeber sind aus. Nur eine Flanke an den Ports 1 und 2 kann einen Interrupt auslösen und so den Mikrocontroller in den aktiven Modus versetzen.
     \item [LPM 3] Zzgl. zu LPM4 kann ein Timer-Interrupt den Mikrocontroller erwecken (ACLK On).
     \item [LPM 2] Zusätzlich zu LPM3 ist der DC-Generator eingeschaltet.
     \item [LPM 1] Zusätzlich zu LPM2 ist SMCLK aktiv. DC-Generator ist nur aktiv wenn DCO für MCLK oder SMCLK gebraucht wird.
@@ -282,7 +282,7 @@ Der MSP430F1612 besitzt sechs verschiedene Power-Modi:
 {Timer}}
 %\addcontentsline{toc}{section}{Timer}
 
-Der Mikrokontroller besitzt neben der Watchdog-Einheit noch zwei Timer A und B, die in programmierbaren Zeitintervalen Timer-Interrupts auslösen, auf die in der Software reagiert werden kann. Damit lassen sich verschiedenste zeitabhängige Anwendungen realisieren, wie u.a. Zeitmessungen, Generierung von Impulsen und das Reagieren auf bzw. Auslösen von Ereignissen in wiederholten Zeitabschnitten.
+Der Mikrokontroller besitzt neben der Watchdog-Einheit noch zwei Timer A und B, die in programmierbaren Zeitintervallen Timer-Interrupts auslösen, auf die in der Software reagiert werden kann. Damit lassen sich verschiedenste zeitabhängige Anwendungen realisieren, wie u.a. Zeitmessungen, Generierung von Impulsen und das Reagieren auf bzw. Auslösen von Ereignissen in wiederholten Zeitabschnitten.
 
 \input{aufgaben/17.tex}
 \input{aufgaben/18.tex}
@@ -296,11 +296,11 @@ Der Mikrokontroller besitzt neben der Watchdog-Einheit noch zwei Timer A und B, 
 {USART}}
 %\addcontentsline{toc}{section}{USART}
 
-Um die serielle Verbindung des Mikrocontrollers nutzen zu können, muss hierfür unter anderem das Format, die Taktquelle, die Baudrate konfiguriert werden. Die gegebene Funktion \texttt{initUART1} wurde dementsprechend folgedermaßen initialisiert:
+Um die serielle Verbindung des Mikrocontrollers nutzen zu können, muss hierfür unter anderem das Format, die Taktquelle, die Baudrate konfiguriert werden. Die gegebene Funktion \texttt{initUART1} wurde dementsprechend folgendermaßen initialisiert:
 \lstinputlisting[caption=initUART1, linerange=122-134, firstnumber=122]
 {../MPP_WS1011/init.c}
 
-Empfangene Daten werde im Register \texttt{UxRXBUF} hinterlegt. Meistens wird das Auslesen über eine eigene Interruptserviceroutine abgearbeitet. Will man Daten senden, so muss im Register \texttt{U1TCTL} überprüft werden ob das Datenregister \texttt{UxTXBUF} frei ist. Dafür ist das Bit \texttt{TXEPT} zuständig. Ist dies der fall so hinterlegt man seine Daten im Datenrgister und der Mikrocontrollersystem sendet diese dann automatisch über die serielle Verbindung.
+Empfangene Daten werden im Register \texttt{UxRXBUF} hinterlegt. Meistens wird das Auslesen über eine eigene Interruptserviceroutine abgearbeitet. Will man Daten senden, so muss im Register \texttt{U1TCTL} überprüft werden, ob das Datenregister \texttt{UxTXBUF} frei ist. Dafür ist das Bit \texttt{TXEPT} zuständig. Ist dies der fall so hinterlegt man seine Daten im Datenregister und der Mikrocontrollersystem sendet diese dann automatisch über die serielle Verbindung.
 
 \input{aufgaben/20.tex}
 \input{aufgaben/21.tex}
