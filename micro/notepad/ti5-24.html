@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en-us" />
+<title>/ti5-24</title>
+<style type="text/css">h1,h2,h3,h4,h5,h6 { display: inline; }</style>
+</head>
+<body>#include "msp430x16x.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemdefinitionen von TI für den MSP430F1612<br
+/>#include "../init.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Initialisierung des Mikrocontrollers<br
+/>#include "../CC1100.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // CC1100 Funktransceiver<br
+/>#include "../system.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Systemfunktionen MSB430H<br
+/>#include "../interrupts.h"&nbsp; // ISR - Interrupt Service Routinen<br
+/>#include "stdio.h"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // includes TI MSP430F1612&nbsp;<br
+/>#include "../SHT11.h"<br
+/>#include "project.h"<br
+/>#include "aufgabe20.h"<br
+/>#include "aufgabe21.h"<br
+/><br
+/>bool printValues = false;<br
+/><br
+/>#pragma vector = TIMERB0_VECTOR<br
+/>__interrupt void TIMERB0_ISR (void)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; SET(ADC12CTL0, ADC12SC);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; printValues = true;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Clears the interrupt flag<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCCTL0, CCIFG);<br
+/>}<br
+/><br
+/>void initADU() {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Zweitfunktion fuer Bit 0, 1 und 2 selektieren<br
+/>&nbsp;&nbsp;&nbsp; P6SEL = BIT0 + BIT1 + BIT2;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Modifizierbar<br
+/>&nbsp;&nbsp;&nbsp; ADC12CTL0 = 0;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //Sample und Hold 256 Cycles<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; ADC an<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; Multiple sample and conversion<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; Sample-and-hold time: 256 cycles<br
+/>&nbsp;&nbsp;&nbsp; ADC12CTL0 = MSC + SHT0_10 + SHT1_10 + ADC12ON;<br
+/><br
+/>&nbsp;&nbsp;&nbsp; //Taktquelle auf ADC12OSC (5V)<br
+/>&nbsp;&nbsp;&nbsp; //Interner Sample and Hold Pulse-Modi<br
+/>&nbsp;&nbsp;&nbsp; //Conversion sequence mode: Sequence-of-channels<br
+/>&nbsp;&nbsp;&nbsp; //Conversion start address: ADC12MEM0<br
+/>&nbsp;&nbsp;&nbsp; ADC12CTL1 = SHP + CONSEQ_1;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //End of Squence<br
+/>&nbsp;&nbsp;&nbsp; //A0 (ax), A1(ay), A2(az) initialisieren<br
+/>&nbsp;&nbsp;&nbsp; //VR+ = AVCC<br
+/>&nbsp;&nbsp;&nbsp; //VR- =AVSS<br
+/>&nbsp;&nbsp;&nbsp; ADC12MCTL0 = INCH_0;<br
+/>&nbsp;&nbsp;&nbsp; ADC12MCTL1 = INCH_1;<br
+/>&nbsp;&nbsp;&nbsp; ADC12MCTL2 = INCH_2 + EOS;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //ADU anschalten<br
+/>&nbsp;&nbsp;&nbsp; SET(ADC12CTL0, ENC);<br
+/>}<br
+/><br
+/>void initMMA()&nbsp;<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; //Auf Output schalten<br
+/>&nbsp;&nbsp;&nbsp; //P5DIR |= BIT4 + BIT5;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; //g-Select for 1.5g Range:<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; P5.4 g-Select 2: LOW<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; P5.5 g-select 1: LOW<br
+/>&nbsp;&nbsp;&nbsp; //deactivate sleep mode<br
+/>&nbsp;&nbsp;&nbsp; P5OUT &amp;= ~(BIT4+BIT5);<br
+/>&nbsp;&nbsp;&nbsp; //&nbsp;&nbsp;&nbsp; P5.6: HIGH<br
+/>&nbsp;&nbsp;&nbsp; P5OUT |= BIT6;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>}<br
+/><br
+/>float convertAduValue(unsigned int value)<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; // N_adc = 4095 * (Vin - Vr-) / (Vr+ - Vr-)<br
+/>&nbsp;&nbsp;&nbsp; // =&gt;<br
+/>&nbsp;&nbsp;&nbsp; // Vr- = 0V, Vr+ = 3V<br
+/>&nbsp;&nbsp;&nbsp; // Vin = (N_adc * 3) / 4095<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Result in milli volts<br
+/>&nbsp;&nbsp;&nbsp; return (value / 4095.0) * 3.0;<br
+/>}<br
+/><br
+/>void printMMAValues()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; unsigned int ax, ay, az;<br
+/>&nbsp;&nbsp;&nbsp; float x, y, z;<br
+/>&nbsp;&nbsp;&nbsp; char buffer[32];<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(ADC12CTL1 &amp; ADC12BUSY);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // P6.0 – ax<br
+/>&nbsp;&nbsp;&nbsp; ax = ADC12MEM0;<br
+/>&nbsp;&nbsp;&nbsp; x = convertAduValue(ax);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // P6.1 – ay&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; ay = ADC12MEM1;<br
+/>&nbsp;&nbsp;&nbsp; y = convertAduValue(ay);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // P6.2 – az&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; az = ADC12MEM2;<br
+/>&nbsp;&nbsp;&nbsp; z = convertAduValue(az);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; sprintf(buffer, "%f\t%f\t%f\r\n", x, y, z);<br
+/>&nbsp;&nbsp;&nbsp; uart1_put_str(buffer);<br
+/>}<br
+/><br
+/>void initSecTimer() {<br
+/>&nbsp;&nbsp;&nbsp; // Divisor 8 for ACL Clock source<br
+/>&nbsp;&nbsp;&nbsp; SET(BCSCTL1, DIVA0);<br
+/>&nbsp;&nbsp;&nbsp; SET(BCSCTL1, DIVA1);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Halts timer<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, MC0);<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, MC1);<br
+/><br
+/>&nbsp;&nbsp;&nbsp; // Clear the timer<br
+/>&nbsp;&nbsp;&nbsp; SET(TBCTL, TBCLR);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Sets TBSSEL 01b =&gt; Clock Source ACLK<br
+/>&nbsp;&nbsp;&nbsp; SET(TBCTL, TBSSEL0);<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, TBSSEL1);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Sets counter length to 16-Bit<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, CNTL0);<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, CNTL1);<br
+/><br
+/>&nbsp;&nbsp;&nbsp; // Sets the timer to 2048 cycles, i.e. 500 ms on ACLK with divisor 8<br
+/>&nbsp;&nbsp;&nbsp; TBCCR0 = 0x0028;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Starts timer ... Mode control 01b -&gt; Up mode<br
+/>&nbsp;&nbsp;&nbsp; SET(TBCTL, MC0);<br
+/>&nbsp;&nbsp;&nbsp; CLEAR(TBCTL, MC1);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; // Enables interrupt<br
+/>&nbsp;&nbsp;&nbsp; SET(TBCCTL0, CCIE);<br
+/>}<br
+/><br
+/>void Aufgabe24()<br
+/>{<br
+/>&nbsp;&nbsp;&nbsp; initMMA();<br
+/>&nbsp;&nbsp;&nbsp; initADU();<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; initSecTimer();<br
+/><br
+/>&nbsp;&nbsp;&nbsp; // Interrupts global einschalten<br
+/>&nbsp;&nbsp;&nbsp; _bis_SR_register(GIE);<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; while(true)<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(printValues) {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printValues = false;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printMMAValues();<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br
+/>}<br
+/><br
+/></body>
+</html>
