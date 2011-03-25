@@ -1,6 +1,11 @@
 \subsection
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/041101.html}
-{Aufgabe 27: Der Empfangsmode}}
+{Aufgabe 27: Der Empfangsmodus}}
+
+Der Transciever kann mit der bereits vorhandenen Funktion \texttt{initCC1100()}
+initialisiert werden. Diese Funktion wird bereits im Framework im Boot-Vorgang aufgerufen. 
+Es ist nun nur noch nötig den Transciever mit Hilfe der Funktion \texttt{switchFreq()}
+auf den richtigen Funkkanal zu setzen. In unserem Fall ist dies der Kanal Null. 
 
 \subsubsection*{Quelltext}
 
