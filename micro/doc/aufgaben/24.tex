@@ -2,6 +2,18 @@
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040802.html}
 {Aufgabe 24: Der 3D Beschleunigungssensor}}
 
+Hier wird die ADU genutzt, um die analogen Messwerte des 3D
+Beschleunigungssensors einzulesen und weiterzuverarbeiten. Die
+Komponenten im dreidimensionalen Raum ax, ay, az sind dabei auf den
+Portleitungen 6.0, 6.1 und 6.2 geschaltet, die wir selektieren. Die
+Leitungen 5.4 und 5.5 dienen zum Setzen des Messbereiches, wir wählen
+1,5 G (Low, Low).
+
+Nach dieser Initialisierung können die Beschleunigungs-Daten
+aus der ADU ausgelesen und auf der seriellen Schnittstelle
+ausgegeben. Vor jedem Auslesen wird gewartet bis die ADU das BUSY-Flag
+gelöscht.
+
 \subsubsection*{Quelltext}
 
 \lstinputlisting[linerange=8-999,firstnumber=8,caption=aufgabe24.c]

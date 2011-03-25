@@ -45,7 +45,7 @@ void initADU() {
     //End of Squence
     //A0 (ax), A1(ay), A2(az) initialisieren
     //VR+ = AVCC
-    //VR- =AVSS
+    //VR- = AVSS
     ADC12MCTL0 = INCH_0;
     ADC12MCTL1 = INCH_1;
     ADC12MCTL2 = INCH_2 + EOS;
@@ -76,7 +76,7 @@ float convertAduValue(unsigned int value)
     // Vr- = 0V, Vr+ = 3V
     // Vin = (N_adc * 3) / 4095
 
-    // Result in milli volts
+    // Result in Volts
     return (value / 4095.0) * 3.0;
 }
 
@@ -104,7 +104,7 @@ void printMMAValues()
     uart1_put_str(buffer);
 }
 
-void initSecTimer() {
+void initMilliSecTimer() {
     // Divisor 8 for ACL Clock source
     SET(BCSCTL1, DIVA0);
     SET(BCSCTL1, DIVA1);
@@ -140,7 +140,7 @@ void Aufgabe24()
     initMMA();
     initADU();
 
-    initSecTimer();
+    initMilliSecTimer();
 
     // Interrupts global einschalten
     _bis_SR_register(GIE);
