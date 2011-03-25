@@ -14,14 +14,16 @@ void Aufgabe22()
 {
     char tmpBuffer[32];
 
-	// Interrupts global einschalten
+		// Interrupts global einschalten
     _bis_SR_register(GIE);
 
     uart1_put_str("Initialized!");
 
-    while(!readyToSend);
-
-    sprintf(tmpBuffer,"String Länge: %d", buffer_counter);
-    uart1_put_str("asd");
-    readyToSend = false;
+		while(1) {
+			if(gotNewLine) {
+				sprintf(tmpBuffer,"String Länge: %d", buffer_counter);
+				gotNewLine = false;
+				uart1_put_str(tmpBuffer);
+			}
+		}
 }

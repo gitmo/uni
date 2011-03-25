@@ -2,6 +2,18 @@
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/040703.html}
 {Aufgabe 22: UART mit Empfangspuffer und Interrupt}}
 
+Daten über die serielle Verbindung können auch mit Interrupts empfangen und gesendet werden.
+Hierzu verwendet man meist ein Empfangsbuffer um einkommende Daten abspeichern zu können.
+In unserem Fall verwenden wir ein einfaches \textit{Array}.
+Für professionellere Anwendungszwecke wird hier meist ein \textit{Ringbuffer} eingesetzt.
+Wenn wir nun mittels \texttt{\_bis\_SR\_register(GIE)} global die Interrupts einschalten,
+wird für jedes einkommende Byte ein Interrupt generiert.
+Im Interrupt selbst speichern wir das Byte im globalen Array ab,
+und signalisieren unserem Hauptprogramm mittels der Variable \texttt{newLine},
+ob wie einen Zeilenumbruch empfangen haben.
+Das Hauptprogramm überprüft in jedem Schleifenschritt, ob wir einen String mit Zeilenumbruch empfangen haben
+und sendet daraufhin die Länge des Strings zurück. 
+
 \subsubsection*{Quelltext}
 
 \lstinputlisting[caption=aufgabe22.h]

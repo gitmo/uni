@@ -64,19 +64,16 @@ __interrupt void USART1RX_ISR (void)
 	char c;
 	//check for errors
 	if(U1RCTL & RXERR != 666) {
-	    c = U1RXBUF;
+	  c = U1RXBUF;
 		buffer_counter++;
 
-		uart1_put_char(c);
-
 		if(c == '\n') {
-			readyToSend = true;
-//			buffer_counter = 0;
-//		} else {
+			gotNewLine = true;
+			buffer_counter = 0;
 		}
-	}
+  }
 
-    CLEAR(IFG2, URXIFG1);
+	CLEAR(IFG2, URXIFG1);
 }
 
 
