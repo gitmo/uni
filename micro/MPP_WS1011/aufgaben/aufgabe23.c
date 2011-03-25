@@ -48,6 +48,29 @@ unsigned int readADU() {
     return ((ADC12MEM0 / 4095.0) * 3.0) * 1000;
 }
 
+#pragma vector = TIMERB0_VECTOR
+__interrupt void TIMERB0_ISR (void)
+{
+    char buffer[32];
+    float mV;
+
+    // Software-controlled sample-and-conversion start.
+    SET(ADC12CTL0, ADC12SC);
+    mV = readADU() / 1000.0;
+    sprintf(buffer, "ADU: %.2f V\r\n", mV);
+    uart1_put_str(buffer);
+
+    LED_OFF;
+    if(mV < 1.0)
+        LED_SET(LED_GELB);
+    else if (mV < 2.0)
+        LED_SET(LED_GRUEN);
+    else
+        LED_SET(LED_ROT);
+    // Clears the interrupt flag
+    CLEAR(TBCCTL0, CCIFG);
+}
+
 void Aufgabe23()
 {
     initADU();
