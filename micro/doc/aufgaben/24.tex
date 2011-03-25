@@ -12,7 +12,9 @@ Leitungen 5.4 und 5.5 dienen zum Setzen des Messbereiches, wir wählen
 Nach dieser Initialisierung können die Beschleunigungs-Daten
 aus der ADU ausgelesen und auf der seriellen Schnittstelle
 ausgegeben. Vor jedem Auslesen wird gewartet bis die ADU das BUSY-Flag
-gelöscht.
+gelöscht. Die Timer-ISR steuert über ein Boolean Flag die Ausgabe des
+Nächsten Werts. Alternativ könnte man in einer ADU-ISR auf die
+erfolgte Konvertierung reagieren und hier die Werte ausgegeben.
 
 \subsubsection*{Quelltext}
 
