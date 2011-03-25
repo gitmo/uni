@@ -31,10 +31,10 @@ Y-Achse verschoben sein soll, dem Wert $2047 = \frac{(2^{12}-1) * 1,5V} {3V}$.
 Wie die Initialisierung des Timers erfolgt, wurde bereits in vorigen
 Aufgaben erarbeitet. Die Timer-Interrupt-Service-Routine soll den nächsten
 Sinuswert aus der vorberechneten Feld an den DAC übergeben: {\tt
-  sinus[index]} auf das Datenregister {\tt
-  DAC12\_\-0DAT}). Anschließend wird für das nächste Zeitinverall der
+  sinus[index]} auf das Datenregister {\tt DAC12\_\-0DAT}). Anschließend wird für das nächste Zeitinverall der
 Index inkrementiert. Beim letzten Sample 100 wird wieder auf 0
-gesprungen, so dass die nächste Periode ausgegeben werden kann.
+gesprungen, so dass die nächste Periode ausgegeben werden
+kann.
 
 \begin{center}
 \includegraphics[scale=0.75]{aufgaben/25.png}
