@@ -11,9 +11,12 @@ Ziel war es nun über zwei Digital-Analog-Umwandler jeweils bereits berechnete S
 
 Hierzu wurden bei der Initialsierung des Mikrocontrollers die komplette Periode eines Sinus vorberechnet.
 Da die Werte später über den Digital-Analog-Umwandler auf dem Oszilloskop ausgegeben werden,
-wird der jeweilige Sinus-Wert noch auf einen Bereich von 0 bis 3V erhöht, sowie in eine 12 Bit Zahl konvertiert.
+wurde der jeweilige Sinus-Wert noch auf einen Bereich von 0 bis 3V erhöht, sowie in eine 12 Bit Zahl konvertiert.
 
-Der DMA-Controller wurde so konfiguriert, dass er zuvor initialisierte Timer als Trigger benutzt und den nächstfolgenden Sinus-Wert in das Register des Digital-Analog-Umwandlers kopiert. Dieser wandelt den Wert in eine analoge Spannung um.
+Der DMA-Controller ist für das Kopieren der Sinus-Werte in den jeweiligen Digital-Analog-Umwandler zuständig.
+Dieser wurde so konfiguriert, dass er zuvor initialisierte Timer als Trigger benutzt und den nächstfolgenden Sinus-Wert in das Register des jeweiligen Digital-Analog-Umwandlers kopiert.
+
+Je nach eingestellten Timer-Trigger-Werten und somit anderem Frequenzverhältnissen, können nun andere Lissajous-Figuren auf dem Oszilloskop dargestellt werden.
 
 Bei der Umsetzung wurde auch eine eigene Bibliothek für die jeweiligen Peripherieeinheiten des Mikrocontrollers geschrieben.
 
