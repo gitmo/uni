@@ -32,6 +32,12 @@ local.properties
 *.blg
 *.ilg
 *.ind
+_region_.**
+*.dvi
+*.fmt
+*.rel
+**/auto/**
+*.el
 
 # Mac OS X goodness
 .DS_Store
@@ -44,7 +50,6 @@ release/
 
 build/
 *xcodeproj/
-
 
 # asm
 !FULogo_RGB.pdf
