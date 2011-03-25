@@ -1,11 +1,21 @@
 \subsubsection*{Idee}
 
-\href{https://secure.wikimedia.org/wikipedia/de/wiki/Lissajous-Figuren}
-{Lissajous-Figuren} auf dem Oszilloskop, funk-fernsteuerbar mit Hilfe von
-Sensordaten des Beschleunigungsmessers ...
+Idee war die Darstellung von \href{https://secure.wikimedia.org/wikipedia/de/wiki/Lissajous-Figuren}
+{Lissajous-Figuren} auf dem Oszilloskop mit Hilfe des DMA-Controllers und  des Digital-Analog-Umwandlers.
 
-\subsubsection*{Bisheriger Stand}
-...
+Das Bild eines Oszilloskop kann mittels zwei Spannungseingängen manipuliert werden.
+Punkte werden wie in einem Koordinaten-System mittels x- und y-Werten beschrieben.
+Einer der beiden Eingänge des Oszilloskops steht für den x-Wert und der andere für den y-Wert.
+
+Ziel war es nun über zwei Digital-Analog-Umwandler jeweils bereits berechnete Sinus-Werte in analoge Spannungen umzuwandeln und mit Hilfe dieser Spannungen Figuren auf dem Oszilloskop zu zeichnen. 
+
+Hierzu wurden bei der Initialsierung des Mikrocontrollers die komplette Periode eines Sinus vorberechnet.
+Da die Werte später über den Digital-Analog-Umwandler auf dem Oszilloskop ausgegeben werden,
+wird der jeweilige Sinus-Wert noch auf einen Bereich von 0 bis 3V erhöht, sowie in eine 12 Bit Zahl konvertiert.
+
+Der DMA-Controller wurde so konfiguriert, dass er zuvor initialisierte Timer als Trigger benutzt und den nächstfolgenden Sinus-Wert in das Register des Digital-Analog-Umwandlers kopiert. Dieser wandelt den Wert in eine analoge Spannung um.
+
+Bei der Umsetzung wurde auch eine eigene Bibliothek für die jeweiligen Peripherieeinheiten des Mikrocontrollers geschrieben.
 
 \subsubsection*{Quelltext}
 
