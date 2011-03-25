@@ -2,7 +2,31 @@
 {\href{http://cst.mi.fu-berlin.de/intern/19606-P-MPP/Aufgaben/041001.html}
 {Aufgabe 26: Der Funktionsgenerator im DMA Betrieb}}
 
-\subsubsection*{Quelltext}
+\subsubsection*{Vorgehensweise}
 
+Bei dieser Aufgabenstellung, entfällt die Timer-ISR und stattdessen
+werden die Sinuswerte mittels DMA an den Wandler geschrieben. Dennoch 
+wird der Timer wie zuvor initialisiert, da er als Triggersignal dem DMA
+signalisiert, wann der Speicherpointer auf den nächsten Werts
+inkrementiert werden soll.
+
+Zur Inititialisierung des DMA's legen wir im DMA-Control-Register die
+Trigger-Quelle {\tt Timer\_B} fest. Das DMA-Modul 0 bekommt die
+Startadresse und Größe des vorberechneten Sinus-Arrays
+übergeben. Außerdem wird der DMA auf den Single-Transfer-Mode mit
+inkrementeller Adressierung programmiert, dh. nach Übertragung der 100
+Sample-Werte (und 100 Trigger-Events) ist Schluss. Als Zieladresse
+soll direkt in das DA-Wandler-Datenregister geschrieben. Zum Schluss
+wird der DMA eingeschaltet. Zusätzlich eine ISR bereitgestellt, die nach
+Ende eines Single-Transfers-Durchlaufs den DMA mit dem Enable-Bit
+erneut einschaltet.
+
+\subsubsection*{Quelltext}
+ 
 \lstinputlisting[linerange=8-999,firstnumber=8,caption=aufgabe26.c]
 {../MPP_WS1011/aufgaben/aufgabe26.c}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../Main"
+%%% End: 
