@@ -4,10 +4,9 @@
  * fib(0)   = fib(1) = 1
  * fib(i+2) = fib(i+1) + fib(i), i = {0, 1, 2}
  */
-
-int fib(int n)
+unsigned int fib(int n)
 {
-    int n_0 = 1, n_1 = 1;
+    unsigned int n_0 = 1, n_1 = 1, n_2;
     for (int i = 3; i <= n; i++) {
         int n_2 = n_0 + n_1;
         n_0 = n_1;
@@ -15,16 +14,20 @@ int fib(int n)
     }
     return n_1;
 }
+
 int main()
 {
-    int x;
+    int x, res;
 
     do {
-      printf("Integer X (>=0): ");
-      scanf("%i", &x);
-    } while (x < 0);
+      printf("Non-negative Integer X: ");
+      res = scanf("%i", &x);
+      // flush input stream
+      fpurge(stdin);
+    } while (!res || x < 0);
 
-    printf("fib(%d) = %d\n", x, fib(x));
+    // Overflow at x > 47 with 32 bit uint's!
+    printf("fib(%u) = %u\n", x, fib(x));
 
     return 0;
 }
