@@ -1,5 +1,7 @@
 #include <cstdio>
 
+unsigned int fib(int n);
+
 /*
  * fib(0)   = fib(1) = 1
  * fib(i+2) = fib(i+1) + fib(i), i = {0, 1, 2}
@@ -8,7 +10,7 @@ unsigned int fib(int n)
 {
     unsigned int n_0 = 1, n_1 = 1, n_2;
     for (int i = 3; i <= n; i++) {
-        int n_2 = n_0 + n_1;
+        n_2 = n_0 + n_1;
         n_0 = n_1;
         n_1 = n_2;
     }
