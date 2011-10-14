@@ -7,7 +7,7 @@
 //
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include "exercise2.h"
 
 char lower (char c) {
