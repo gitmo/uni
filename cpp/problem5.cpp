@@ -51,7 +51,7 @@ int main (int argc, const char * argv[])
     
     std::cout << "opening " << fname << '\n';
 
-    // Open file for writing
+    // Open file for reading
     if (!(fd = fopen(fname, "r"))) {
         perror(fname);
         exit(1);
