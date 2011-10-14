@@ -36,7 +36,7 @@ int main (int argc, const char * argv[])
     // Open file for reading
     if (!(fd = fopen(fname, "r"))) {
         perror(fname);
-        exit(1);
+        return 1;
     }
     
     char c;
