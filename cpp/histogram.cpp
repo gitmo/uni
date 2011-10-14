@@ -39,7 +39,7 @@ int main (int argc, const char * argv[])
         exit(1);
     }
     
-    unsigned char c;
+    char c;
     while ((c = fgetc(fd)) != EOF) {
         histogram[c]++;
     }
