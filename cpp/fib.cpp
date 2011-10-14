@@ -1,4 +1,4 @@
-#include <cstdio>
+#include <stdio.h>
 
 unsigned int fib(int n);
 
@@ -25,7 +25,7 @@ int main()
       printf("Non-negative Integer X: ");
       res = scanf("%i", &x);
       // flush input stream
-      fpurge(stdin);
+      while (getchar() != '\n');
     } while (!res || x < 0);
 
     // Overflow at x > 47 with 32 bit uint's!
