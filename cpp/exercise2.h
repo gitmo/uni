@@ -9,9 +9,8 @@
 #ifndef C___Course_Exercises_exercise2_h
 #define C___Course_Exercises_exercise2_h
 
-void reverse (char str[]);
-    
+bool reverse (char str[]);
 char lower (char c);
-
+void test(const char * str);
 
 #endif

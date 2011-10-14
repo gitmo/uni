@@ -16,24 +16,35 @@ char lower (char c) {
     return c;
 }
 
-void reverse (char str[]) {
+bool reverse (char str[]) {
+    bool palindrom = true;
     size_t n = 0;
     size_t len = strlen(str);
     for (size_t i = len; i > len / 2 ; i--) {
         char c = str[i - 1];
         str[i - 1] = lower(str[n]);
         str[n] = lower(c);
+        if (str[n] != str[i - 1])
+            palindrom = false;
         n++;
     }
+    return palindrom;
 }
 
+void test(const char * s)
+{
+    char str[strlen(s) + 1];
+    strcpy(str, s);
+    std::cout << str << '\n';
+    if (reverse(str))
+        std::cout << "Palindrom!" << std::endl;
+    std::cout << str << std::endl;
+}
 
 int main (int argc, const char * argv[])
 {
-    char str[] = "Hamster";
-    std::cout << str << '\n';
-    reverse(str);
-    std::cout << str << '\n';
+    test("Hamster");
+    test("Anna");
     return 0;
 }
 
